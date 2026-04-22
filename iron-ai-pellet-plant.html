@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>IRON-AI · Pellet Plant Advisory System · AMNS Vizag</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #ffffff;
+  --bg2: #f8f9fc;
+  --bg3: #f1f4f9;
+  --border: #e2e8f0;
+  --border2: #cbd5e1;
+  --text: #0f172a;
+  --text2: #334155;
+  --text3: #64748b;
+  --text4: #94a3b8;
+  --accent-blue: #1d4ed8;
+  --accent-blue-lt: #dbeafe;
+  --accent-green: #16a34a;
+  --accent-green-lt: #dcfce7;
+  --accent-red: #dc2626;
+  --accent-red-lt: #fee2e2;
+  --accent-amber: #d97706;
+  --accent-amber-lt: #fef3c7;
+  --accent-purple: #7c3aed;
+  --accent-purple-lt: #ede9fe;
+  --accent-orange: #ea580c;
+  --accent-orange-lt: #ffedd5;
+  --accent-cyan: #0891b2;
+  --accent-cyan-lt: #cffafe;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.05);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.10), 0 4px 8px rgba(0,0,0,0.06);
+  --radius: 10px;
+  --font-mono: 'DM Mono', 'Courier New', monospace;
+  --font-sans: 'DM Sans', system-ui, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg2); color: var(--text); font-family: var(--font-sans); font-size: 13px; min-height: 100vh; }
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--bg3); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+button { cursor: pointer; font-family: var(--font-sans); }
+
+/* ── HEADER ── */
+#header {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  box-shadow: var(--shadow);
+}
+.logo-wrap { display: flex; align-items: center; gap: 12px; }
+.logo-icon {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: white;
+}
+.logo-text { font-weight: 800; font-size: 17px; letter-spacing: 2px; color: var(--text); }
+.logo-sub { font-size: 9px; color: var(--text4); letter-spacing: 1.5px; text-transform: uppercase; }
+nav { display: flex; gap: 2px; }
+nav button {
+  background: none; border: none; border-radius: 7px;
+  padding: 6px 13px; font-size: 12px; font-weight: 500;
+  color: var(--text3); transition: all 0.15s;
+}
+nav button:hover { background: var(--bg3); color: var(--text); }
+nav button.active { background: var(--accent-blue-lt); color: var(--accent-blue); font-weight: 700; }
+.live-pill {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--accent-green-lt);
+  border-radius: 20px; padding: 4px 12px;
+  font-size: 11px; color: var(--accent-green); font-family: var(--font-mono);
+}
+.live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent-green); animation: blink 2s infinite; }
+
+/* ── MODE BAR ── */
+#modebar {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 24px;
+  display: flex; align-items: center; gap: 10px;
+}
+.mode-label { font-size: 10px; color: var(--text4); letter-spacing: 1.5px; text-transform: uppercase; margin-right: 4px; }
+.mode-btn {
+  border-radius: 7px; padding: 5px 16px; font-size: 11px; font-weight: 700;
+  border: 1.5px solid var(--border); background: none; color: var(--text3);
+  letter-spacing: 0.3px; transition: all 0.2s;
+}
+.mode-btn.active-optimal { background: var(--accent-green-lt); color: var(--accent-green); border-color: #86efac; }
+.mode-btn.active-advisory { background: var(--accent-blue-lt); color: var(--accent-blue); border-color: #93c5fd; }
+.mode-btn.active-reset { background: var(--accent-orange-lt); color: var(--accent-orange); border-color: #fdba74; }
+.mode-desc { margin-left: auto; font-size: 11px; color: var(--text3); background: var(--bg3); border-radius: 6px; padding: 4px 12px; }
+
+/* ── LAYOUT ── */
+#content { padding: 20px 24px; overflow-y: auto; max-height: calc(100vh - 112px); }
+
+/* ── CARDS ── */
+.card {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+}
+.card-header { font-size: 10px; color: var(--text4); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 14px; font-family: var(--font-mono); }
+
+/* ── KPI ROW ── */
+.kpi-grid { display: grid; grid-template-columns: repeat(6,1fr); gap: 10px; margin-bottom: 18px; }
+.kpi-card {
+  background: var(--bg); border: 1.5px solid var(--border);
+  border-radius: var(--radius); padding: 14px 14px 12px;
+  box-shadow: var(--shadow); position: relative; overflow: hidden;
+}
+.kpi-card.alarm { border-color: var(--accent-red); }
+.kpi-card.warning { border-color: var(--accent-amber); }
+.kpi-alarm-bar { position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent-red); animation: blink 1s infinite; }
+.kpi-warn-bar { position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent-amber); }
+.kpi-icon { font-size: 17px; margin-bottom: 6px; }
+.kpi-val { font-size: 22px; font-weight: 800; font-family: var(--font-mono); color: var(--text); line-height: 1; }
+.kpi-val.alarm { color: var(--accent-red); }
+.kpi-val.warning { color: var(--accent-amber); }
+.kpi-unit { font-size: 10px; color: var(--text4); margin-top: 2px; font-family: var(--font-mono); }
+.kpi-label { font-size: 10px; color: var(--text3); margin-top: 4px; font-weight: 600; }
+.kpi-tgt { font-size: 9px; margin-top: 3px; color: var(--text4); }
+
+/* ── PROCESS STRIP ── */
+.process-strip {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px; margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+.flow-line { position: relative; height: 70px; }
+.flow-connector {
+  position: absolute; top: 50%; left: 4%; right: 4%; height: 3px;
+  transform: translateY(-50%);
+  background: linear-gradient(90deg, #ea580c, #d97706, #16a34a, #0891b2, #7c3aed, #dc2626, #475569);
+  border-radius: 2px; opacity: 0.25;
+}
+.zone-node {
+  position: absolute; top: 50%; transform: translate(-50%, -50%);
+  display: flex; flex-direction: column; align-items: center;
+  cursor: pointer;
+}
+.zone-bubble {
+  width: 46px; height: 46px; border-radius: 10px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  border: 2px solid; transition: all 0.2s; box-shadow: var(--shadow);
+}
+.zone-bubble:hover { transform: scale(1.05); box-shadow: var(--shadow-md); }
+.zone-bubble.selected { box-shadow: 0 0 0 3px rgba(29,78,216,0.3); }
+.zone-short { font-size: 8px; font-weight: 800; letter-spacing: 0.5px; font-family: var(--font-mono); }
+.zone-dot { width: 7px; height: 7px; border-radius: 50%; margin-top: 2px; }
+.zone-dot.alarm { animation: blink 1s infinite; }
+.zone-label-below { font-size: 8px; color: var(--text4); margin-top: 4px; white-space: nowrap; text-align: center; }
+
+/* ── TAG PANEL ── */
+.tag-panel {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px; margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+.tag-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.tag-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 12px;
+}
+.tag-card.alarm { border-color: var(--accent-red); background: #fff5f5; }
+.tag-card.warning { border-color: var(--accent-amber); background: #fffbf0; }
+.tag-id { font-size: 9px; color: var(--text4); font-family: var(--font-mono); }
+.tag-row { display: flex; justify-content: space-between; align-items: center; margin-top: 3px; }
+.tag-val { font-size: 19px; font-weight: 800; color: var(--text); font-family: var(--font-mono); }
+.tag-unit { font-size: 11px; color: var(--text3); margin-left: 4px; }
+.tag-name { font-size: 10px; color: var(--text3); margin-top: 3px; }
+.badge {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.8px; border-radius: 4px;
+  padding: 2px 6px; text-transform: uppercase;
+}
+.badge.normal { background: var(--accent-green-lt); color: var(--accent-green); }
+.badge.warning { background: var(--accent-amber-lt); color: var(--accent-amber); }
+.badge.alarm { background: var(--accent-red-lt); color: var(--accent-red); }
+
+/* ── MAIN GRID ── */
+.main-grid { display: grid; grid-template-columns: 1fr 360px; gap: 16px; }
+
+/* ── RECOMMENDATIONS ── */
+.rec-card {
+  background: var(--bg); border: 1.5px solid var(--border);
+  border-radius: var(--radius); margin-bottom: 8px;
+  box-shadow: var(--shadow); overflow: hidden; transition: box-shadow 0.2s;
+}
+.rec-card:hover { box-shadow: var(--shadow-md); }
+.rec-header {
+  padding: 11px 14px; display: flex; align-items: center; gap: 10px;
+  cursor: pointer; user-select: none;
+}
+.rec-icon { font-size: 20px; }
+.rec-priority { font-size: 9px; font-weight: 800; letter-spacing: 0.8px; border-radius: 4px; padding: 2px 7px; }
+.priority-HIGH { background: var(--accent-red-lt); color: var(--accent-red); }
+.priority-MEDIUM { background: var(--accent-amber-lt); color: var(--accent-amber); }
+.priority-LOW { background: var(--accent-green-lt); color: var(--accent-green); }
+.rec-zone { font-size: 10px; color: var(--text4); }
+.rec-time { font-size: 10px; color: var(--text4); }
+.rec-title { font-size: 13px; font-weight: 700; color: var(--text); }
+.rec-impact { font-size: 12px; font-weight: 700; color: var(--accent-green); font-family: var(--font-mono); }
+.rec-conf { font-size: 10px; color: var(--text4); }
+.rec-chevron { color: var(--text4); font-size: 12px; margin-left: auto; flex-shrink: 0; }
+.rec-body { padding: 0 14px 14px; border-top: 1px solid var(--border); display: none; }
+.rec-body.open { display: block; }
+.rec-detail { color: var(--text2); font-size: 12px; margin: 10px 0 10px; line-height: 1.6; }
+.rec-action-box {
+  border-radius: 7px; padding: 9px 12px; margin-bottom: 10px;
+}
+.rec-action-label { font-size: 9px; color: var(--text4); letter-spacing: 1px; margin-bottom: 3px; }
+.rec-action-text { font-size: 12px; font-weight: 700; font-family: var(--font-mono); }
+.conf-bar-track { background: var(--bg3); border-radius: 4px; height: 5px; margin-bottom: 10px; }
+.conf-bar-fill { height: 5px; border-radius: 4px; background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple)); transition: width 0.5s; }
+.action-btns { display: flex; gap: 8px; }
+.btn-accept {
+  flex: 1; background: var(--accent-green-lt); color: var(--accent-green);
+  border: 1.5px solid #86efac; border-radius: 7px; padding: 7px; font-size: 11px; font-weight: 700;
+}
+.btn-dismiss {
+  background: var(--accent-red-lt); color: var(--accent-red);
+  border: 1.5px solid #fca5a5; border-radius: 7px; padding: 7px 12px; font-size: 11px;
+}
+.accepted-msg { color: var(--accent-green); font-size: 11px; font-weight: 700; }
+.auto-msg { color: var(--accent-blue); font-size: 11px; }
+.paused-msg { color: var(--accent-orange); font-size: 11px; }
+
+/* ── RIGHT PANEL ── */
+.right-col { display: flex; flex-direction: column; gap: 12px; }
+.gauge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+
+/* ── PROCESS FLOW PAGE ── */
+.pf-stage {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px 20px; margin-bottom: 14px;
+  box-shadow: var(--shadow); position: relative; overflow: hidden;
+}
+.pf-accent { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-radius: 10px 0 0 10px; }
+.pf-title { font-size: 14px; font-weight: 800; margin-bottom: 14px; margin-left: 12px; }
+.pf-cols { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; margin-left: 12px; margin-bottom: 12px; }
+.pf-col-head { font-size: 9px; color: var(--text4); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 6px; font-family: var(--font-mono); }
+.pf-item { font-size: 11px; color: var(--text2); margin-bottom: 3px; }
+.pf-kpi-item { font-size: 11px; color: var(--accent-green); margin-bottom: 3px; font-family: var(--font-mono); font-weight: 700; }
+.pf-ai-bar {
+  margin-left: 12px; background: #f0ebff; border: 1px solid #d8b4fe;
+  border-radius: 7px; padding: 6px 12px;
+}
+.pf-ai-bar-text { font-size: 11px; color: var(--accent-purple); }
+.furnace-zones { display: flex; gap: 8px; margin-left: 12px; margin-bottom: 12px; }
+.fz-card {
+  flex: 1; background: var(--accent-red-lt); border: 1px solid #fca5a5;
+  border-radius: 7px; padding: 8px 10px;
+}
+.fz-name { font-size: 11px; font-weight: 700; color: var(--accent-red); }
+.fz-temp { font-size: 13px; font-weight: 800; color: var(--accent-amber); font-family: var(--font-mono); }
+.fz-desc { font-size: 10px; color: var(--text3); margin-top: 2px; }
+
+/* ── HIERARCHY ── */
+.h-layout { display: flex; gap: 14px; }
+.h-sidebar { width: 210px; flex-shrink: 0; }
+.h-btn {
+  width: 100%; background: var(--bg); border: 1.5px solid var(--border);
+  border-radius: 8px; padding: 11px 13px; text-align: left; margin-bottom: 6px;
+  transition: all 0.15s; box-shadow: var(--shadow);
+}
+.h-btn:hover { box-shadow: var(--shadow-md); }
+.h-btn.active { border-color: var(--accent-blue); background: var(--accent-blue-lt); }
+.h-level { font-size: 15px; font-weight: 900; font-family: var(--font-mono); }
+.h-name { font-size: 11px; color: var(--text2); font-weight: 600; margin-top: 1px; }
+.h-scope { font-size: 10px; color: var(--text4); margin-top: 1px; }
+.h-detail { flex: 1; background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); }
+.h-title-row { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+.h-badge { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 900; font-family: var(--font-mono); border: 2px solid; }
+.h-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.h-sec-head { font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; font-family: var(--font-mono); }
+.h-uc-item { background: var(--bg2); border-radius: 7px; padding: 8px 11px; margin-bottom: 5px; font-size: 12px; color: var(--text2); }
+.h-data-item { font-size: 11px; color: var(--text2); padding: 4px 0; border-bottom: 1px solid var(--border); }
+.h-kpi-item { font-size: 11px; color: var(--accent-green); padding: 4px 0; font-family: var(--font-mono); font-weight: 700; }
+.h-ai-box { border-radius: 8px; padding: 12px; margin-top: 12px; }
+
+/* ── PIPELINE ── */
+.pl-tabs { display: flex; gap: 6px; margin-bottom: 18px; flex-wrap: wrap; }
+.pl-tab {
+  border-radius: 8px; padding: 7px 15px; font-size: 12px; font-weight: 600;
+  border: 1.5px solid var(--border); background: var(--bg); color: var(--text3);
+  transition: all 0.15s;
+}
+.pl-tab.active { font-weight: 800; }
+.pl-content { background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); }
+.pl-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+.pl-icon { font-size: 36px; }
+.pl-title { font-size: 18px; font-weight: 800; color: var(--text); }
+.pl-sub { font-size: 12px; color: var(--text3); margin-top: 3px; }
+.pl-kpi-box { border-radius: 9px; padding: 10px 16px; text-align: center; border: 1.5px solid; }
+.pl-kpi-label { font-size: 9px; color: var(--text4); letter-spacing: 1px; }
+.pl-kpi-val { font-size: 17px; font-weight: 900; font-family: var(--font-mono); }
+.pl-problem { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 14px; font-size: 13px; color: var(--text2); line-height: 1.6; }
+.pl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.pl-sec-head { font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; font-family: var(--font-mono); }
+.pl-arch-box { border-radius: 8px; padding: 12px; margin-bottom: 8px; border: 1px solid; }
+.pl-arch-name { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.pl-arch-desc { font-size: 11px; color: var(--text3); }
+.pl-eval-box { background: var(--accent-green-lt); border: 1px solid #86efac; border-radius: 7px; padding: 10px 12px; font-size: 11px; color: var(--accent-green); }
+.pl-feature { font-size: 11px; color: var(--text2); padding: 3px 0; border-bottom: 1px solid var(--border); }
+.pl-output { font-size: 11px; color: var(--text2); padding: 4px 0; border-bottom: 1px solid var(--border); }
+.pl-phase { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 7px; }
+.pl-phase-num { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 800; border: 2px solid; flex-shrink: 0; }
+.pl-phase-text { font-size: 11px; color: var(--text2); }
+.pl-impact { border-radius: 9px; padding: 14px; border: 1.5px solid; }
+.pl-impact-head { font-size: 10px; font-weight: 800; letter-spacing: 1px; margin-bottom: 10px; }
+.pl-impact-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; }
+.pl-impact-item { background: var(--bg); border-radius: 7px; padding: 10px; text-align: center; border: 1px solid var(--border); font-size: 12px; font-weight: 700; }
+
+/* ── CHEMISTRY ── */
+.chem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px; }
+.chem-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow); }
+.chem-stage { font-size: 13px; font-weight: 800; color: var(--accent-red); margin-bottom: 8px; }
+.chem-formula { background: var(--bg3); border-radius: 6px; padding: 8px 12px; font-family: var(--font-mono); font-size: 11px; color: var(--accent-blue); margin-bottom: 8px; }
+.chem-key { font-size: 11px; color: var(--text2); }
+.qual-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 18px; }
+.qual-card { background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow); }
+.qual-param { font-size: 22px; font-weight: 900; font-family: var(--font-mono); }
+.qual-full { font-size: 12px; font-weight: 700; color: var(--text); margin: 4px 0; }
+.qual-method { font-size: 10px; color: var(--text4); margin-bottom: 4px; }
+.qual-target { font-size: 12px; font-weight: 800; font-family: var(--font-mono); margin-bottom: 8px; }
+.qual-formula { font-size: 10px; color: var(--text3); font-family: var(--font-mono); margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+.qual-driver { font-size: 10px; color: var(--text3); margin-bottom: 2px; }
+.arch-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+.arch-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 9px; padding: 13px; }
+.arch-sys { font-size: 12px; font-weight: 700; color: var(--accent-blue); }
+.arch-type { font-size: 10px; color: var(--accent-purple); margin-bottom: 3px; }
+.arch-tags { font-size: 12px; font-weight: 700; font-family: var(--font-mono); color: var(--accent-green); margin-bottom: 5px; }
+.arch-desc { font-size: 10px; color: var(--text3); }
+
+/* ── AI CHAT ── */
+.chat-layout { display: grid; grid-template-columns: 1fr 270px; gap: 14px; height: calc(100vh - 200px); }
+.chat-main { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); display: flex; flex-direction: column; box-shadow: var(--shadow); }
+.chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.chat-msg { display: flex; gap: 10px; }
+.chat-msg.user { justify-content: flex-end; }
+.chat-avatar { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+.chat-avatar.ai { background: var(--accent-blue); }
+.chat-avatar.user { background: var(--bg3); }
+.chat-bubble { max-width: 72%; border-radius: 10px; padding: 10px 13px; font-size: 12px; line-height: 1.65; }
+.chat-bubble.ai { background: var(--bg2); border: 1px solid var(--border); color: var(--text2); }
+.chat-bubble.user { background: var(--accent-blue-lt); border: 1px solid #93c5fd; color: var(--accent-blue); }
+.chat-footer { padding: 14px; border-top: 1px solid var(--border); }
+.chat-suggestions { display: flex; gap: 5px; margin-bottom: 8px; flex-wrap: wrap; }
+.chat-chip {
+  background: var(--bg3); border: 1px solid var(--border); border-radius: 20px;
+  padding: 3px 10px; font-size: 10px; color: var(--text3); transition: all 0.15s;
+}
+.chat-chip:hover { background: var(--accent-blue-lt); color: var(--accent-blue); border-color: #93c5fd; }
+.chat-input-row { display: flex; gap: 8px; }
+.chat-input {
+  flex: 1; background: var(--bg2); border: 1.5px solid var(--border);
+  border-radius: 8px; padding: 9px 13px; font-size: 12px; font-family: var(--font-sans);
+  color: var(--text); outline: none; transition: border-color 0.15s;
+}
+.chat-input:focus { border-color: var(--accent-blue); }
+.chat-send {
+  background: var(--accent-blue); color: white; border: none;
+  border-radius: 8px; padding: 9px 16px; font-size: 14px; font-weight: 700;
+  transition: opacity 0.15s;
+}
+.chat-send:hover { opacity: 0.85; }
+.typing-dots { display: flex; gap: 4px; align-items: center; padding: 4px 0; }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-blue); animation: bounce 0.8s infinite; }
+.dot:nth-child(2) { animation-delay: 0.15s; }
+.dot:nth-child(3) { animation-delay: 0.3s; }
+
+/* ── RIGHT SIDE PANELS ── */
+.right-panel { display: flex; flex-direction: column; gap: 10px; }
+.health-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; text-align: center; box-shadow: var(--shadow); }
+.health-score { font-size: 52px; font-weight: 900; font-family: var(--font-mono); line-height: 1; }
+.impact-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); }
+.impact-label { font-size: 11px; color: var(--text3); }
+.impact-val { font-size: 13px; font-weight: 800; font-family: var(--font-mono); }
+.alert-row { display: flex; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); cursor: pointer; }
+.alert-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.alert-title { font-size: 11px; color: var(--text2); flex: 1; }
+.alert-zone { font-size: 9px; color: var(--text4); }
+
+/* ── MODAL ── */
+#reset-modal {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+  display: flex; align-items: center; justify-content: center; z-index: 999;
+  display: none;
+}
+#reset-modal.show { display: flex; }
+.modal-box { background: var(--bg); border: 1.5px solid var(--accent-orange); border-radius: 14px; padding: 28px; max-width: 380px; text-align: center; box-shadow: var(--shadow-lg); }
+.modal-icon { font-size: 32px; margin-bottom: 10px; }
+.modal-title { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+.modal-desc { font-size: 12px; color: var(--text3); line-height: 1.6; margin-bottom: 20px; }
+.modal-btns { display: flex; gap: 10px; }
+.modal-confirm { flex: 1; background: var(--accent-orange-lt); color: var(--accent-orange); border: 1.5px solid #fdba74; border-radius: 8px; padding: 9px; font-size: 12px; font-weight: 800; }
+.modal-cancel { flex: 1; background: var(--bg2); color: var(--text3); border: 1.5px solid var(--border); border-radius: 8px; padding: 9px; font-size: 12px; }
+
+/* ── GAUGE SVG ── */
+.gauge-wrap { text-align: center; padding: 8px 4px; }
+.gauge-val { font-size: 15px; font-weight: 800; font-family: var(--font-mono); margin-top: -4px; }
+.gauge-lbl { font-size: 9px; color: var(--text4); text-transform: uppercase; letter-spacing: 0.8px; }
+
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+@keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+.section { animation: fadeIn 0.25s ease; }
+</style>
+</head>
+<body>
+
+<!-- RESET MODAL -->
+<div id="reset-modal">
+  <div class="modal-box">
+    <div class="modal-icon">⚠️</div>
+    <div class="modal-title">Confirm Reset to Manual Mode</div>
+    <div class="modal-desc">All AI recommendations will be paused. Setpoints return to operator-defined baselines. Use only during maintenance windows.</div>
+    <div class="modal-btns">
+      <button class="modal-confirm" onclick="confirmReset()">CONFIRM RESET</button>
+      <button class="modal-cancel" onclick="closeModal()">CANCEL</button>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div id="header">
+  <div class="logo-wrap">
+    <div class="logo-icon">⚙️</div>
+    <div>
+      <div class="logo-text">IRON-AI</div>
+      <div class="logo-sub">AMNS Vizag Pellet Plant · Advisory System</div>
+    </div>
+  </div>
+  <nav>
+    <button class="active" onclick="showSection('dashboard',this)">📊 Dashboard</button>
+    <button onclick="showSection('process',this)">🔄 Process Flow</button>
+    <button onclick="showSection('hierarchy',this)">🏗️ L0–L5 Hierarchy</button>
+    <button onclick="showSection('pipeline',this)">🔬 AI Pipeline</button>
+    <button onclick="showSection('chemistry',this)">⚗️ Chemistry</button>
+    <button onclick="showSection('advisor',this)">🤖 AI Advisor</button>
+  </nav>
+  <div class="live-pill">
+    <div class="live-dot"></div>
+    <span id="live-time">LIVE</span>
+  </div>
+</div>
+
+<!-- MODE BAR -->
+<div id="modebar">
+  <span class="mode-label">Operation Mode:</span>
+  <button class="mode-btn" id="btn-advisory" onclick="setMode('advisory')">🤖 AI ADVISORY MODE</button>
+  <button class="mode-btn" id="btn-optimal" onclick="setMode('optimal')">⚡ OPTIMAL MODE</button>
+  <button class="mode-btn" id="btn-reset" onclick="openModal()">🔄 RESET / MANUAL</button>
+  <div class="mode-desc" id="mode-desc">AI generates recommendations · Operators review and approve actions</div>
+</div>
+
+<!-- CONTENT WRAPPER -->
+<div id="content">
+
+<!-- ═══════════════════ DASHBOARD ═══════════════════ -->
+<div id="sec-dashboard" class="section">
+
+  <!-- KPI Row -->
+  <div class="kpi-grid" id="kpi-grid">
+    <div class="kpi-card" id="kpi-prod">
+      <div class="kpi-icon">🏭</div>
+      <div class="kpi-val" id="v-prod">362</div>
+      <div class="kpi-unit">t/h</div>
+      <div class="kpi-label">Production Rate</div>
+      <div class="kpi-tgt">TGT: 370 t/h</div>
+    </div>
+    <div class="kpi-card alarm" id="kpi-fuel">
+      <div class="kpi-alarm-bar"></div>
+      <div class="kpi-icon">⛽</div>
+      <div class="kpi-val alarm" id="v-fuel">62.4</div>
+      <div class="kpi-unit">Mcal/t</div>
+      <div class="kpi-label">Specific Fuel</div>
+      <div class="kpi-tgt">TGT: 57.0 Mcal/t</div>
+    </div>
+    <div class="kpi-card warning" id="kpi-css">
+      <div class="kpi-warn-bar"></div>
+      <div class="kpi-icon">💪</div>
+      <div class="kpi-val warning" id="v-css">234</div>
+      <div class="kpi-unit">daN/p</div>
+      <div class="kpi-label">CCS (Latest)</div>
+      <div class="kpi-tgt">TGT: &gt;250 daN/p</div>
+    </div>
+    <div class="kpi-card" id="kpi-yield">
+      <div class="kpi-icon">✅</div>
+      <div class="kpi-val" id="v-yield">86.4</div>
+      <div class="kpi-unit">%</div>
+      <div class="kpi-label">On-Size Yield</div>
+      <div class="kpi-tgt">TGT: 88%</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon">🌀</div>
+      <div class="kpi-val" id="v-ti">93.8</div>
+      <div class="kpi-unit">%</div>
+      <div class="kpi-label">Tumble Index</div>
+      <div class="kpi-tgt">TGT: &gt;93%</div>
+    </div>
+    <div class="kpi-card warning">
+      <div class="kpi-warn-bar"></div>
+      <div class="kpi-icon">🔬</div>
+      <div class="kpi-val warning" id="v-blaine">1820</div>
+      <div class="kpi-unit">cm²/g</div>
+      <div class="kpi-label">Blaine (Feed)</div>
+      <div class="kpi-tgt">TGT: 1900</div>
+    </div>
+  </div>
+
+  <!-- Process Strip -->
+  <div class="process-strip">
+    <div class="card-header">Process Flow — Live Zone Status (click to expand)</div>
+    <div class="flow-line" id="flow-line">
+      <div class="flow-connector"></div>
+    </div>
+  </div>
+
+  <!-- Tag Panel (shown when zone selected) -->
+  <div id="tag-panel" style="display:none" class="tag-panel">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="font-size:14px;font-weight:800;color:var(--text)" id="tag-panel-title">Zone Tags</div>
+      <button onclick="closeTagPanel()" style="background:none;border:none;font-size:20px;color:var(--text4);line-height:1">×</button>
+    </div>
+    <div class="tag-grid" id="tag-content"></div>
+  </div>
+
+  <!-- Main Grid -->
+  <div class="main-grid">
+    <div>
+      <!-- Recommendations -->
+      <div class="card-header" style="margin-bottom:10px">🤖 AI Prescriptive Recommendations
+        <span id="high-count" style="background:var(--accent-red-lt);color:var(--accent-red);border-radius:4px;padding:2px 8px;font-size:10px;margin-left:8px">2 HIGH</span>
+      </div>
+      <div id="rec-list"></div>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="right-col">
+      <!-- Gauges -->
+      <div class="card" style="padding:14px">
+        <div class="card-header">Critical Parameters</div>
+        <div class="gauge-grid">
+          <div class="gauge-wrap">
+            <svg width="78" height="46" viewBox="0 0 78 46">
+              <path d="M 6 43 A 33 33 0 0 1 72 43" fill="none" stroke="#f1f4f9" stroke-width="7" stroke-linecap="round"/>
+              <path id="g-fuel-arc" d="M 6 43 A 33 33 0 0 1 72 43" fill="none" stroke="#dc2626" stroke-width="7" stroke-linecap="round" stroke-dasharray="0 104"/>
+              <line id="g-fuel-needle" x1="39" y1="43" x2="6" y2="43" stroke="#dc2626" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="39" cy="43" r="3" fill="#dc2626"/>
+            </svg>
+            <div class="gauge-val" id="gv-fuel" style="color:var(--accent-red)">62.4</div>
+            <div class="gauge-lbl">Mcal/t · Fuel</div>
+          </div>
+          <div class="gauge-wrap">
+            <svg width="78" height="46" viewBox="0 0 78 46">
+              <path d="M 6 43 A 33 33 0 0 1 72 43" fill="none" stroke="#f1f4f9" stroke-width="7" stroke-linecap="round"/>
+              <path id="g-css-arc" d="M 6 43 A 33 33 0 0 1 72 43" fill="none" stroke="#d97706" stroke-width="7" stroke-linecap="round" stroke-dasharray="0 104"/>
+              <line id="g-css-needle" x1="39" y1="43" x2="6" y2="43" stroke="#d97706" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="39" cy="43" r="3" fill="#d97706"/>
+            </svg>
+            <div class="gauge-val" id="gv-css" style="color:var(--accent-amber)">234</div>
+            <div class="gauge-lbl">daN/p · CCS</div>
+          </div>
+          <div class="gauge-wrap">
+            <svg width="78" height="46" viewBox="0 0 78 46">
+              <path d="M 6 43 A 33 33 0 0 1 72 43" fill="none" stroke="#f1f4f9" stroke-width="7" stroke-linecap="round"/>
+              <path id="g-yield-arc" d="M 6 43 A 33 33 0 0 1 72 43" fill="none" stroke="#16a34a" stroke-width="7" stroke-linecap="round" stroke-dasharray="0 104"/>
+              <line id="g-yield-needle" x1="39" y1="43" x2="6" y2="43" stroke="#16a34a" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="39" cy="43" r="3" fill="#16a34a"/>
+            </svg>
+            <div class="gauge-val" id="gv-yield" style="color:var(--accent-green)">86.4</div>
+            <div class="gauge-lbl">% · Yield</div>
+          </div>
+          <div class="gauge-wrap">
+            <svg width="78" height="46" viewBox="0 0 78 46">
+              <path d="M 6 43 A 33 33 0 0 1 72 43" fill="none" stroke="#f1f4f9" stroke-width="7" stroke-linecap="round"/>
+              <path id="g-moist-arc" d="M 6 43 A 33 33 0 0 1 72 43" fill="none" stroke="#0891b2" stroke-width="7" stroke-linecap="round" stroke-dasharray="0 104"/>
+              <line id="g-moist-needle" x1="39" y1="43" x2="6" y2="43" stroke="#0891b2" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="39" cy="43" r="3" fill="#0891b2"/>
+            </svg>
+            <div class="gauge-val" id="gv-moist" style="color:var(--accent-cyan)">9.1</div>
+            <div class="gauge-lbl">% · Cake Moist</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Business Impact -->
+      <div class="card" style="padding:14px">
+        <div class="card-header">Business Impact — AI vs Baseline</div>
+        <div id="impact-list"></div>
+      </div>
+
+      <!-- Quick Chat -->
+      <div class="card" style="padding:14px">
+        <div class="card-header">Quick AI Query</div>
+        <div id="mini-chat" style="max-height:100px;overflow-y:auto;margin-bottom:8px"></div>
+        <div style="display:flex;gap:6px">
+          <input id="mini-input" class="chat-input" placeholder="Ask about fuel, CCS..." style="font-size:11px;padding:6px 10px"
+            onkeydown="if(event.key==='Enter')sendMiniChat()"/>
+          <button class="chat-send" onclick="sendMiniChat()" style="padding:6px 12px;font-size:13px">→</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ PROCESS FLOW ═══════════════════ -->
+<div id="sec-process" class="section" style="display:none">
+  <div class="card-header" style="margin-bottom:16px">End-to-End Process Flow — Pellet Plant</div>
+  <div id="pf-content"></div>
+</div>
+
+<!-- ═══════════════════ HIERARCHY ═══════════════════ -->
+<div id="sec-hierarchy" class="section" style="display:none">
+  <div class="card-header" style="margin-bottom:16px">L0–L5 Plant Hierarchy with AI Deployment</div>
+  <div class="h-layout">
+    <div class="h-sidebar" id="h-sidebar"></div>
+    <div class="h-detail" id="h-detail"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════ PIPELINE ═══════════════════ -->
+<div id="sec-pipeline" class="section" style="display:none">
+  <div class="card-header" style="margin-bottom:16px">AI Use-Cases in Pipeline — Detailed Specifications</div>
+  <div class="pl-tabs" id="pl-tabs"></div>
+  <div class="pl-content" id="pl-content"></div>
+</div>
+
+<!-- ═══════════════════ CHEMISTRY ═══════════════════ -->
+<div id="sec-chemistry" class="section" style="display:none">
+  <div class="card-header" style="margin-bottom:16px">Process Physics & Chemistry — Induration Science</div>
+  <div class="chem-grid" id="chem-grid"></div>
+  <div class="card-header" style="margin-bottom:12px">Quality Parameters — Definitions & Targets</div>
+  <div class="qual-grid" id="qual-grid"></div>
+  <div class="card-header" style="margin-bottom:12px;margin-top:18px">Data Architecture — Tag Level to Enterprise</div>
+  <div class="arch-grid" id="arch-grid"></div>
+</div>
+
+<!-- ═══════════════════ AI ADVISOR ═══════════════════ -->
+<div id="sec-advisor" class="section" style="display:none">
+  <div class="card-header" style="margin-bottom:14px">AI Advisory Chat — Prescriptive Engine</div>
+  <div class="chat-layout">
+    <div class="chat-main">
+      <div class="chat-messages" id="chat-messages"></div>
+      <div class="chat-footer">
+        <div class="chat-suggestions">
+          <button class="chat-chip" onclick="askChat('Fuel status?')">Fuel status?</button>
+          <button class="chat-chip" onclick="askChat('CCS prediction?')">CCS prediction?</button>
+          <button class="chat-chip" onclick="askChat('Filter moisture fix?')">Filter moisture fix?</button>
+          <button class="chat-chip" onclick="askChat('Top 3 priorities?')">Top 3 priorities?</button>
+          <button class="chat-chip" onclick="askChat('Stacker status?')">Stacker status?</button>
+          <button class="chat-chip" onclick="askChat('Energy savings today?')">Energy savings today?</button>
+        </div>
+        <div class="chat-input-row">
+          <input id="chat-input" class="chat-input" placeholder="Ask about any process parameter, deviation, or request recommendations..."
+            onkeydown="if(event.key==='Enter')sendChat()"/>
+          <button class="chat-send" onclick="sendChat()">→</button>
+        </div>
+      </div>
+    </div>
+    <div class="right-panel">
+      <div class="health-card">
+        <div class="card-header">Plant Health Score</div>
+        <div class="health-score" id="health-score" style="color:var(--accent-blue)">86</div>
+        <div style="color:var(--text4);font-size:11px">/ 100</div>
+        <div id="health-mode" style="font-size:12px;font-weight:700;margin-top:6px;color:var(--accent-blue)">🤖 ADVISORY</div>
+      </div>
+      <div class="card" style="padding:14px">
+        <div class="card-header">Active Alerts</div>
+        <div id="alert-list"></div>
+      </div>
+      <div class="card" style="padding:14px">
+        <div class="card-header">Today's AI Impact</div>
+        <div id="today-impact"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<script>
+// ══════════════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════════════
+const ZONES = [
+  {id:'rms',  label:'Raw Material Stacking', short:'RMS',  color:'#ea580c', bcolor:'#ffedd5', x:4},
+  {id:'grind',label:'Grinding & Beneficiation',short:'GRND',color:'#d97706',bcolor:'#fef3c7', x:18},
+  {id:'filter',label:'Filtration & Slurry', short:'FILT', color:'#16a34a', bcolor:'#dcfce7', x:32},
+  {id:'mix',  label:'Mixing & Homogenization',short:'MIX', color:'#0891b2', bcolor:'#cffafe', x:46},
+  {id:'ball', label:'Balling Disc/Drum',    short:'BALL', color:'#7c3aed', bcolor:'#ede9fe', x:60},
+  {id:'induct',label:'Induration Furnace',  short:'IND',  color:'#dc2626', bcolor:'#fee2e2', x:74},
+  {id:'cool', label:'Cooling & Screening',  short:'COOL', color:'#475569', bcolor:'#f1f5f9', x:88},
+];
+
+const TAGS = {
+  rms:[
+    {tag:'SR-101-FEED-RATE',label:'Feed Rate',value:412,unit:'t/h',status:'normal',target:400},
+    {tag:'SR-101-FE-GRADE',label:'Fe Grade Feed',value:63.2,unit:'%',status:'normal',target:63.5},
+    {tag:'SR-101-MOISTURE',label:'Moisture In',value:9.8,unit:'%',status:'warning',target:9.0},
+    {tag:'CNV-101-LOAD',label:'Conveyor Load',value:387,unit:'t/h',status:'normal',target:390},
+  ],
+  grind:[
+    {tag:'BM-201-FEED',label:'Ball Mill Feed',value:380,unit:'t/h',status:'normal',target:380},
+    {tag:'BM-201-PSS',label:'Product Blaine',value:1820,unit:'cm²/g',status:'warning',target:1900},
+    {tag:'BM-201-POWER',label:'Mill Power Draw',value:4.8,unit:'MW',status:'normal',target:5.0},
+    {tag:'CYC-201-DENS',label:'Cyclone O/F Density',value:28.4,unit:'%sol',status:'normal',target:28},
+  ],
+  filter:[
+    {tag:'FLT-301-PRESS',label:'Filter Pressure',value:0.62,unit:'bar',status:'normal',target:0.65},
+    {tag:'FLT-301-MOIST',label:'Filter Cake Moisture',value:9.1,unit:'%',status:'alarm',target:8.5},
+    {tag:'SL-301-DENS',label:'Slurry Density',value:65.2,unit:'%sol',status:'normal',target:65},
+    {tag:'SL-301-PH',label:'Slurry pH',value:8.4,unit:'pH',status:'normal',target:8.5},
+  ],
+  mix:[
+    {tag:'MX-401-BENT',label:'Bentonite Dosing',value:0.72,unit:'%',status:'normal',target:0.7},
+    {tag:'MX-401-MOIST',label:'Mix Moisture',value:8.7,unit:'%',status:'warning',target:8.5},
+    {tag:'MX-401-TEMP',label:'Mix Temperature',value:28,unit:'°C',status:'normal',target:28},
+    {tag:'MX-401-SPEED',label:'Mixer Speed',value:18.5,unit:'RPM',status:'normal',target:18},
+  ],
+  ball:[
+    {tag:'DC-501-SPEED',label:'Disc Speed',value:6.8,unit:'RPM',status:'normal',target:7.0},
+    {tag:'DC-501-ANGLE',label:'Disc Angle',value:48,unit:'°',status:'normal',target:48},
+    {tag:'DC-501-GB-SIZE',label:'Green Ball Size D50',value:11.4,unit:'mm',status:'warning',target:12.0},
+    {tag:'DC-501-PROD',label:'GB Production',value:362,unit:'t/h',status:'normal',target:370},
+  ],
+  induct:[
+    {tag:'IF-601-DRYING-T',label:'Drying Zone Temp',value:320,unit:'°C',status:'normal',target:320},
+    {tag:'IF-601-PRH-T',label:'Preheat Zone Temp',value:980,unit:'°C',status:'normal',target:980},
+    {tag:'IF-601-FIRE-T',label:'Firing Zone Temp',value:1310,unit:'°C',status:'warning',target:1300},
+    {tag:'IF-601-FUEL',label:'Specific Fuel',value:62.4,unit:'Mcal/t',status:'alarm',target:57.0},
+    {tag:'IF-601-BH',label:'Bed Height',value:410,unit:'mm',status:'normal',target:420},
+    {tag:'IF-601-SPEED',label:'Grate Speed',value:1.82,unit:'m/min',status:'normal',target:1.85},
+  ],
+  cool:[
+    {tag:'CL-701-T1',label:'Cooler Inlet Temp',value:1180,unit:'°C',status:'normal',target:'<1200'},
+    {tag:'CL-701-T2',label:'Cooler Outlet Temp',value:128,unit:'°C',status:'normal',target:'<150'},
+    {tag:'SCR-701-YIELD',label:'On-size Yield',value:86.4,unit:'%',status:'warning',target:88},
+    {tag:'LAB-CCS',label:'CCS (Lab)',value:234,unit:'daN/p',status:'warning',target:250},
+    {tag:'LAB-TI',label:'Tumble Index',value:93.8,unit:'%',status:'normal',target:'>93'},
+    {tag:'LAB-AI',label:'Abrasion Index',value:4.8,unit:'%',status:'normal',target:'<5'},
+  ]
+};
+
+const RECS = [
+  {id:1,priority:'HIGH',zone:'induct',zoneLabel:'Induration Furnace',icon:'🔥',color:'#dc2626',bgColor:'#fee2e2',bdColor:'#fca5a5',
+   title:'Firing Zone Temp 10°C Above Setpoint',
+   detail:'Firing zone temp at 1310°C vs SP 1300°C. Reduce fuel gas flow to burner banks B7–B12 by 3.2%. Expected fuel saving: 1.8 Mcal/t. CCS impact: neutral (currently over-fired).',
+   action:'Reduce burner B7–B12 gas flow by 3.2% → SP: 1258 Nm³/h',
+   impact:'−1.8 Mcal/t fuel',confidence:91,timeframe:'15 min'},
+  {id:2,priority:'HIGH',zone:'filter',zoneLabel:'Filtration',icon:'💧',color:'#1d4ed8',bgColor:'#dbeafe',bdColor:'#93c5fd',
+   title:'Filter Cake Moisture Deviation',
+   detail:'Filter cake moisture at 9.1% vs target 8.5%. Increase vacuum pressure on disc filters 1 & 2 by 0.08 bar. Check flocculant dosing (currently at 42 g/t, recommend 45 g/t).',
+   action:'Increase vacuum pressure to 0.70 bar + Flocculant dosing → 45 g/t',
+   impact:'Moisture −0.5%',confidence:87,timeframe:'20 min'},
+  {id:3,priority:'MEDIUM',zone:'ball',zoneLabel:'Balling Disc',icon:'⭕',color:'#7c3aed',bgColor:'#ede9fe',bdColor:'#c4b5fd',
+   title:'Green Ball Size Trending Below Target',
+   detail:'D50 green ball size at 11.4 mm vs target 12.0 mm. Increase disc speed from 6.8 to 7.1 RPM and raise water addition by 0.15% in pelletizer. Monitor for 10 min.',
+   action:'Disc speed → 7.1 RPM | Water addition +0.15%',
+   impact:'+0.6mm D50',confidence:83,timeframe:'10 min'},
+  {id:4,priority:'MEDIUM',zone:'cool',zoneLabel:'Quality Prediction',icon:'⚠️',color:'#d97706',bgColor:'#fef3c7',bdColor:'#fcd34d',
+   title:'CCS Prediction 45-min Ahead: 228 daN/p',
+   detail:'AI model predicts CCS will drop to 228 daN/p (below 250 target) in ~45 min based on current green ball moisture (9.1%), disc size deviation, and firing temp profile.',
+   action:'Implement recommendations #1 + #2 + #3 simultaneously',
+   impact:'CCS risk ↓ 228',confidence:78,timeframe:'45 min ahead'},
+  {id:5,priority:'LOW',zone:'rms',zoneLabel:'Raw Material',icon:'🏗️',color:'#ea580c',bgColor:'#ffedd5',bdColor:'#fdba74',
+   title:'Fe Grade Trending Below Target',
+   detail:'Feed Fe grade at 63.2% vs 63.5% target. Recommend switching to Blend-B reclaim sequence on SR-2 to compensate.',
+   action:'Switch SR-2 to Blend-B sequence | +8% HG ore blend',
+   impact:'Fe grade +0.3%',confidence:74,timeframe:'30 min'},
+];
+
+const HIERARCHY = [
+  {level:'L0',name:'Enterprise / Value Chain',scope:'Plant-wide',color:'#6366f1',bgc:'#eef2ff',
+   ai:'Enterprise AI / Digital Twin',model:'Linear Programming + DNN for production planning',
+   usecases:['Long-term production scheduling','Energy cost optimization across grid tariff slots','Quality-grade mix optimization for market demand','Maintenance planning & OEE prediction'],
+   data:['ERP production orders','Market demand signals','Energy cost curves','Historical quality performance','CAPEX/OPEX models'],
+   kpis:['Overall plant OEE > 85%','Cost/t pellet < ₹2,200','Annual fuel budget compliance','Dispatch compliance > 98%']},
+  {level:'L1',name:'Plant / Production Unit',scope:'Area-level',color:'#7c3aed',bgc:'#f5f3ff',
+   ai:'Area-level Process Supervisory AI',model:'Multi-variable constraint optimization (MILP + APC)',
+   usecases:['Throughput balancing across areas','Energy allocation per process section','Quality cascade prediction from raw to final','Shift-level advisory for supervisors'],
+   data:['Area-level production rates','Inter-area buffer levels','Section energy meters','Area-wise quality samples'],
+   kpis:['Grinding throughput > 380 t/h','Balling efficiency > 92%','Induration availability > 92%']},
+  {level:'L2',name:'Process Section',scope:'Section-level',color:'#0891b2',bgc:'#ecfeff',
+   ai:'Section-level Soft Sensors + Prediction Models',model:'XGBoost, Random Forest, LSTM per section',
+   usecases:['Ball mill circuit Blaine prediction','Disc pelletizer size distribution prediction','Furnace zone-wise temperature profile optimization','Cooling fan distribution optimization'],
+   data:['Section-level flows, temperatures, densities','Lab sample data (2-hr frequency)','Utility consumption per section','Equipment vibration & bearing temperatures'],
+   kpis:['Blaine ±50 cm²/g','GB D50 ±0.5 mm','Zone temp ±15°C']},
+  {level:'L3',name:'Equipment Unit',scope:'Equipment-level',color:'#16a34a',bgc:'#f0fdf4',
+   ai:'Equipment-level Anomaly Detection + Advisory',model:'Isolation Forest + LSTM autoencoder; MPC for control',
+   usecases:['Ball mill overload detection','Disc pelletizer scraper wear detection','Furnace burner fouling detection','Conveyor belt slip detection'],
+   data:['Equipment operating parameters (speed, power, temp)','Vibration spectra (1-sec)','Lubrication system data','Motor current signatures'],
+   kpis:['Unplanned downtime < 2%','MTBF > 2000 hrs','Spare parts vs plan']},
+  {level:'L4',name:'Control Loop / Module',scope:'Loop-level',color:'#d97706',bgc:'#fffbeb',
+   ai:'Advanced Process Control (APC) + Setpoint Advisor',model:'Model Predictive Control (MPC), PID tuner, RL',
+   usecases:['Moisture control loop optimization','Bed height cascade control','Temperature profile control across furnace zones','Disc water addition feedback loop'],
+   data:['PID loop performance metrics (IAE, settling time)','Control valve positions','Loop SP vs PV deviations','Controller mode (auto/manual)'],
+   kpis:['Loop availability in auto > 95%','SP achievement > 90%','Control valve wear monitoring']},
+  {level:'L5',name:'Field Instrument / Tag',scope:'Tag-level',color:'#ea580c',bgc:'#fff7ed',
+   ai:'Sensor Validation + Data Quality AI',model:'Statistical process control, sensor cross-validation, drift detection',
+   usecases:['Thermocouple drift detection (IF-601-TE-12 series)','Flow transmitter fouling detection','Pressure sensor cross-validation','Missing/stuck data imputation'],
+   data:['Raw sensor readings (1–10 sec scan)','Instrument calibration records','Maintenance logs','Process historian (OSIsoft PI / IP21)'],
+   kpis:['Data quality index > 99%','Sensor calibration compliance','False alarm rate < 0.5%']},
+];
+
+const PIPELINE_UCS = [
+  {id:'stacker',icon:'🏗️',title:'Stacker Reclaimer Optimization',zone:'rms',kpi:'Fe var ↓18%',kpiColor:'#ea580c',
+   problem:'Optimizes stacking/reclaiming sequence to maintain consistent ore blend quality and minimize Fe grade variability.',
+   arch:'Reinforcement Learning (PPO) + ARIMA Time-Series',
+   train:'Historical SR operational logs (2 years), lab assay data, conveyor load data. Reward function: minimize Fe grade variance over 4-hr window.',
+   eval:'Fe grade σ reduction, blend prediction RMSE < 0.15%, conveyor utilization efficiency',
+   features:['Bed layer composition','SR position encoder','Conveyor speed/load','Historical assay by pile section','Weather (moisture impact)','Lab Fe grade (lagged 1–4 hr)'],
+   outputs:['Recommended reclaim sequence (SR-1/SR-2 priority)','Predicted blend Fe grade (next 2 hr)','Estimated moisture in blend','Energy/t reclaim'],
+   phases:['Phase 1: Data collection & EDA (4 wks)','Phase 2: Simulation environment build (6 wks)','Phase 3: RL training & validation (8 wks)','Phase 4: Shadow mode deployment (4 wks)','Phase 5: Live advisory with operator override'],
+   impact:['Fe grade variability ↓ 18%','Blend correction manpower ↓ 40%','Conveyor energy ↓ 6%','Annual benefit: ~₹4.2 Cr']},
+  {id:'slurry',icon:'💧',title:'Slurry Quality & Filtration',zone:'filter',kpi:'Moisture ↓0.3%',kpiColor:'#16a34a',
+   problem:'Predicts filtrate quality and prescribes vacuum/pressure adjustments to achieve target filter cake moisture consistently.',
+   arch:'XGBoost (offline batch) + LSTM (real-time 15-min prediction)',
+   train:'3 years of filtration data from OSIsoft PI historian. Features engineered: filter cycle time, cake growth rate, vacuum efficiency index.',
+   eval:'Moisture MAE < 0.15%, F1 on >9% moisture alarm events > 0.88, Walk-forward cross-validation',
+   features:['Slurry feed density','Feed flow rate','Slurry pH','Flocculant dosage (current & lagged)','Vacuum pressure','Filter cloth age (cycles)','Feed Blaine','Ambient temperature'],
+   outputs:['Predicted filter cake moisture (15 min ahead)','Recommended vacuum pressure SP','Flocculant dosing recommendation','Filter cloth replacement alert'],
+   phases:['Phase 1: Data audit & missing value imputation (2 wks)','Phase 2: XGBoost static model (3 wks)','Phase 3: LSTM real-time integration (5 wks)','Phase 4: APC integration for vacuum auto-adjust (4 wks)'],
+   impact:['Filter cake moisture deviation ↓ 0.3%','Green ball moisture consistency +15%','CCS improvement +6 daN/p (indirect)','Annual benefit: ~₹2.8 Cr']},
+  {id:'fuel',icon:'🔥',title:'Fuel & Process Optimization – Induration',zone:'induct',kpi:'Fuel saving 8–12%',kpiColor:'#dc2626',
+   problem:'Optimizes fuel distribution across drying, preheating, firing, and after-firing zones to minimize fuel consumption while meeting CCS targets.',
+   arch:'Physics-Informed Neural Network (PINN) + Model Predictive Control (MPC)',
+   train:'PINN trained on combustion physics equations + 4-yr operational data. MPC uses real-time state estimation. Uncertainty quantification via Monte Carlo Dropout.',
+   eval:'Specific fuel consumption RMSE < 0.8 Mcal/t, CCS prediction within ±5 daN/p, fuel saving > 5% in shadow mode',
+   features:['Zone-wise gas flow rates (B1–B24 burner banks)','Bed height at multiple points','Grate speed','Green ball moisture (incoming)','Calorific value of gas (GCV analyzer)','Windbox pressures','Exhaust gas O₂ % per zone','Ambient air temp/humidity'],
+   outputs:['Optimal fuel flow per burner bank (SP recommendation)','Predicted specific fuel (Mcal/t, next 30 min)','Zone-wise temperature profile forecast','CCS prediction based on firing profile','Air-fuel ratio optimization per zone'],
+   phases:['Phase 1: Thermodynamic model validation (6 wks)','Phase 2: PINN training with plant data (8 wks)','Phase 3: MPC integration & tuning (6 wks)','Phase 4: Shadow mode with KPI tracking (6 wks)','Phase 5: Live with operator confirmation loop'],
+   impact:['Specific fuel ↓ 8–12% (5–7 Mcal/t)','CO₂ emissions ↓ 7.5%','CCS consistency ↑ (less over/under firing)','Annual fuel savings: ₹18–25 Cr at 3 MTPA']},
+  {id:'quality',icon:'⭕',title:'Pellet Quality Enhancement',zone:'cool',kpi:'+4 kg/pellet CCS',kpiColor:'#7c3aed',
+   problem:'Predicts final pellet quality (CCS, TI, AI, size) 45 min ahead of lab results and prescribes corrective actions across multiple process stages.',
+   arch:'Ensemble: Random Forest (feature importance) + XGBoost (tabular) + LSTM (sequential) — stacked with meta-learner',
+   train:'Combine lab CCS data with process historian. Label: lab CCS taken 45–90 min after production. SHAP for explainability. Walk-forward validation.',
+   eval:'CCS MAE < 8 daN/p, Class precision (Pass/Fail >250 daN/p) > 92%, SHAP alignment with domain knowledge',
+   features:['Green ball D50, moisture, drop number','Filter cake moisture (T-90min)','Disc speed, angle at production time','Firing zone peak temp','Bed height','After-firing zone O₂%','Bentonite dosing','Feed Blaine','Chemical: Fe, SiO₂, Al₂O₃, MgO'],
+   outputs:['Predicted CCS (daN/p) — 45 min ahead','Predicted Tumble Index (%)','Predicted Abrasion Index (%)','Quality class: Pass / Monitor / Fail','Root cause ranking (SHAP top-3 drivers)','Prescriptive action per driver'],
+   phases:['Phase 1: Feature engineering & lab data alignment (4 wks)','Phase 2: Individual model training (6 wks)','Phase 3: Ensemble stacking (3 wks)','Phase 4: SHAP explainability integration (2 wks)','Phase 5: Operator dashboard integration'],
+   impact:['CCS improvement +15–20 daN/p','Quality rejection rate ↓ 60%','Lab manpower optimization ↓ 30%','Annual benefit: ~₹8.4 Cr']},
+];
+
+const CHEM = [
+  {stage:'Green Ball Formation',formula:'Fe₂O₃ + H₂O + Bentonite → Capillary bonding',key:'Moisture 8.0–9.5%, Blaine 1800–2000 cm²/g critical for nucleation'},
+  {stage:'Drying (200–400°C)',formula:'Fe₂O₃·H₂O → Fe₂O₃ + H₂O↑',key:'Avoid thermal shock; ramp rate <50°C/min prevents pellet cracking'},
+  {stage:'Preheating (800–1100°C)',formula:'3Fe₂O₃ → 2Fe₃O₄ + ½O₂ | FeO + ½O₂ → Fe₂O₃',key:'Oxidation front must reach pellet core before firing zone'},
+  {stage:'Firing (1200–1350°C)',formula:'Fe₂O₃ → solid-state sintering → ceramic bonds',key:'Hematite recrystallization. CCS driven by bond density. Target >250 daN/p'},
+  {stage:'After-Firing (900–1100°C)',formula:'Fe₃O₄ + O₂ → Fe₂O₃ (re-oxidation)',key:'Ensures complete oxidation. Incomplete re-oxidation → low CCS, swelling in BF'},
+  {stage:'Cooling (<150°C out)',formula:'Sensible heat recovery to preheat combustion air',key:'Rapid cooling = higher throughput. Residual heat to uptake fans.'},
+];
+
+const QUAL = [
+  {param:'CCS',full:'Cold Crushing Strength',method:'ISO 4700',target:'> 250 daN/p',formula:'Force at fracture / pellet cross-section',
+   drivers:['Firing temp','Time at temp','Fe grade','Blaine'],color:'#dc2626',bgc:'#fee2e2',tgtc:'#dc2626'},
+  {param:'TI',full:'Tumble Index',method:'ISO 3271',target:'> 93 %',formula:'+6.3mm fraction after 200 revolutions',
+   drivers:['CCS','Pellet size uniformity','Porosity','Re-oxidation completeness'],color:'#16a34a',bgc:'#dcfce7',tgtc:'#16a34a'},
+  {param:'AI',full:'Abrasion Index',method:'ISO 3271',target:'< 5 %',formula:'−0.5mm fraction after tumble test',
+   drivers:['Surface quality','Moisture at discharge','Cooling rate','GB moisture'],color:'#d97706',bgc:'#fef3c7',tgtc:'#d97706'},
+  {param:'Size',full:'Size Distribution D50',method:'ISO 4696',target:'10–16 mm',formula:'Sieve analysis cumulative curve',
+   drivers:['Disc speed','Disc angle','Water addition','Binder dosing'],color:'#7c3aed',bgc:'#ede9fe',tgtc:'#7c3aed'},
+];
+
+const ARCH = [
+  {sys:'OSIsoft PI / AspenTech IP21',type:'Process Historian · 1–10 sec',tags:'8,000+ tags',desc:'All PLC/DCS outputs, calculated tags, quality data. Primary AI training data source.'},
+  {sys:'Siemens PCS7 / ABB DCS',type:'Distributed Control System · 1 sec',tags:'4,200 loops',desc:'Real-time control execution. APC setpoints pushed back here.'},
+  {sys:'SCADA (WonderWare/Ignition)',type:'Supervisory Control · 2–5 sec',tags:'12,000 points',desc:'Operator visualization, alarm management, setpoint interface.'},
+  {sys:'LIMS (LabVantage)',type:'Laboratory System · 2–4 hr',tags:'80+ parameters',desc:'CCS, TI, AI, chemical analysis, size distribution — primary quality labels.'},
+  {sys:'SAP PM / EAM',type:'Maintenance System · Event-based',tags:'Maintenance orders',desc:'Equipment history, failure modes, spare parts — used for predictive maintenance.'},
+  {sys:'AI/ML Platform (Edge+Cloud)',type:'Analytics Layer · Real-time',tags:'Model outputs',desc:'Prediction results, recommendations, confidence scores pushed to SCADA/dashboard.'},
+];
+
+// ══════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════
+let mode = 'advisory';
+let expandedRec = null;
+let acceptedRecs = [];
+let dismissedRecs = [];
+let selectedZone = null;
+let activeHLevel = 'L3';
+let activePipeline = 'stacker';
+let chatHistory = [{from:'ai',text:'Welcome to IRON-AI Advisory System — AMNS Vizag Pellet Plant. I have detected 2 HIGH priority deviations. Firing zone fuel is 9.5% above optimal, and filter cake moisture is 0.6% above target. Shall I generate a corrective action plan?'}];
+let tick = 0;
+
+// ══════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════
+window.onload = () => {
+  buildProcessStrip();
+  buildRecommendations();
+  buildImpact();
+  buildProcessFlow();
+  buildHierarchy();
+  buildPipeline();
+  buildChemistry();
+  buildAdvisorPanel();
+  buildMiniChat();
+  setMode('advisory');
+  setInterval(tick3s, 3000);
+  setInterval(updateTime,1000);
+  updateGauges(62.4, 234, 86.4, 9.1);
+};
+
+function updateTime(){
+  document.getElementById('live-time').textContent = 'LIVE · '+new Date().toLocaleTimeString();
+}
+
+function tick3s(){
+  tick++;
+  const noise = (v,r)=> +(v + (Math.sin(tick*0.7+v)*r)).toFixed(v>100?1:2);
+  const fuelBase = mode==='optimal'?58.2:mode==='reset'?65.0:62.4;
+  const cssBase  = mode==='optimal'?258 :mode==='reset'?222 :234;
+  const yldBase  = mode==='optimal'?89.5:mode==='reset'?84.0:86.4;
+  const fv = noise(fuelBase,0.015*fuelBase);
+  const cv = noise(cssBase,0.01*cssBase);
+  const yv = noise(yldBase,0.005*yldBase);
+  const mv = noise(9.1,0.015*9.1);
+  document.getElementById('v-fuel').textContent = fv.toFixed(1);
+  document.getElementById('v-css').textContent  = Math.round(cv);
+  document.getElementById('v-yield').textContent= yv.toFixed(1);
+  document.getElementById('gv-fuel').textContent = fv.toFixed(1);
+  document.getElementById('gv-css').textContent  = Math.round(cv);
+  document.getElementById('gv-yield').textContent= yv.toFixed(1);
+  document.getElementById('gv-moist').textContent= mv.toFixed(1);
+  updateGauges(fv,cv,yv,mv);
+}
+
+function updateGauges(fv,cv,yv,mv){
+  const ARC = 104;
+  function setGauge(arcId,needleId,pct){
+    const el = document.getElementById(arcId);
+    const nl = document.getElementById(needleId);
+    if(!el||!nl) return;
+    const dash = (pct/100)*ARC;
+    el.setAttribute('stroke-dasharray', dash+' '+ARC);
+    const angle = (pct/100)*180 - 180;
+    const rad = angle*Math.PI/180;
+    const x2 = 39 + 30*Math.cos(rad), y2 = 43 + 30*Math.sin(rad);
+    nl.setAttribute('x2',x2.toFixed(1)); nl.setAttribute('y2',y2.toFixed(1));
+  }
+  setGauge('g-fuel-arc','g-fuel-needle', ((fv-50)/(75-50))*100);
+  setGauge('g-css-arc','g-css-needle',   ((cv-180)/(300-180))*100);
+  setGauge('g-yield-arc','g-yield-needle',((yv-75)/(95-75))*100);
+  setGauge('g-moist-arc','g-moist-needle',((mv-7)/(12-7))*100);
+}
+
+// ══════════════════════════════════════════════════════
+// MODE
+// ══════════════════════════════════════════════════════
+function setMode(m){
+  mode = m;
+  document.querySelectorAll('.mode-btn').forEach(b=>b.className='mode-btn');
+  const btn = document.getElementById('btn-'+m);
+  if(btn) btn.classList.add('active-'+m);
+  const descs = {
+    optimal:'⚡ AI autonomously applies all recommendations · Plant running at peak efficiency',
+    advisory:'🤖 AI generates recommendations · Operators review and approve actions',
+    reset:'🔄 AI paused · All controls returned to manual baselines'
+  };
+  document.getElementById('mode-desc').textContent = descs[m];
+  buildImpact();
+  const hs = {optimal:'92',advisory:'86',reset:'79'};
+  const hc = {optimal:'var(--accent-green)',advisory:'var(--accent-blue)',reset:'var(--accent-orange)'};
+  const hm = {optimal:'⚡ OPTIMAL',advisory:'🤖 ADVISORY',reset:'🔄 MANUAL'};
+  const hsEl = document.getElementById('health-score');
+  const hmEl = document.getElementById('health-mode');
+  if(hsEl){ hsEl.textContent=hs[m]; hsEl.style.color=hc[m]; }
+  if(hmEl){ hmEl.textContent=hm[m]; hmEl.style.color=hc[m]; }
+  buildRecommendations();
+  buildTodayImpact();
+}
+function openModal(){ document.getElementById('reset-modal').classList.add('show'); }
+function closeModal(){ document.getElementById('reset-modal').classList.remove('show'); }
+function confirmReset(){ acceptedRecs=[]; setMode('reset'); closeModal(); }
+
+// ══════════════════════════════════════════════════════
+// SECTIONS
+// ══════════════════════════════════════════════════════
+function showSection(id,btn){
+  document.querySelectorAll('#content > div').forEach(d=>d.style.display='none');
+  document.getElementById('sec-'+id).style.display='block';
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(id==='advisor') buildChatMessages();
+}
+
+// ══════════════════════════════════════════════════════
+// PROCESS STRIP
+// ══════════════════════════════════════════════════════
+function buildProcessStrip(){
+  const fl = document.getElementById('flow-line');
+  ZONES.forEach(z=>{
+    const zTags = TAGS[z.id]||[];
+    const hasAlarm = zTags.some(t=>t.status==='alarm');
+    const hasWarn  = zTags.some(t=>t.status==='warning');
+    const statColor = hasAlarm?'#dc2626':hasWarn?'#d97706':'#16a34a';
+    const nd = document.createElement('div');
+    nd.className='zone-node';
+    nd.style.left=z.x+'%';
+    nd.onclick=()=>toggleZone(z.id);
+    nd.id='zone-node-'+z.id;
+    nd.innerHTML=`
+      <div class="zone-bubble" id="zone-bubble-${z.id}" style="background:${z.bcolor};border-color:${statColor}">
+        <span class="zone-short" style="color:${z.color}">${z.short}</span>
+        <div class="zone-dot${hasAlarm?' alarm':''}" style="background:${statColor}"></div>
+      </div>
+      <div class="zone-label-below">${z.label.split(' ')[0]}</div>`;
+    fl.appendChild(nd);
+  });
+}
+
+function toggleZone(zid){
+  if(selectedZone===zid){ selectedZone=null; document.getElementById('tag-panel').style.display='none';
+    document.querySelectorAll('.zone-bubble').forEach(b=>b.classList.remove('selected')); return; }
+  selectedZone=zid;
+  document.querySelectorAll('.zone-bubble').forEach(b=>b.classList.remove('selected'));
+  document.getElementById('zone-bubble-'+zid)?.classList.add('selected');
+  const zone = ZONES.find(z=>z.id===zid);
+  document.getElementById('tag-panel-title').textContent = zone.label+' — Tag Detail';
+  document.getElementById('tag-panel').style.display='block';
+  const tc = document.getElementById('tag-content');
+  tc.innerHTML='';
+  (TAGS[zid]||[]).forEach(tag=>{
+    const el=document.createElement('div');
+    el.className='tag-card '+tag.status;
+    el.innerHTML=`<div class="tag-id">${tag.tag}</div>
+      <div class="tag-row"><span class="tag-val">${tag.value}<span class="tag-unit">${tag.unit}</span></span><span class="badge ${tag.status}">${tag.status.toUpperCase()}</span></div>
+      <div class="tag-name">${tag.label} · TGT: ${tag.target} ${tag.unit}</div>`;
+    tc.appendChild(el);
+  });
+}
+
+function closeTagPanel(){
+  selectedZone=null;
+  document.getElementById('tag-panel').style.display='none';
+  document.querySelectorAll('.zone-bubble').forEach(b=>b.classList.remove('selected'));
+}
+
+// ══════════════════════════════════════════════════════
+// RECOMMENDATIONS
+// ══════════════════════════════════════════════════════
+function buildRecommendations(){
+  const el = document.getElementById('rec-list');
+  if(!el) return;
+  el.innerHTML='';
+  const visible = RECS.filter(r=>!dismissedRecs.includes(r.id));
+  visible.forEach(rec=>{
+    const div=document.createElement('div');
+    div.className='rec-card'; div.id='rec-card-'+rec.id;
+    const isOpen = expandedRec===rec.id;
+    div.innerHTML=`
+      <div class="rec-header" onclick="toggleRec(${rec.id})">
+        <span class="rec-icon">${rec.icon}</span>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:3px">
+            <span class="rec-priority priority-${rec.priority}">${rec.priority}</span>
+            <span class="rec-zone">${rec.zoneLabel}</span>
+            <span class="rec-time">· ${rec.timeframe}</span>
+          </div>
+          <div class="rec-title">${rec.title}</div>
+        </div>
+        <div style="text-align:right;margin-right:10px">
+          <div class="rec-impact">${rec.impact}</div>
+          <div class="rec-conf">Conf: ${rec.confidence}%</div>
+        </div>
+        <div class="rec-chevron">${isOpen?'▲':'▼'}</div>
+      </div>
+      <div class="rec-body${isOpen?' open':''}">
+        <div class="rec-detail">${rec.detail}</div>
+        <div class="rec-action-box" style="background:${rec.bgColor};border:1px solid ${rec.bdColor}">
+          <div class="rec-action-label">RECOMMENDED ACTION:</div>
+          <div class="rec-action-text" style="color:${rec.color}">${rec.action}</div>
+        </div>
+        <div style="font-size:10px;color:var(--text4);margin-bottom:4px">AI Confidence: ${rec.confidence}%</div>
+        <div class="conf-bar-track"><div class="conf-bar-fill" style="width:${rec.confidence}%"></div></div>
+        ${getRecButtons(rec)}
+      </div>`;
+    el.appendChild(div);
+  });
+  const highCnt = visible.filter(r=>r.priority==='HIGH').length;
+  document.getElementById('high-count').textContent=highCnt+' HIGH';
+}
+
+function getRecButtons(rec){
+  if(acceptedRecs.includes(rec.id)) return `<div class="accepted-msg">✓ Action Accepted &amp; Applied</div>`;
+  if(mode==='advisory') return `<div class="action-btns"><button class="btn-accept" onclick="acceptRec(${rec.id},event)">✓ ACCEPT &amp; APPLY</button><button class="btn-dismiss" onclick="dismissRec(${rec.id},event)">✗</button></div>`;
+  if(mode==='optimal') return `<div class="auto-msg">⚡ Auto-applied in Optimal Mode</div>`;
+  return `<div class="paused-msg">🔄 AI paused — Manual Mode active</div>`;
+}
+
+function toggleRec(id){
+  expandedRec = expandedRec===id ? null : id;
+  buildRecommendations();
+}
+function acceptRec(id,e){ e.stopPropagation(); acceptedRecs.push(id); expandedRec=null; buildRecommendations(); }
+function dismissRec(id,e){ e.stopPropagation(); dismissedRecs.push(id); expandedRec=null; buildRecommendations(); }
+
+// ══════════════════════════════════════════════════════
+// BUSINESS IMPACT
+// ══════════════════════════════════════════════════════
+function buildImpact(){
+  const el=document.getElementById('impact-list');
+  if(!el) return;
+  const data = {
+    optimal:[
+      {label:'Fuel Saving (Active)',val:'−8.1 Mcal/t',sub:'~₹34,000/hr',c:'var(--accent-green)'},
+      {label:'CCS Improvement',val:'+24 daN/p',sub:'vs baseline 230',c:'var(--accent-purple)'},
+      {label:'Yield Gain',val:'+3.1%',sub:'~9 t/hr additional',c:'var(--accent-blue)'},
+      {label:'Annual Fuel Saving',val:'₹29.8 Cr/yr',sub:'3 MTPA basis',c:'var(--accent-amber)'},
+    ],
+    advisory:[
+      {label:'Fuel Saving (Active)',val:'−1.8 Mcal/t',sub:'~₹7,600/hr',c:'var(--accent-green)'},
+      {label:'CCS Improvement',val:'+16 daN/p',sub:'vs baseline 230',c:'var(--accent-purple)'},
+      {label:'Yield Gain',val:'+2.0%',sub:'~7 t/hr additional',c:'var(--accent-blue)'},
+      {label:'Annual Fuel Saving',val:'₹6.7 Cr/yr',sub:'3 MTPA basis',c:'var(--accent-amber)'},
+    ],
+    reset:[
+      {label:'Fuel Saving',val:'Baseline',sub:'Manual control active',c:'var(--text4)'},
+      {label:'CCS',val:'Baseline',sub:'No AI intervention',c:'var(--text4)'},
+      {label:'Yield',val:'Baseline',sub:'No optimization',c:'var(--text4)'},
+      {label:'Missed saving/day',val:'~₹8.2L/day',sub:'Opportunity cost',c:'var(--accent-red)'},
+    ]
+  };
+  el.innerHTML='';
+  (data[mode]||[]).forEach(d=>{
+    const r=document.createElement('div'); r.className='impact-row';
+    r.innerHTML=`<div><div class="impact-label">${d.label}</div><div style="font-size:10px;color:var(--text4)">${d.sub}</div></div><div class="impact-val" style="color:${d.c}">${d.val}</div>`;
+    el.appendChild(r);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// PROCESS FLOW PAGE
+// ══════════════════════════════════════════════════════
+const PF_STAGES = [
+  {id:'rms',color:'#ea580c',title:'1. Raw Material Handling & Stacking',
+   inputs:['Iron ore fines (Fe: 63–65%, SiO₂ < 3%)','Bentonite (binder, 0.6–0.8%)','Limestone / Dolomite (flux)'],
+   controls:['Reclaimer sequence','Blend ratio SR-1:SR-2','Conveyor speed','Moisture control'],
+   outputs:['Homogeneous ore blend','Consistent Fe grade ±0.15%','Moisture < 10%'],
+   kpis:['Feed rate: 380–420 t/h','Fe variability < ±0.2%','Stacker util. > 85%'],
+   ai:'SR Optimization (Pipeline) — RL model optimizes reclaim sequence for blend quality'},
+  {id:'grind',color:'#d97706',title:'2. Grinding & Beneficiation',
+   inputs:['Raw ore blend from stockpile','Process water','Grinding media (balls)'],
+   controls:['Mill feed rate','Mill speed','Water addition','Classifier cut-size'],
+   outputs:['Slurry at target Blaine (1800–2000 cm²/g)','D80 < 45 μm','Density 65–68%'],
+   kpis:['Blaine: 1850–2000 cm²/g','Specific energy < 14 kWh/t','Cyclone efficiency > 85%'],
+   ai:'Mill load optimization — XGBoost predicts optimal feed rate vs Blaine'},
+  {id:'filter',color:'#16a34a',title:'3. Filtration & Slurry Preparation',
+   inputs:['Ground slurry from ball mill','Flocculant','Process water'],
+   controls:['Vacuum pressure','Flocculant dosing','Filter speed','Cake thickness'],
+   outputs:['Filter cake moisture 8.0–9.0%','Uniform cake density','Clear filtrate'],
+   kpis:['Cake moisture: 8.5±0.3%','Filtration rate > 1.2 t/m²/h','Filtrate SS < 200 ppm'],
+   ai:'Slurry & Filtration Optimization (Pipeline) — LSTM predicts moisture 15 min ahead'},
+  {id:'mix',color:'#0891b2',title:'4. Mixing & Homogenization',
+   inputs:['Filter cake','Bentonite (0.6–0.8%)','Limestone/Olivine','Return fines'],
+   controls:['Bentonite dosing rate','Mixer speed/RPM','Water addition','Residence time'],
+   outputs:['Homogeneous mix at 8.0–9.0% moisture','Uniform binder distribution','Drop number > 5'],
+   kpis:['Bentonite dosing ±0.05%','Mixer power < 0.8 kWh/t','Drop number > 5'],
+   ai:'Binder optimization — RF model predicts pellet green strength from mix properties'},
+  {id:'ball',color:'#7c3aed',title:'5. Balling — Disc Pelletizers',
+   inputs:['Homogenized mix','Spray water','Return fines (undersize)'],
+   controls:['Disc speed (6.5–8.5 RPM)','Disc angle (45–52°)','Water spray rate','Scraper position'],
+   outputs:['Green balls 9–16 mm','Green ball strength (drop test > 5)','Uniform size distribution'],
+   kpis:['D50: 11–13 mm','GB moisture: 8.5–9.5%','Disc productivity > 40 t/disc/h'],
+   ai:'Disc optimization — PID + ML advisory for speed/angle/water to maintain D50 target'},
+  {id:'induct',color:'#dc2626',title:'6. Induration — Straight Grate Furnace',
+   inputs:['Green balls from discs','Natural gas / COREX gas','Combustion air','Recirculated hot gas'],
+   controls:['Zone-wise gas flow','Bed height (380–450 mm)','Grate speed (1.6–2.0 m/min)','Windbox pressure'],
+   outputs:['Indurated pellets CCS > 250 daN/p','TI > 93%, AI < 5%','Specific fuel < 57 Mcal/t'],
+   kpis:['CCS > 250 daN/p','Specific fuel < 57 Mcal/t','Bed temp uniformity ±15°C'],
+   ai:'Fuel & Process Optimization (Pipeline) — Physics-informed NN + MPC. Saves 8–12% fuel',
+   furnaceZones:[
+     {name:'Drying (UDD/DDD)',temp:'200–400°C',desc:'Remove free moisture, prevent cracking'},
+     {name:'Preheat I & II',temp:'800–1100°C',desc:'Oxidation of magnetite; thermal hardening'},
+     {name:'Firing',temp:'1260–1340°C',desc:'Sintering — ceramic bond formation, CCS development'},
+     {name:'After-Firing',temp:'900–1100°C',desc:'Complete re-oxidation Fe₃O₄ → Fe₂O₃'},
+   ]},
+  {id:'cool',color:'#475569',title:'7. Cooling, Screening & Dispatch',
+   inputs:['Hot indurated pellets ~1100°C','Cooling air'],
+   controls:['Cooling fan speed','Air distribution','Screen deck opening'],
+   outputs:['Cooled pellets < 150°C','Sized pellets 8–16 mm','Quality-graded product'],
+   kpis:['Outlet temp < 150°C','On-size yield > 88%','CCS final > 250 daN/p'],
+   ai:'Pellet Quality Enhancement (Pipeline) — Ensemble model predicts CCS 45 min ahead'},
+];
+
+function buildProcessFlow(){
+  const el=document.getElementById('pf-content');
+  if(!el) return;
+  PF_STAGES.forEach(st=>{
+    const div=document.createElement('div'); div.className='pf-stage';
+    let fzHtml='';
+    if(st.furnaceZones){
+      fzHtml=`<div class="furnace-zones">${st.furnaceZones.map(z=>`<div class="fz-card"><div class="fz-name">${z.name}</div><div class="fz-temp">${z.temp}</div><div class="fz-desc">${z.desc}</div></div>`).join('')}</div>`;
+    }
+    div.innerHTML=`<div class="pf-accent" style="background:${st.color}"></div>
+      <div class="pf-title" style="color:${st.color}">${st.title}</div>
+      <div class="pf-cols">
+        <div><div class="pf-col-head">Inputs</div>${st.inputs.map(i=>`<div class="pf-item">• ${i}</div>`).join('')}</div>
+        <div><div class="pf-col-head">Control Variables</div>${st.controls.map(i=>`<div class="pf-item">• ${i}</div>`).join('')}</div>
+        <div><div class="pf-col-head">Outputs</div>${st.outputs.map(i=>`<div class="pf-item">• ${i}</div>`).join('')}</div>
+        <div><div class="pf-col-head">Key KPIs</div>${st.kpis.map(i=>`<div class="pf-kpi-item">✓ ${i}</div>`).join('')}</div>
+      </div>
+      ${fzHtml}
+      <div class="pf-ai-bar" style="margin-left:12px"><span class="pf-ai-bar-text"><strong>🤖 AI:</strong> ${st.ai}</span></div>`;
+    el.appendChild(div);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// HIERARCHY
+// ══════════════════════════════════════════════════════
+function buildHierarchy(){
+  const sb=document.getElementById('h-sidebar');
+  HIERARCHY.forEach(lv=>{
+    const btn=document.createElement('button'); btn.className='h-btn'+(lv.level===activeHLevel?' active':'');
+    btn.id='h-btn-'+lv.level;
+    btn.innerHTML=`<div class="h-level" style="color:${lv.color}">${lv.level}</div><div class="h-name">${lv.name}</div><div class="h-scope">${lv.scope}</div>`;
+    btn.onclick=()=>selectHLevel(lv.level);
+    sb.appendChild(btn);
+  });
+  renderHDetail(activeHLevel);
+}
+
+function selectHLevel(level){
+  activeHLevel=level;
+  document.querySelectorAll('.h-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('h-btn-'+level).classList.add('active');
+  renderHDetail(level);
+}
+
+function renderHDetail(level){
+  const lv=HIERARCHY.find(l=>l.level===level);
+  const el=document.getElementById('h-detail');
+  el.style.borderColor=lv.color+'66';
+  el.innerHTML=`
+    <div class="h-title-row">
+      <div class="h-badge" style="color:${lv.color};background:${lv.bgc};border-color:${lv.color}">${lv.level}</div>
+      <div><div style="font-size:16px;font-weight:800;color:var(--text)">${lv.name}</div><div style="font-size:12px;color:var(--text3);margin-top:3px">${lv.desc||lv.scope}</div></div>
+    </div>
+    <div class="h-grid">
+      <div>
+        <div class="h-sec-head" style="color:${lv.color}">AI Use Cases</div>
+        ${lv.usecases.map(u=>`<div class="h-uc-item"><span style="color:${lv.color};margin-right:6px">▸</span>${u}</div>`).join('')}
+        <div class="h-ai-box" style="background:${lv.bgc};border:1.5px solid ${lv.color}44;margin-top:12px">
+          <div style="font-size:10px;font-weight:800;letter-spacing:1px;color:${lv.color};margin-bottom:4px">AI ENGINE</div>
+          <div style="font-size:12px;font-weight:700;color:var(--text)">${lv.ai}</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:4px">${lv.model}</div>
+        </div>
+      </div>
+      <div>
+        <div class="h-sec-head" style="color:var(--text4)">Data Sources</div>
+        ${lv.data.map(d=>`<div class="h-data-item"><span style="color:var(--accent-blue);margin-right:6px">◆</span>${d}</div>`).join('')}
+        <div style="margin-top:14px">
+          <div class="h-sec-head" style="color:var(--text4)">Target KPIs</div>
+          ${lv.kpis.map(k=>`<div class="h-kpi-item">✓ ${k}</div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════════════
+// PIPELINE
+// ══════════════════════════════════════════════════════
+function buildPipeline(){
+  const tabs=document.getElementById('pl-tabs');
+  PIPELINE_UCS.forEach(uc=>{
+    const btn=document.createElement('button'); btn.className='pl-tab'+(uc.id===activePipeline?' active':'');
+    btn.id='pl-tab-'+uc.id;
+    btn.style.borderColor=uc.id===activePipeline?uc.kpiColor:'';
+    btn.style.color=uc.id===activePipeline?uc.kpiColor:'';
+    btn.textContent=uc.icon+' '+uc.title;
+    btn.onclick=()=>selectPipeline(uc.id);
+    tabs.appendChild(btn);
+  });
+  renderPipeline(activePipeline);
+}
+
+function selectPipeline(id){
+  activePipeline=id;
+  document.querySelectorAll('.pl-tab').forEach(b=>{b.classList.remove('active');b.style.borderColor='';b.style.color='';});
+  const uc=PIPELINE_UCS.find(u=>u.id===id);
+  const tb=document.getElementById('pl-tab-'+id);
+  tb.classList.add('active'); tb.style.borderColor=uc.kpiColor; tb.style.color=uc.kpiColor;
+  renderPipeline(id);
+}
+
+function renderPipeline(id){
+  const uc=PIPELINE_UCS.find(u=>u.id===id);
+  const el=document.getElementById('pl-content');
+  el.style.borderColor=uc.kpiColor+'44';
+  el.innerHTML=`
+    <div class="pl-header">
+      <div style="display:flex;align-items:center;gap:14px">
+        <div class="pl-icon">${uc.icon}</div>
+        <div><div class="pl-title">${uc.title}</div><div class="pl-sub">Zone: ${uc.zone.toUpperCase()} · Status: <span style="color:var(--accent-purple);font-weight:700">IN PIPELINE</span></div></div>
+      </div>
+      <div class="pl-kpi-box" style="background:${uc.kpiColor}11;border-color:${uc.kpiColor}55">
+        <div class="pl-kpi-label">TARGET KPI</div>
+        <div class="pl-kpi-val" style="color:${uc.kpiColor}">${uc.kpi}</div>
+      </div>
+    </div>
+    <div class="pl-problem">${uc.problem}</div>
+    <div class="pl-grid">
+      <div>
+        <div class="pl-sec-head" style="color:${uc.kpiColor}">Model Architecture</div>
+        <div class="pl-arch-box" style="background:${uc.kpiColor}08;border-color:${uc.kpiColor}33">
+          <div class="pl-arch-name">${uc.arch}</div>
+          <div class="pl-arch-desc">${uc.train}</div>
+        </div>
+        <div class="pl-eval-box">${uc.eval}</div>
+        <div style="margin-top:12px">
+          <div class="pl-sec-head" style="color:var(--text4)">Input Features (${uc.features.length})</div>
+          ${uc.features.map(f=>`<div class="pl-feature"><span style="color:var(--accent-blue);margin-right:6px">◆</span>${f}</div>`).join('')}
+        </div>
+      </div>
+      <div>
+        <div class="pl-sec-head" style="color:var(--text4)">Model Outputs</div>
+        ${uc.outputs.map(o=>`<div class="pl-output"><span style="color:var(--accent-purple);margin-right:6px">▸</span>${o}</div>`).join('')}
+        <div style="margin-top:14px">
+          <div class="pl-sec-head" style="color:var(--text4)">Deployment Phases</div>
+          ${uc.phases.map((p,i)=>`<div class="pl-phase"><div class="pl-phase-num" style="border-color:${uc.kpiColor};color:${uc.kpiColor}">${i+1}</div><div class="pl-phase-text">${p}</div></div>`).join('')}
+        </div>
+      </div>
+    </div>
+    <div class="pl-impact" style="background:${uc.kpiColor}08;border-color:${uc.kpiColor}44">
+      <div class="pl-impact-head" style="color:${uc.kpiColor}">💰 BUSINESS IMPACT</div>
+      <div class="pl-impact-grid">${uc.impact.map(imp=>`<div class="pl-impact-item" style="color:${uc.kpiColor}">${imp}</div>`).join('')}</div>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════════════
+// CHEMISTRY
+// ══════════════════════════════════════════════════════
+function buildChemistry(){
+  const cg=document.getElementById('chem-grid');
+  CHEM.forEach(c=>{
+    const d=document.createElement('div'); d.className='chem-card';
+    d.innerHTML=`<div class="chem-stage">${c.stage}</div><div class="chem-formula">${c.formula}</div><div class="chem-key">⚙️ ${c.key}</div>`;
+    cg.appendChild(d);
+  });
+  const qg=document.getElementById('qual-grid');
+  QUAL.forEach(q=>{
+    const d=document.createElement('div'); d.className='qual-card'; d.style.borderColor=q.color+'44';
+    d.innerHTML=`<div class="qual-param" style="color:${q.color}">${q.param}</div>
+      <div class="qual-full">${q.full}</div>
+      <div class="qual-method">Method: ${q.method}</div>
+      <div class="qual-target" style="color:${q.tgtc}">Target: ${q.target}</div>
+      <div class="qual-formula">${q.formula}</div>
+      <div style="font-size:10px;color:var(--text4);margin-bottom:4px">Key Drivers:</div>
+      ${q.drivers.map(d=>`<div class="qual-driver">• ${d}</div>`).join('')}`;
+    qg.appendChild(d);
+  });
+  const ag=document.getElementById('arch-grid');
+  ARCH.forEach(a=>{
+    const d=document.createElement('div'); d.className='arch-card';
+    d.innerHTML=`<div class="arch-sys">${a.sys}</div><div class="arch-type">${a.type}</div><div class="arch-tags">${a.tags}</div><div class="arch-desc">${a.desc}</div>`;
+    ag.appendChild(d);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// AI ADVISOR PANEL
+// ══════════════════════════════════════════════════════
+function buildAdvisorPanel(){
+  buildChatMessages();
+  buildAlertList();
+  buildTodayImpact();
+}
+
+function buildChatMessages(){
+  const el=document.getElementById('chat-messages');
+  if(!el) return;
+  el.innerHTML='';
+  chatHistory.forEach(m=>{
+    const div=document.createElement('div'); div.className='chat-msg '+m.from;
+    div.innerHTML=`${m.from==='ai'?`<div class="chat-avatar ai">🤖</div>`:''}
+      <div class="chat-bubble ${m.from}">${m.text}</div>
+      ${m.from==='user'?`<div class="chat-avatar user">👤</div>`:''}`;
+    el.appendChild(div);
+  });
+  el.scrollTop=el.scrollHeight;
+}
+
+function buildAlertList(){
+  const el=document.getElementById('alert-list');
+  if(!el) return;
+  el.innerHTML='';
+  RECS.filter(r=>!dismissedRecs.includes(r.id)).slice(0,5).forEach(r=>{
+    const d=document.createElement('div'); d.className='alert-row';
+    d.onclick=()=>{showSection('dashboard',document.querySelector('nav button'));setTimeout(()=>toggleRec(r.id),100);};
+    d.innerHTML=`<div class="alert-dot" style="background:${r.color}"></div><div><div class="alert-title">${r.title.slice(0,35)}...</div><div class="alert-zone">${r.zoneLabel}</div></div><span class="badge priority-${r.priority}">${r.priority}</span>`;
+    el.appendChild(d);
+  });
+}
+
+function buildTodayImpact(){
+  const el=document.getElementById('today-impact');
+  if(!el) return;
+  const data=[
+    {label:'Recommendations issued',val:'14',c:'var(--accent-blue)'},
+    {label:'Accepted by operators',val:String(acceptedRecs.length+(mode==='optimal'?14:8)),c:'var(--accent-green)'},
+    {label:'Fuel saved (Mcal)',val:mode==='optimal'?'1,944':'432',c:'var(--accent-amber)'},
+    {label:'CCS deviations prevented',val:mode==='optimal'?'3':'1',c:'var(--accent-purple)'},
+  ];
+  el.innerHTML='';
+  data.forEach(d=>{
+    const r=document.createElement('div'); r.className='impact-row';
+    r.innerHTML=`<div class="impact-label">${d.label}</div><div class="impact-val" style="color:${d.c}">${d.val}</div>`;
+    el.appendChild(r);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// CHAT
+// ══════════════════════════════════════════════════════
+const CHAT_RESPONSES = {
+  fuel:'Current specific fuel consumption is 62.4 Mcal/t vs target 57.0 Mcal/t. The primary driver is over-firing in zones B7–B12 (+10°C deviation). Implementing recommendation #1 will reduce fuel by ~1.8 Mcal/t immediately. Over 24h, this translates to ~432 Mcal savings (~₹18,000 at current gas price). Full optimization potential: 57.0 Mcal/t achievable within 2 hours of corrective actions.',
+  css:'Current CCS is 234 daN/p. The 45-min ahead prediction is 228 daN/p — below the 250 daN/p target. Root cause: (1) Filter cake moisture 9.1% → weakens green ball binder bridges, (2) GB size D50 at 11.4mm → less surface area for sintering. Priority actions: Fix moisture first (20 min response), then disc speed. Expected CCS recovery to 255+ within 90 min of implementing Recs #1, #2, and #3.',
+  moisture:'Filter cake moisture is the critical deviation at 9.1% vs 8.5% target. Recommendation: Increase vacuum pressure from 0.62 to 0.70 bar on disc filters 1 & 2, AND increase flocculant dosing from 42 to 45 g/t. Flocculant improvement shows effect in ~15 min, vacuum adjustment in ~8 min. Total expected moisture reduction: 0.5–0.6%. This is Recommendation #2 — you can accept it from the Dashboard.',
+  stacker:'Stacker-Reclaimer optimization is in pipeline (Phase-2). Current Fe grade deviation of 0.3% at feed is being partially compensated by manual blend adjustment. The SR optimization module will use Reinforcement Learning (PPO) to automatically sequence SR-1 and SR-2 to maintain ±0.15% Fe grade variability. Expected deployment: Q3 2025. Annual benefit: ~₹4.2 Cr.',
+  energy:'Today\'s AI impact so far: Fuel monitoring has identified 62.4 vs 57.0 Mcal/t deviation. If Rec #1 is accepted now, expected saving is 1.8 Mcal/t → 432 Mcal over 24h → approximately ₹18,000 at ₹41.7/Mcal gas price. In Optimal Mode, the full saving potential of 8.1 Mcal/t yields ₹34,000/hr or ~₹8.2L/day. Year-to-date potential: ₹29.8 Cr at 3 MTPA.',
+  priorities:'Top 3 immediate priorities: (1) HIGH — Reduce burner B7–B12 gas flow 3.2% to fix 10°C over-firing → saves 1.8 Mcal/t in 15 min. (2) HIGH — Increase filter vacuum to 0.70 bar + flocculant to 45 g/t to fix moisture deviation → prevents CCS drop in 45 min. (3) MEDIUM — Increase disc speed to 7.1 RPM → fixes GB D50 undershoot. Combined effect: CCS recovers from predicted 228 to 255+ daN/p.',
+  default:'Based on current plant state: 2 HIGH alerts (induration fuel, filter moisture), 3 MEDIUM alerts (green ball size, predicted CCS drop, feed Fe grade). Overall Plant Efficiency Index: '+(mode==='optimal'?'92.4':mode==='reset'?'79.1':'85.6')+'%. Recommend prioritizing Actions #1 and #2 for maximum impact. Shall I walk you through the corrective action sequence?'
+};
+
+function getAIResponse(msg){
+  const l=msg.toLowerCase();
+  if(l.includes('fuel')||l.includes('energy')||l.includes('mcal')) return CHAT_RESPONSES.fuel;
+  if(l.includes('css')||l.includes('quality')||l.includes('crush')) return CHAT_RESPONSES.css;
+  if(l.includes('moisture')||l.includes('filter')||l.includes('floccu')) return CHAT_RESPONSES.moisture;
+  if(l.includes('stacker')||l.includes('reclaim')||l.includes('fe grade')) return CHAT_RESPONSES.stacker;
+  if(l.includes('saving')||l.includes('energy saving')) return CHAT_RESPONSES.energy;
+  if(l.includes('priorit')||l.includes('top 3')||l.includes('top3')) return CHAT_RESPONSES.priorities;
+  return CHAT_RESPONSES.default;
+}
+
+function addTypingIndicator(){
+  const el=document.getElementById('chat-messages');
+  const div=document.createElement('div'); div.className='chat-msg ai'; div.id='typing-indicator';
+  div.innerHTML=`<div class="chat-avatar ai">🤖</div><div class="chat-bubble ai"><div class="typing-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>`;
+  el.appendChild(div); el.scrollTop=el.scrollHeight;
+}
+
+function removeTypingIndicator(){ document.getElementById('typing-indicator')?.remove(); }
+
+function askChat(msg){ document.getElementById('chat-input').value=msg; sendChat(); }
+
+function sendChat(){
+  const inp=document.getElementById('chat-input');
+  const msg=inp.value.trim(); if(!msg) return;
+  chatHistory.push({from:'user',text:msg});
+  inp.value='';
+  buildChatMessages();
+  addTypingIndicator();
+  setTimeout(()=>{
+    removeTypingIndicator();
+    chatHistory.push({from:'ai',text:getAIResponse(msg)});
+    buildChatMessages();
+  },1200);
+}
+
+function sendMiniChat(){
+  const inp=document.getElementById('mini-input');
+  const msg=inp.value.trim(); if(!msg) return;
+  inp.value='';
+  const mc=document.getElementById('mini-chat');
+  const resp=getAIResponse(msg);
+  mc.innerHTML+=`<div style="text-align:right;margin-bottom:4px"><span style="background:var(--accent-blue-lt);color:var(--accent-blue);border-radius:6px;padding:3px 8px;font-size:10px">${msg}</span></div>`;
+  mc.innerHTML+=`<div style="margin-bottom:4px"><span style="background:var(--bg3);border-radius:6px;padding:3px 8px;font-size:10px;color:var(--text2)">${resp.slice(0,120)}...</span></div>`;
+  mc.scrollTop=mc.scrollHeight;
+}
+
+function buildMiniChat(){
+  const mc=document.getElementById('mini-chat');
+  if(mc) mc.innerHTML=`<div style="margin-bottom:4px"><span style="background:var(--bg3);border-radius:6px;padding:3px 8px;font-size:10px;color:var(--text2)">2 HIGH alerts detected. Ask me anything.</span></div>`;
+}
+</script>
+</body>
+</html>

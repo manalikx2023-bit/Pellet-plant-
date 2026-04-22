@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AM/NS India — Iron Pellet Plant Digital Twin | Vizag</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f2f5;
+  --surface:#ffffff;
+  --surface2:#f7f8fa;
+  --surface3:#eef0f4;
+  --border:#dde2ea;
+  --border2:#c8d0db;
+  --text:#111827;
+  --text2:#374151;
+  --text3:#6b7280;
+  --text4:#9ca3af;
+  --blue:#1d4ed8;
+  --blue2:#eff6ff;
+  --blue3:#bfdbfe;
+  --green:#065f46;
+  --green2:#ecfdf5;
+  --green3:#a7f3d0;
+  --amber:#92400e;
+  --amber2:#fffbeb;
+  --amber3:#fcd34d;
+  --red:#991b1b;
+  --red2:#fef2f2;
+  --red3:#fecaca;
+  --cyan:#0e7490;
+  --cyan2:#ecfeff;
+  --orange:#c2410c;
+  --orange2:#fff7ed;
+  --purple:#5b21b6;
+  --purple2:#f5f3ff;
+  --teal:#0f766e;
+  --mono:'Share Tech Mono',monospace;
+  --head:'Rajdhani',sans-serif;
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif}
+
+/* ── HEADER ── */
+.hdr{height:56px;background:var(--surface);border-bottom:2px solid var(--border);
+  display:flex;align-items:center;padding:0 20px;gap:14px;flex-shrink:0;
+  box-shadow:0 1px 4px rgba(0,0,0,0.06)}
+.logo-box{width:38px;height:38px;background:linear-gradient(135deg,#1d4ed8,#3b82f6);
+  border-radius:9px;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 8px rgba(29,78,216,0.25)}
+.logo-box svg{width:20px;height:20px;fill:#fff}
+.hdr-brand{font-family:var(--head);font-size:16px;font-weight:700;color:var(--text);letter-spacing:0.3px}
+.hdr-sub{font-size:10px;color:var(--text3);margin-top:1px}
+.hdr-sep{width:1px;height:34px;background:var(--border2);margin:0 6px}
+.hdr-spacer{flex:1}
+
+/* Mode switcher */
+.mode-bar{display:flex;gap:3px;background:var(--surface3);border:1px solid var(--border);border-radius:10px;padding:3px}
+.mode-btn{padding:5px 18px;border-radius:7px;font-size:11px;font-weight:700;font-family:var(--head);
+  cursor:pointer;letter-spacing:0.4px;transition:all 0.2s;color:var(--text3);border:none;background:transparent}
+.mode-btn:hover{color:var(--text2);background:var(--surface)}
+.m-optimal {background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0;box-shadow:0 1px 4px rgba(6,95,70,0.12)}
+.m-advisory{background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;box-shadow:0 1px 4px rgba(29,78,216,0.12)}
+.m-reset   {background:#fef2f2;color:#991b1b;border:1px solid #fecaca;box-shadow:0 1px 4px rgba(153,27,27,0.12)}
+
+.hdr-badge{font-size:10px;padding:4px 10px;border-radius:20px;font-weight:600;
+  display:flex;align-items:center;gap:5px;font-family:var(--head);letter-spacing:0.3px}
+.b-live{background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0}
+.b-info{background:var(--surface3);color:var(--text3);border:1px solid var(--border)}
+.pulse{width:6px;height:6px;border-radius:50%;background:#10b981;animation:pu 1.4s infinite}
+@keyframes pu{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.75)}}
+.clock-disp{font-family:var(--mono);font-size:12px;color:var(--blue);letter-spacing:1.5px}
+
+/* ── USE-CASE STRIP ── */
+.uc-strip{height:40px;background:var(--surface);border-bottom:1px solid var(--border);
+  display:flex;align-items:stretch;padding:0 16px;gap:2px;overflow-x:auto;flex-shrink:0;scrollbar-width:none}
+.uc-strip::-webkit-scrollbar{display:none}
+.uc-tab{display:flex;align-items:center;gap:6px;padding:0 14px;font-size:11px;font-weight:600;
+  font-family:var(--head);letter-spacing:0.3px;color:var(--text3);cursor:pointer;
+  border-bottom:2.5px solid transparent;white-space:nowrap;transition:all 0.15s}
+.uc-tab:hover{color:var(--text2);background:var(--surface2)}
+.uc-tab.active{color:var(--blue);border-bottom-color:var(--blue);background:var(--blue2)}
+.uc-tab .tc{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+
+/* ── KPI BAR STRIP ── */
+.kpi-strip{background:var(--surface);border-bottom:1px solid var(--border);
+  padding:8px 14px;display:flex;gap:7px;overflow-x:auto;flex-shrink:0;scrollbar-width:none;
+  box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.kpi-strip::-webkit-scrollbar{display:none}
+.kpi-bar-card{min-width:118px;flex-shrink:0;background:var(--surface);border:1px solid var(--border);
+  border-radius:9px;padding:8px 11px 7px;cursor:default;transition:all 0.15s;position:relative;overflow:hidden}
+.kpi-bar-card:hover{border-color:var(--border2);box-shadow:0 2px 8px rgba(0,0,0,0.07)}
+.kpi-top-bar{position:absolute;top:0;left:0;right:0;height:3px;border-radius:9px 9px 0 0}
+.kpi-lbl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.6px;
+  font-family:var(--head);font-weight:700;margin-bottom:4px;margin-top:2px}
+.kpi-num{font-family:var(--mono);font-size:17px;color:var(--text);line-height:1.1}
+.kpi-unit-sm{font-size:9px;color:var(--text4);margin-left:2px}
+.kpi-delta{font-size:9px;font-weight:600;margin-top:3px}
+.kpi-delta.up{color:#065f46}.kpi-delta.dn{color:#991b1b}.kpi-delta.nt{color:var(--text4)}
+.kpi-hbar-track{height:4px;background:var(--surface3);border-radius:2px;margin-top:5px;overflow:hidden}
+.kpi-hbar-fill{height:100%;border-radius:2px;transition:width 0.5s ease}
+
+/* ── MAIN 3-COLUMN ── */
+.layout{display:grid;grid-template-columns:248px 1fr 272px;height:calc(100vh - 166px);overflow:hidden}
+
+/* ── LEFT CONTROLS ── */
+.left{background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.left-head{padding:10px 14px;border-bottom:1px solid var(--border);background:var(--surface2);
+  flex-shrink:0;display:flex;align-items:center;justify-content:space-between}
+.left-head-title{font-family:var(--head);font-size:13px;font-weight:700;color:var(--text);letter-spacing:0.3px}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#10b981;animation:pu 1.4s infinite}
+.left-scroll{overflow-y:auto;flex:1;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.left-scroll::-webkit-scrollbar{width:3px}
+.left-scroll::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+.ctrl-section{border-bottom:1px solid var(--border);padding:11px 14px}
+.ctrl-section-hdr{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.ctrl-dot{width:9px;height:9px;border-radius:3px;flex-shrink:0}
+.ctrl-name{font-family:var(--head);font-size:11px;font-weight:700;color:var(--text2);
+  letter-spacing:0.4px;text-transform:uppercase}
+.ctrl-status{font-size:8px;padding:2px 7px;border-radius:10px;font-weight:700;margin-left:auto;font-family:var(--head)}
+.cs-ok{background:var(--green2);color:var(--green)}.cs-warn{background:var(--amber2);color:var(--amber)}
+
+.ctrl-item{margin-bottom:11px}
+.ctrl-item:last-child{margin-bottom:2px}
+.ctrl-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
+.ctrl-label{font-size:10px;color:var(--text2);font-weight:400}
+.ctrl-val-display{font-family:var(--mono);font-size:11px;font-weight:500}
+.ctrl-unit-tiny{font-size:8px;color:var(--text3);font-family:'Barlow',sans-serif}
+input[type=range]{width:100%;height:3px;-webkit-appearance:none;appearance:none;
+  background:var(--surface3);border-radius:2px;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;
+  width:13px;height:13px;border-radius:50%;cursor:pointer;background:var(--surface);
+  border:2px solid currentColor;box-shadow:0 1px 4px rgba(0,0,0,0.15)}
+.ctrl-bounds{display:flex;justify-content:space-between;font-size:8px;color:var(--text4);
+  font-family:var(--mono);margin-top:2px}
+
+.status-chips{display:flex;gap:5px;flex-wrap:wrap;padding:8px 14px;border-bottom:1px solid var(--border);
+  background:var(--surface2)}
+.chip{font-size:9px;padding:3px 9px;border-radius:12px;font-weight:700;font-family:var(--head);
+  display:flex;align-items:center;gap:4px;letter-spacing:0.3px}
+.chip-g{background:var(--green2);color:var(--green);border:1px solid var(--green3)}
+.chip-a{background:var(--amber2);color:var(--amber);border:1px solid var(--amber3)}
+.chip-r{background:var(--red2);color:var(--red);border:1px solid var(--red3)}
+.chip-dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+
+/* ── CENTER ── */
+.center{background:var(--bg);display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.viz-tabs{display:flex;background:var(--surface);border-bottom:1px solid var(--border);padding:0 12px;flex-shrink:0}
+.viz-tab{padding:9px 15px;font-size:11px;font-weight:700;font-family:var(--head);
+  color:var(--text3);cursor:pointer;border-bottom:2.5px solid transparent;letter-spacing:0.3px;transition:all 0.15s}
+.viz-tab:hover{color:var(--text2)}.viz-tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+.viz-body{flex:1;overflow-y:auto;padding:12px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.viz-body::-webkit-scrollbar{width:3px}
+.viz-body::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* schematic card */
+.schem-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:14px;margin-bottom:10px;overflow:hidden;
+  box-shadow:0 1px 6px rgba(0,0,0,0.05)}
+.schem-title{font-family:var(--head);font-size:11px;font-weight:700;color:var(--text3);
+  text-transform:uppercase;letter-spacing:0.6px;margin-bottom:12px}
+
+/* stage metric cards */
+.stage-row{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:10px}
+.smc{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:9px 10px;
+  text-align:center;cursor:pointer;transition:all 0.15s;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.smc:hover{border-color:var(--border2);transform:translateY(-1px);box-shadow:0 3px 10px rgba(0,0,0,0.08)}
+.smc-lbl{font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:0.4px;
+  font-family:var(--head);font-weight:700;margin-bottom:3px}
+.smc-val{font-family:var(--mono);font-size:15px;font-weight:500}
+.smc-sub{font-size:8px;color:var(--text4);margin-top:2px}
+.smc-bar{height:3px;border-radius:2px;background:var(--surface3);margin-top:6px}
+.smc-fill{height:100%;border-radius:2px;transition:width 0.4s}
+
+/* chart cards */
+.tchart-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  padding:12px 14px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
+.tchart-hdr{font-family:var(--head);font-size:11px;font-weight:700;color:var(--text2);
+  margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;letter-spacing:0.3px}
+.tbadge{font-size:8px;padding:2px 8px;border-radius:10px;font-weight:700;font-family:var(--head)}
+.tb-ok{background:var(--green2);color:var(--green)}.tb-warn{background:var(--amber2);color:var(--amber)}
+.tb-live{background:var(--blue2);color:var(--blue)}
+
+/* ── RIGHT PANEL ── */
+.right{background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.ai-head{padding:11px 14px;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--surface2)}
+.ai-head-title{font-family:var(--head);font-size:13px;font-weight:700;color:var(--text);
+  display:flex;align-items:center;gap:8px;letter-spacing:0.3px}
+.ai-head-icon{width:22px;height:22px;background:linear-gradient(135deg,#1d4ed8,#3b82f6);
+  border-radius:6px;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 1px 6px rgba(29,78,216,0.2)}
+.ai-head-icon svg{width:12px;height:12px;fill:#fff}
+.ai-conf{font-size:9px;color:var(--text4);margin-top:3px;font-family:var(--mono)}
+.ai-scroll{overflow-y:auto;flex:1;padding:10px 12px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.ai-scroll::-webkit-scrollbar{width:3px}
+.ai-scroll::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* AI cards */
+.ai-card{border-radius:9px;padding:10px 12px;margin-bottom:7px;border:1px solid transparent}
+.ai-insight{background:#f0f9ff;border-color:#bae6fd}
+.ai-action {background:#eff6ff;border-color:#bfdbfe}
+.ai-alert  {background:#fef2f2;border-color:#fecaca}
+.ai-saving {background:#ecfdf5;border-color:#a7f3d0}
+.ai-card-title{font-family:var(--head);font-size:11px;font-weight:700;letter-spacing:0.3px;
+  margin-bottom:5px;display:flex;align-items:center;gap:6px}
+.ait-insight{color:#0369a1}.ait-action{color:#1d4ed8}.ait-alert{color:#991b1b}.ait-saving{color:#065f46}
+.ai-card-body{font-size:10px;line-height:1.7;color:var(--text2)}
+.ai-saving-val{font-family:var(--mono);font-size:15px;font-weight:500;color:#065f46;margin-top:5px}
+.ai-btn{margin-top:7px;font-size:9px;font-weight:700;font-family:var(--head);letter-spacing:0.4px;
+  cursor:pointer;display:inline-flex;align-items:center;gap:4px;padding:4px 10px;
+  border-radius:6px;transition:all 0.15s;border:1px solid transparent}
+.ab-blue{background:var(--blue2);color:var(--blue);border-color:var(--blue3)}
+.ab-blue:hover{background:var(--blue3)}
+.ab-green{background:var(--green2);color:var(--green);border-color:var(--green3)}
+
+.ai-sep{font-family:var(--head);font-size:9px;font-weight:700;color:var(--text3);
+  text-transform:uppercase;letter-spacing:0.8px;margin:10px 0 6px;display:flex;align-items:center;gap:8px}
+.ai-sep::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* savings total */
+.savings-total{background:linear-gradient(135deg,#ecfdf5,#eff6ff);
+  border:1px solid #a7f3d0;border-radius:11px;padding:12px 14px;margin-bottom:10px;text-align:center}
+.savings-val{font-family:var(--mono);font-size:26px;color:var(--green);font-weight:500}
+.savings-lbl{font-size:9px;color:var(--text3);margin-top:3px;font-family:var(--head);
+  letter-spacing:0.5px;text-transform:uppercase}
+
+/* confidence */
+.conf-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.conf-label{font-size:9px;color:var(--text2);min-width:95px;font-family:var(--head);font-weight:600}
+.conf-track{flex:1;height:5px;background:var(--surface3);border-radius:3px;overflow:hidden}
+.conf-fill{height:100%;border-radius:3px}
+.conf-pct{font-family:var(--mono);font-size:9px;color:var(--text3);min-width:28px;text-align:right}
+
+/* reset */
+.reset-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+.rg-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 11px}
+.rg-stage{font-size:9px;font-weight:700;font-family:var(--head);color:var(--text3);
+  text-transform:uppercase;letter-spacing:0.4px;margin-bottom:7px}
+.rg-row{display:flex;justify-content:space-between;font-size:9px;margin-bottom:4px}
+.rg-key{color:var(--text3)}.rg-baseline{color:var(--green);font-family:var(--mono)}
+.rg-current{font-family:var(--mono)}.rg-current.changed{color:var(--amber)}
+.rbtn{padding:7px 16px;border-radius:7px;font-size:11px;font-weight:700;font-family:var(--head);
+  letter-spacing:0.4px;cursor:pointer;border:none;transition:all 0.2s}
+.rbtn-primary{background:var(--blue);color:#fff;box-shadow:0 2px 8px rgba(29,78,216,0.25)}
+.rbtn-primary:hover{background:#1e40af}
+.rbtn-secondary{background:var(--surface2);color:var(--text2);border:1px solid var(--border)}
+.rbtn-secondary:hover{border-color:var(--border2)}
+
+/* SVG node helpers */
+.proc-node{cursor:pointer}
+.proc-node:hover{opacity:0.9}
+.node-title{font-family:'Rajdhani',sans-serif;font-weight:700;text-anchor:middle}
+.node-val{font-family:'Share Tech Mono',monospace;text-anchor:middle}
+
+/* quality gauges */
+.qgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:4px 0}
+.qg-box{background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:11px;text-align:center}
+.qg-val{font-family:var(--mono);font-size:22px;line-height:1}
+.qg-lbl{font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:0.4px;
+  font-family:var(--head);font-weight:700;margin-top:4px}
+.qg-bar{height:4px;border-radius:2px;background:var(--surface3);margin-top:8px;overflow:hidden}
+.qg-fill{height:100%;border-radius:2px;transition:width 0.4s}
+.qg-tgt{font-size:8px;color:var(--text4);margin-top:4px}
+
+.hidden{display:none!important}
+canvas{display:block}
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<div class="hdr">
+  <div class="logo-box">
+    <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+  </div>
+  <div>
+    <div class="hdr-brand">AM/NS India — Iron Pellet Plant Digital Twin</div>
+    <div class="hdr-sub">ArcelorMittal Nippon Steel India · Vizag · 6 MTPA · Straight Grate Technology</div>
+  </div>
+  <div class="hdr-sep"></div>
+  <div class="mode-bar">
+    <button class="mode-btn m-optimal"  id="btn-optimal"  onclick="setMode('optimal')">◉ Optimal Run</button>
+    <button class="mode-btn"            id="btn-advisory" onclick="setMode('advisory')">◈ AI Advisory</button>
+    <button class="mode-btn"            id="btn-reset"    onclick="setMode('reset')">↺ Baseline Reset</button>
+  </div>
+  <div class="hdr-spacer"></div>
+  <div class="hdr-badge b-live"><div class="pulse"></div>LIVE</div>
+  <div class="hdr-badge b-info">Shift B · Line-1</div>
+  <div class="clock-disp" id="clock">--:--:--</div>
+</div>
+
+<!-- ══ USE-CASE STRIP ══ -->
+<div class="uc-strip">
+  <div class="uc-tab active" onclick="setUC(0)"><div class="tc"></div>Full Plant Simulator</div>
+  <div class="uc-tab" onclick="setUC(1)"><div class="tc"></div>Stacker Reclaimer</div>
+  <div class="uc-tab" onclick="setUC(2)"><div class="tc"></div>Slurry &amp; Filtration</div>
+  <div class="uc-tab" onclick="setUC(3)"><div class="tc"></div>Indurating Furnace</div>
+  <div class="uc-tab" onclick="setUC(4)"><div class="tc"></div>Pellet Quality</div>
+  <div class="uc-tab" onclick="setUC(5)"><div class="tc"></div>Green Ball Formation</div>
+  <div class="uc-tab" onclick="setUC(6)"><div class="tc"></div>Predictive Maintenance</div>
+</div>
+
+<!-- ══ KPI STRIP ══ -->
+<div class="kpi-strip" id="kpi-strip"></div>
+
+<!-- ══ MAIN LAYOUT ══ -->
+<div class="layout">
+
+  <!-- LEFT -->
+  <div class="left">
+    <div class="left-head">
+      <div class="left-head-title" id="ctrl-title">Process Controls</div>
+      <div class="live-dot"></div>
+    </div>
+    <div class="left-scroll" id="left-controls"></div>
+  </div>
+
+  <!-- CENTER -->
+  <div class="center">
+    <div class="viz-tabs">
+      <div class="viz-tab active" onclick="setViz('schematic')">Process Schematic</div>
+      <div class="viz-tab" onclick="setViz('trends')">Trend Charts</div>
+      <div class="viz-tab" onclick="setViz('quality')">Quality Dashboard</div>
+      <div class="viz-tab" onclick="setViz('energy')">Energy &amp; Fuel</div>
+    </div>
+    <div class="viz-body">
+      <div id="viz-schematic"></div>
+      <div id="viz-trends"   class="hidden"></div>
+      <div id="viz-quality"  class="hidden"></div>
+      <div id="viz-energy"   class="hidden"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+    <div class="ai-head">
+      <div class="ai-head-title">
+        <div class="ai-head-icon">
+          <svg viewBox="0 0 12 12"><path d="M6 1l1.5 3.3H11L8.5 6.6l1 3.7L6 8.4l-3.5 1.9 1-3.7L1 4.3h3.5z"/></svg>
+        </div>
+        <span id="ai-panel-title">AI Advisory Engine</span>
+      </div>
+      <div class="ai-conf" id="ai-conf-line">ML confidence · Updated every 45 sec · 94.2% accuracy</div>
+    </div>
+    <div class="ai-scroll" id="ai-panel"></div>
+  </div>
+
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// PROCESS STATE — AM/NS Vizag pellet plant
+// ══════════════════════════════════════════════
+const S = {
+  ohp:       { feed_rate:420, reclaimer_speed:72, stacker_angle:14, blend_ratio:64, stockpile_ht:12 },
+  blending:  { ore_fines:62, moisture_in:9.2, blend_eff:94 },
+  grinding:  { mill_speed:78, classifier_rpm:680, blaine:1850, residue_45:12, water_flow:320, power_kw:2820 },
+  slurry:    { concentration:65, density:1.68, pH:8.2, flow:185, viscosity:42 },
+  filtration:{ vacuum:650, cycle_speed:1.4, cloth_pct:92, cake_moist:9.1, cake_thick:22, throughput:380 },
+  binder:    { bentonite:6.1, lime_pct:1.8, mix_moist:8.8, mix_time:4.5 },
+  balling:   { disc_angle:46, drum_speed:11.5, water_spray:17, green_burst:11.8, drop_num:4.9, onspec_pct:91 },
+  furnace:   { udz:280, ddd:410, ph1:860, ph2:1050, firing:1285, soaking:1260, cooling_z:850,
+               fuel_flow:4350, air_flow:88000, grate_speed:1.85, bed_ht:185, wg_temp:312 },
+  cooler:    { air_vol:62000, outlet_temp:138, speed:1.2 },
+  screening: { upper_mm:16, lower_mm:9, vib_hz:18, fines_pct:4.1 },
+  quality:   { CCS:258, RI:72.4, CR:4.8, TII:96.2, Fe:65.7, basicity:1.06, tumble:94.5 },
+};
+const BASELINE = JSON.parse(JSON.stringify(S));
+
+// ══════════════════════════════════════════════
+// KPI DEFINITIONS
+// ══════════════════════════════════════════════
+const KPIS = [
+  { id:'throughput', label:'Throughput',     unit:'t/h',   color:'#1d4ed8', max:560,  val:480,  prevVal:480, pct:0, delta:0 },
+  { id:'energy',     label:'Sp. Energy',     unit:'GJ/t',  color:'#92400e', max:65,   val:48.4, prevVal:48.4,pct:0, delta:0 },
+  { id:'ccs',        label:'CCS',            unit:'daN',   color:'#5b21b6', max:320,  val:258,  prevVal:258, pct:0, delta:0 },
+  { id:'ri',         label:'Reduct. Index',  unit:'%',     color:'#0e7490', max:85,   val:72.4, prevVal:72.4,pct:0, delta:0 },
+  { id:'fe',         label:'Fe Content',     unit:'%',     color:'#065f46', max:68,   val:65.7, prevVal:65.7,pct:0, delta:0 },
+  { id:'fines',      label:'Return Fines',   unit:'%',     color:'#c2410c', max:10,   val:4.1,  prevVal:4.1, pct:0, delta:0 },
+  { id:'fuel',       label:'Fuel Rate',      unit:'Nm³/h', color:'#991b1b', max:6000, val:4350, prevVal:4350,pct:0, delta:0 },
+  { id:'cake_m',     label:'Cake Moisture',  unit:'%',     color:'#0e7490', max:12,   val:9.1,  prevVal:9.1, pct:0, delta:0 },
+  { id:'oee',        label:'Plant OEE',      unit:'%',     color:'#1d4ed8', max:100,  val:86.8, prevVal:86.8,pct:0, delta:0 },
+];
+
+// ══════════════════════════════════════════════
+// COMPUTE KPIs from state — reactive physics model
+// ══════════════════════════════════════════════
+function compute() {
+  const f = S.furnace, fi = S.filtration, b = S.binder, ball = S.balling, g = S.grinding;
+  KPIS.forEach(k => { k.prevVal = k.val; });
+
+  KPIS[0].val = +(S.ohp.feed_rate * 1.138 + (g.blaine - 1850) * 0.008).toFixed(1);
+  KPIS[1].val = +(47 + (f.fuel_flow/4200-1)*3.2 + (f.firing/1285-1)*2.1 + (fi.cake_moist-9)*0.4).toFixed(1);
+  KPIS[2].val = +Math.min(320, Math.max(180,
+    215 + (f.firing-1200)*0.32 + b.bentonite*4.2 + (g.blaine-1800)*0.018
+    + (fi.cake_moist < 9 ? 12 : 0) - (f.grate_speed-1.85)*20)).toFixed(0);
+  KPIS[3].val = +(68 + (f.firing-1200)*0.016 + (f.ph2-1050)*0.008 + (fi.cake_moist < 9.5 ? 1.8 : 0)).toFixed(1);
+  KPIS[4].val = +(S.blending.ore_fines * 0.976 + 4.2).toFixed(1);
+  KPIS[5].val = +Math.max(1.5, (6.2 - (ball.disc_angle-46)*0.14 - (g.blaine-1800)*0.002)).toFixed(1);
+  KPIS[6].val = f.fuel_flow;
+  KPIS[7].val = fi.cake_moist;
+  KPIS[8].val = +(84.2 + (S.ohp.feed_rate-420)*0.008 - (fi.cloth_pct < 90 ? 1.5 : 0)).toFixed(1);
+
+  S.quality.CCS      = KPIS[2].val;
+  S.quality.RI       = KPIS[3].val;
+  S.quality.Fe       = KPIS[4].val;
+
+  KPIS.forEach(k => {
+    k.pct   = Math.min(100, Math.max(0, (parseFloat(k.val) / k.max) * 100));
+    k.delta = +(parseFloat(k.val) - parseFloat(k.prevVal)).toFixed(2);
+  });
+}
+
+// ══════════════════════════════════════════════
+// APP STATE
+// ══════════════════════════════════════════════
+let currentMode = 'optimal';
+let currentUC   = 0;
+let currentViz  = 'schematic';
+let charts      = {};
+
+// clock
+setInterval(() => {
+  document.getElementById('clock').textContent = new Date().toLocaleTimeString('en-IN', { hour12:false });
+}, 1000);
+document.getElementById('clock').textContent = new Date().toLocaleTimeString('en-IN', { hour12:false });
+
+// ══════════════════════════════════════════════
+// MODE SWITCH
+// ══════════════════════════════════════════════
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('btn-optimal') .className = 'mode-btn' + (mode==='optimal'  ? ' m-optimal'  : '');
+  document.getElementById('btn-advisory').className = 'mode-btn' + (mode==='advisory' ? ' m-advisory' : '');
+  document.getElementById('btn-reset')   .className = 'mode-btn' + (mode==='reset'    ? ' m-reset'    : '');
+  renderLeft();
+  renderRight();
+}
+
+// ══════════════════════════════════════════════
+// USE-CASE SWITCH
+// ══════════════════════════════════════════════
+function setUC(idx) {
+  currentUC = idx;
+  document.querySelectorAll('.uc-tab').forEach((el, i) => el.classList.toggle('active', i === idx));
+  renderLeft();
+  renderRight();
+}
+
+// ══════════════════════════════════════════════
+// VIZ TAB SWITCH
+// ══════════════════════════════════════════════
+function setViz(tab) {
+  currentViz = tab;
+  ['schematic','trends','quality','energy'].forEach(t => {
+    document.getElementById('viz-'+t).classList.toggle('hidden', t !== tab);
+  });
+  document.querySelectorAll('.viz-tab').forEach((el, i) => {
+    el.classList.toggle('active', ['schematic','trends','quality','energy'][i] === tab);
+  });
+  if (tab === 'trends')  renderTrends();
+  if (tab === 'quality') renderQuality();
+  if (tab === 'energy')  renderEnergy();
+}
+
+// ══════════════════════════════════════════════
+// KPI STRIP
+// ══════════════════════════════════════════════
+function renderKPIs() {
+  compute();
+  document.getElementById('kpi-strip').innerHTML = KPIS.map(k => {
+    const pct  = k.pct.toFixed(1);
+    const dir  = k.delta > 0.05 ? 'up' : k.delta < -0.05 ? 'dn' : 'nt';
+    const arrow= dir === 'up' ? '▲' : dir === 'dn' ? '▼' : '—';
+    const dv   = Math.abs(k.delta) > 0.01 ? (k.delta > 0 ? '+' : '') + k.delta.toFixed(1) : '—';
+    const disp = k.val >= 1000 ? k.val.toLocaleString() : k.val;
+    return `<div class="kpi-bar-card">
+      <div class="kpi-top-bar" style="background:${k.color}"></div>
+      <div class="kpi-lbl">${k.label}</div>
+      <div><span class="kpi-num">${disp}</span><span class="kpi-unit-sm">${k.unit}</span></div>
+      <div class="kpi-delta ${dir}">${arrow} ${dv}</div>
+      <div class="kpi-hbar-track">
+        <div class="kpi-hbar-fill" style="width:${pct}%;background:${k.color}"></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════
+// CONTROLS CONFIG
+// ══════════════════════════════════════════════
+const UC_CTRLS = {
+  0: [
+    { title:'OHP & Stacker Reclaimer', color:'#065f46', bg:'#ecfdf5', status:'ok', params:[
+      { st:'ohp', k:'feed_rate',       l:'Feed Rate',        min:300,  max:520,   step:5,    unit:'t/h',   c:'#1d4ed8' },
+      { st:'ohp', k:'reclaimer_speed', l:'Reclaimer Speed',  min:50,   max:100,   step:1,    unit:'%',     c:'#065f46' },
+      { st:'ohp', k:'blend_ratio',     l:'Ore Blend Ratio',  min:55,   max:75,    step:0.5,  unit:'%',     c:'#0e7490' },
+    ]},
+    { title:'Grinding Mill', color:'#0e7490', bg:'#ecfeff', status:'ok', params:[
+      { st:'grinding', k:'mill_speed',     l:'Mill Speed',       min:65,  max:95,   step:1,   unit:'%',     c:'#0e7490' },
+      { st:'grinding', k:'classifier_rpm', l:'Classifier Speed', min:580, max:800,  step:10,  unit:'rpm',   c:'#0e7490' },
+      { st:'grinding', k:'blaine',         l:'Blaine Target',    min:1600,max:2200, step:25,  unit:'cm²/g', c:'#5b21b6' },
+    ]},
+    { title:'Slurry & Filtration', color:'#1d4ed8', bg:'#eff6ff', status:'ok', params:[
+      { st:'slurry',    k:'concentration', l:'Concentration',    min:58, max:72,  step:0.5, unit:'%',    c:'#1d4ed8' },
+      { st:'filtration',k:'vacuum',        l:'Vacuum Pressure',  min:580,max:720, step:5,   unit:'mmHg', c:'#1d4ed8' },
+      { st:'filtration',k:'cake_moist',    l:'Cake Moisture',    min:7.5,max:11,  step:0.1, unit:'%',    c:'#0e7490' },
+      { st:'filtration',k:'cloth_pct',     l:'Cloth Quality',    min:70, max:100, step:1,   unit:'%',    c:'#991b1b' },
+    ]},
+    { title:'Binder & Balling', color:'#92400e', bg:'#fffbeb', status:'ok', params:[
+      { st:'binder', k:'bentonite',   l:'Bentonite Dose',  min:4.5, max:8.5, step:0.1, unit:'kg/t', c:'#92400e' },
+      { st:'binder', k:'lime_pct',    l:'Limestone %',     min:0.8, max:3.5, step:0.1, unit:'%',    c:'#92400e' },
+      { st:'balling',k:'disc_angle',  l:'Disc Angle',      min:38,  max:55,  step:0.5, unit:'°',    c:'#c2410c' },
+      { st:'balling',k:'water_spray', l:'Water Spray',     min:12,  max:26,  step:0.5, unit:'l/h',  c:'#c2410c' },
+    ]},
+    { title:'Indurating Furnace', color:'#991b1b', bg:'#fef2f2', status:'warn', params:[
+      { st:'furnace',k:'firing',     l:'Firing Zone Temp', min:1200,max:1340, step:5,   unit:'°C',    c:'#991b1b' },
+      { st:'furnace',k:'ph2',        l:'Preheating-2 Temp',min:900, max:1150, step:10,  unit:'°C',    c:'#c2410c' },
+      { st:'furnace',k:'fuel_flow',  l:'Fuel Flow',        min:3200,max:5800, step:50,  unit:'Nm³/h', c:'#991b1b' },
+      { st:'furnace',k:'air_flow',   l:'Air Flow',         min:65000,max:115000,step:1000,unit:'Nm³/h',c:'#92400e'},
+      { st:'furnace',k:'grate_speed',l:'Grate Speed',      min:1.2, max:2.8,  step:0.05,unit:'m/min', c:'#5b21b6' },
+    ]},
+  ],
+  1: [
+    { title:'Stacker Reclaimer', color:'#065f46', bg:'#ecfdf5', status:'ok', params:[
+      { st:'ohp',k:'feed_rate',       l:'Feed Rate',         min:300, max:520, step:5,   unit:'t/h',  c:'#1d4ed8' },
+      { st:'ohp',k:'reclaimer_speed', l:'Reclaimer Speed',   min:50,  max:100, step:1,   unit:'%',    c:'#065f46' },
+      { st:'ohp',k:'stacker_angle',   l:'Stacker Angle',     min:8,   max:22,  step:0.5, unit:'°',    c:'#0e7490' },
+      { st:'ohp',k:'blend_ratio',     l:'Ore Blend Ratio',   min:55,  max:75,  step:0.5, unit:'%',    c:'#0e7490' },
+      { st:'ohp',k:'stockpile_ht',    l:'Stockpile Height',  min:6,   max:18,  step:0.5, unit:'m',    c:'#5b21b6' },
+    ]},
+    { title:'Blending', color:'#0e7490', bg:'#ecfeff', status:'ok', params:[
+      { st:'blending',k:'ore_fines',  l:'Ore Fines %',      min:58, max:68,  step:0.5, unit:'%',  c:'#0e7490' },
+      { st:'blending',k:'moisture_in',l:'Feed Moisture',    min:7.5,max:12,  step:0.1, unit:'%',  c:'#1d4ed8' },
+      { st:'blending',k:'blend_eff',  l:'Blend Efficiency', min:85, max:99,  step:0.5, unit:'%',  c:'#065f46' },
+    ]},
+  ],
+  2: [
+    { title:'Slurry Parameters', color:'#1d4ed8', bg:'#eff6ff', status:'ok', params:[
+      { st:'slurry',k:'concentration',l:'Concentration',    min:58,  max:72,  step:0.5, unit:'%',     c:'#1d4ed8' },
+      { st:'slurry',k:'density',      l:'Slurry Density',   min:1.55,max:1.85,step:0.01,unit:'g/cm³', c:'#1d4ed8' },
+      { st:'slurry',k:'pH',           l:'pH Control',       min:7.5, max:9.5, step:0.1, unit:'pH',    c:'#0e7490' },
+      { st:'slurry',k:'flow',         l:'Flow Rate',        min:140, max:240, step:5,   unit:'m³/h',  c:'#5b21b6' },
+    ]},
+    { title:'Disc Vacuum Filter', color:'#0e7490', bg:'#ecfeff', status:'warn', params:[
+      { st:'filtration',k:'vacuum',      l:'Vacuum Pressure',min:580, max:720, step:5,   unit:'mmHg', c:'#0e7490' },
+      { st:'filtration',k:'cycle_speed', l:'Cycle Speed',    min:0.8, max:2.2, step:0.05,unit:'rpm',  c:'#1d4ed8' },
+      { st:'filtration',k:'cake_moist',  l:'Cake Moisture',  min:7.5, max:11,  step:0.1, unit:'%',    c:'#92400e' },
+      { st:'filtration',k:'cake_thick',  l:'Cake Thickness', min:16,  max:28,  step:0.5, unit:'mm',   c:'#065f46' },
+      { st:'filtration',k:'cloth_pct',   l:'Cloth Quality',  min:70,  max:100, step:1,   unit:'%',    c:'#991b1b' },
+    ]},
+  ],
+  3: [
+    { title:'Furnace Zone Temperatures', color:'#991b1b', bg:'#fef2f2', status:'ok', params:[
+      { st:'furnace',k:'udz',    l:'Up Drought Drying',  min:220, max:360,  step:5,  unit:'°C', c:'#1d4ed8' },
+      { st:'furnace',k:'ddd',    l:'Down Drought Drying',min:330, max:500,  step:5,  unit:'°C', c:'#0e7490' },
+      { st:'furnace',k:'ph1',    l:'Preheating-1',       min:720, max:1000, step:10, unit:'°C', c:'#92400e' },
+      { st:'furnace',k:'ph2',    l:'Preheating-2',       min:900, max:1150, step:10, unit:'°C', c:'#c2410c' },
+      { st:'furnace',k:'firing', l:'Firing Zone',        min:1200,max:1340, step:5,  unit:'°C', c:'#991b1b' },
+      { st:'furnace',k:'soaking',l:'Soaking Zone',       min:1150,max:1280, step:5,  unit:'°C', c:'#c2410c' },
+    ]},
+    { title:'Combustion Control', color:'#92400e', bg:'#fffbeb', status:'warn', params:[
+      { st:'furnace',k:'fuel_flow',  l:'Fuel Flow',    min:3200, max:5800,   step:50,   unit:'Nm³/h', c:'#991b1b' },
+      { st:'furnace',k:'air_flow',   l:'Air Flow',     min:65000,max:115000, step:1000, unit:'Nm³/h', c:'#92400e' },
+      { st:'furnace',k:'grate_speed',l:'Grate Speed',  min:1.2,  max:2.8,   step:0.05, unit:'m/min', c:'#5b21b6' },
+      { st:'furnace',k:'bed_ht',     l:'Bed Height',   min:140,  max:230,   step:5,    unit:'mm',    c:'#065f46' },
+    ]},
+  ],
+  4: [
+    { title:'Binder Recipe', color:'#5b21b6', bg:'#f5f3ff', status:'ok', params:[
+      { st:'binder',k:'bentonite',   l:'Bentonite',      min:4.5, max:8.5, step:0.1, unit:'kg/t', c:'#5b21b6' },
+      { st:'binder',k:'lime_pct',    l:'Limestone %',    min:0.8, max:3.5, step:0.1, unit:'%',    c:'#5b21b6' },
+      { st:'binder',k:'mix_moist',   l:'Mix Moisture',   min:7.5, max:10,  step:0.1, unit:'%',    c:'#1d4ed8' },
+    ]},
+    { title:'Firing for Quality', color:'#991b1b', bg:'#fef2f2', status:'ok', params:[
+      { st:'furnace',k:'firing',     l:'Firing Temp',    min:1200,max:1340, step:5,   unit:'°C',   c:'#991b1b' },
+      { st:'furnace',k:'ph2',        l:'PH-2 Temp',      min:900, max:1150, step:10,  unit:'°C',   c:'#c2410c' },
+      { st:'furnace',k:'grate_speed',l:'Grate Speed',    min:1.2, max:2.8,  step:0.05,unit:'m/min',c:'#5b21b6' },
+    ]},
+  ],
+  5: [
+    { title:'Disc Balling', color:'#c2410c', bg:'#fff7ed', status:'ok', params:[
+      { st:'balling',k:'disc_angle',  l:'Disc Angle',     min:38,  max:55,  step:0.5, unit:'°',     c:'#c2410c' },
+      { st:'balling',k:'drum_speed',  l:'Drum Speed',     min:8,   max:16,  step:0.1, unit:'rpm',   c:'#c2410c' },
+      { st:'balling',k:'water_spray', l:'Water Spray',    min:12,  max:26,  step:0.5, unit:'l/h',   c:'#1d4ed8' },
+      { st:'balling',k:'green_burst', l:'Green Burst Str',min:8,   max:18,  step:0.1, unit:'kg',    c:'#065f46' },
+      { st:'balling',k:'drop_num',    l:'Drop Number',    min:3.5, max:7,   step:0.1, unit:'drops', c:'#5b21b6' },
+    ]},
+    { title:'Binder for Balling', color:'#92400e', bg:'#fffbeb', status:'ok', params:[
+      { st:'binder',k:'bentonite',    l:'Bentonite',      min:4.5, max:8.5, step:0.1, unit:'kg/t', c:'#92400e' },
+      { st:'binder',k:'mix_time',     l:'Mix Time',       min:3,   max:7,   step:0.1, unit:'min',  c:'#92400e' },
+    ]},
+  ],
+  6: [
+    { title:'Equipment Health Thresholds', color:'#374151', bg:'#f9fafb', status:'warn', params:[
+      { st:'grinding',k:'mill_speed', l:'Mill Speed',     min:65,  max:95,    step:1,    unit:'%',     c:'#0e7490' },
+      { st:'grinding',k:'power_kw',   l:'Power Draw',     min:2200,max:3500,  step:50,   unit:'kW',    c:'#92400e' },
+      { st:'furnace', k:'grate_speed',l:'Grate Speed',    min:1.2, max:2.8,   step:0.05, unit:'m/min', c:'#5b21b6' },
+      { st:'cooler',  k:'air_vol',    l:'Cooler Air',     min:45000,max:80000,step:1000, unit:'Nm³/h', c:'#1d4ed8' },
+    ]},
+  ],
+};
+
+// ══════════════════════════════════════════════
+// RENDER LEFT CONTROLS
+// ══════════════════════════════════════════════
+function renderLeft() {
+  const ctrl = document.getElementById('left-controls');
+  if (currentMode === 'reset') { renderResetLeft(); return; }
+
+  const chipData = [
+    { l:'Mill OK',      s: S.grinding.mill_speed < 90 ? 'g' : 'a' },
+    { l:'Furnace ON',   s:'g' },
+    { l:'Cloth '+S.filtration.cloth_pct+'%', s: S.filtration.cloth_pct < 85 ? 'r' : S.filtration.cloth_pct < 92 ? 'a' : 'g' },
+    { l:'Cooler OK',    s:'g' },
+    { l:'Grate OK',     s:'g' },
+  ];
+
+  let html = `<div class="status-chips">
+    ${chipData.map(c => `<span class="chip chip-${c.s}"><span class="chip-dot"></span>${c.l}</span>`).join('')}
+  </div>`;
+
+  const groups = UC_CTRLS[currentUC] || UC_CTRLS[0];
+  groups.forEach(g => {
+    html += `<div class="ctrl-section">
+      <div class="ctrl-section-hdr">
+        <div class="ctrl-dot" style="background:${g.color}"></div>
+        <div class="ctrl-name">${g.title}</div>
+        <span class="ctrl-status ${g.status === 'ok' ? 'cs-ok' : 'cs-warn'}">${g.status === 'ok' ? 'OK' : 'WATCH'}</span>
+      </div>`;
+    g.params.forEach(p => {
+      const stObj = S[p.st];
+      const val   = stObj[p.k];
+      const disp  = val >= 10000 ? (val/1000).toFixed(1)+'k' : val >= 1000 ? val.toLocaleString() : val;
+      html += `<div class="ctrl-item">
+        <div class="ctrl-top">
+          <div class="ctrl-label">${p.l}</div>
+          <div class="ctrl-val-display" style="color:${p.c}">${disp} <span class="ctrl-unit-tiny">${p.unit}</span></div>
+        </div>
+        <input type="range" min="${p.min}" max="${p.max}" step="${p.step}" value="${val}"
+          style="accent-color:${p.c}"
+          oninput="onCtrl('${p.st}','${p.k}',this.value,'${p.c}',this)">
+        <div class="ctrl-bounds"><span>${p.min}</span><span>${p.max} ${p.unit}</span></div>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  ctrl.innerHTML = html;
+}
+
+function renderResetLeft() {
+  const keyShow = {
+    ohp:['feed_rate','reclaimer_speed','blend_ratio'],
+    grinding:['mill_speed','blaine','residue_45'],
+    filtration:['vacuum','cake_moist','cloth_pct'],
+    binder:['bentonite','lime_pct'],
+    balling:['disc_angle','water_spray','green_burst'],
+    furnace:['udz','ph2','firing','fuel_flow','grate_speed'],
+  };
+  const stageNames = { ohp:'OHP', grinding:'Grinding', filtration:'Filtration',
+                       binder:'Binder', balling:'Balling', furnace:'Furnace' };
+  let html = `<div style="padding:12px 14px">
+    <div style="font-family:var(--head);font-size:11px;font-weight:700;color:var(--text2);
+      text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;padding-bottom:6px;
+      border-bottom:1px solid var(--border)">Parameter Comparison: Current vs Baseline</div>
+    <div class="reset-grid">`;
+  Object.keys(keyShow).forEach(stage => {
+    html += `<div class="rg-card"><div class="rg-stage">${stageNames[stage]}</div>`;
+    keyShow[stage].forEach(k => {
+      const cur  = S[stage][k];
+      const base = BASELINE[stage][k];
+      const ch   = Math.abs(cur - base) > 0.01;
+      const cd   = cur  >= 1000 ? (cur/1000).toFixed(1)+'k'  : typeof cur  === 'number' ? cur.toFixed(1)  : cur;
+      const bd   = base >= 1000 ? (base/1000).toFixed(1)+'k' : typeof base === 'number' ? base.toFixed(1) : base;
+      html += `<div class="rg-row">
+        <span class="rg-key">${k}</span>
+        <span class="rg-baseline">${bd}</span>
+        <span class="rg-current ${ch ? 'changed' : ''}">${cd}</span>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  html += `</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+      <button class="rbtn rbtn-primary" onclick="doReset()">↺ Reset All to Baseline</button>
+      <button class="rbtn rbtn-secondary" onclick="doReset()">Apply Optimal Recipe</button>
+    </div>
+    <div style="background:var(--green2);border:1px solid var(--green3);border-radius:9px;
+      padding:10px 12px;font-size:10px;color:var(--text2);line-height:1.7">
+      <span style="color:var(--green);font-weight:700">Last Baseline:</span> Shift B · 2026-04-21 06:00 IST<br>
+      Throughput: 480 t/h · CCS: 255 daN · Firing: 1280°C · Energy: 49.1 GJ/t
+    </div>
+  </div>`;
+  document.getElementById('left-controls').innerHTML = html;
+}
+
+function doReset() {
+  Object.keys(BASELINE).forEach(st => Object.keys(BASELINE[st]).forEach(k => { S[st][k] = BASELINE[st][k]; }));
+  renderKPIs(); renderLeft(); renderSchematic(); renderRight();
+  alert('All parameters restored to confirmed baseline values.');
+}
+
+function onCtrl(section, key, val, color, input) {
+  S[section][key] = parseFloat(val);
+  const parent  = input.closest('.ctrl-item');
+  const display = parent.querySelector('.ctrl-val-display');
+  const unit    = parent.querySelector('.ctrl-unit-tiny');
+  const unitTxt = unit ? unit.textContent : '';
+  const v = parseFloat(val);
+  const dv = v >= 10000 ? (v/1000).toFixed(1)+'k' : v >= 1000 ? v.toLocaleString() : v;
+  display.innerHTML = `${dv} <span class="ctrl-unit-tiny">${unitTxt}</span>`;
+  renderKPIs();
+  renderSchematic();
+  renderRight();
+}
+
+// ══════════════════════════════════════════════
+// PROCESS SCHEMATIC — proper sequence, white style
+// OHP → Silos → Blending → Grinding →
+// Water Add/Slurry → Filtration & Cake →
+// [Bentonite ↓] → Green Ball Formation →
+// Indurating Furnace (UDZ→DDD→PH1→PH2→Firing→Soaking→CoolZ) →
+// Circular Cooler → Screening → Output Quality → Dispatch
+// ══════════════════════════════════════════════
+function tcol(t) {
+  if (t < 350)  return '#93c5fd'; // light blue
+  if (t < 650)  return '#fcd34d'; // amber
+  if (t < 950)  return '#fb923c'; // orange
+  if (t < 1150) return '#f97316'; // deep orange
+  return '#ef4444';               // red
+}
+function tcolStroke(t) {
+  if (t < 350)  return '#3b82f6';
+  if (t < 650)  return '#f59e0b';
+  if (t < 950)  return '#ea580c';
+  if (t < 1150) return '#dc2626';
+  return '#b91c1c';
+}
+
+function renderSchematic() {
+  const f = S.furnace, fi = S.filtration, sl = S.slurry, b = S.binder, ball = S.balling, q = S.quality;
+
+  const svgContent = `
+  <svg viewBox="0 0 1120 520" width="100%" style="display:block;overflow:visible;min-height:320px">
+    <defs>
+      <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="#9ca3af"/>
+      </marker>
+      <marker id="ah-blue" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="#1d4ed8"/>
+      </marker>
+      <marker id="ah-green" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="#065f46"/>
+      </marker>
+      <marker id="ah-red" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="#991b1b"/>
+      </marker>
+      <marker id="ah-amber" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="#92400e"/>
+      </marker>
+      <filter id="shadow-sm">
+        <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="rgba(0,0,0,0.1)"/>
+      </filter>
+      <filter id="shadow-md">
+        <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(0,0,0,0.12)"/>
+      </filter>
+    </defs>
+
+    <!-- ═══ SECTION LABELS ═══ -->
+    <text x="8" y="18" font-family="Rajdhani,sans-serif" font-size="9" font-weight="700"
+      fill="#9ca3af" letter-spacing="1">RAW MATERIAL HANDLING</text>
+    <line x1="8" y1="22" x2="370" y2="22" stroke="#e5e7eb" stroke-width="1"/>
+
+    <text x="380" y="18" font-family="Rajdhani,sans-serif" font-size="9" font-weight="700"
+      fill="#9ca3af" letter-spacing="1">SLURRY PREPARATION</text>
+    <line x1="380" y1="22" x2="640" y2="22" stroke="#e5e7eb" stroke-width="1"/>
+
+    <text x="650" y="18" font-family="Rajdhani,sans-serif" font-size="9" font-weight="700"
+      fill="#9ca3af" letter-spacing="1">BALLING</text>
+    <line x1="650" y1="22" x2="750" y2="22" stroke="#e5e7eb" stroke-width="1"/>
+
+    <text x="758" y="18" font-family="Rajdhani,sans-serif" font-size="9" font-weight="700"
+      fill="#9ca3af" letter-spacing="1">INDURATING FURNACE</text>
+    <line x1="758" y1="22" x2="1112" y2="22" stroke="#e5e7eb" stroke-width="1"/>
+
+    <!-- ═══ ROW 1 NODES ═══ -->
+
+    <!-- OHP -->
+    <g class="proc-node" filter="url(#shadow-sm)"
+       onclick="alert('OHP — Ore Handling Plant\nFeed Rate: ${S.ohp.feed_rate} t/h\nBlend Ratio: ${S.ohp.blend_ratio}%\nReclaimer: ${S.ohp.reclaimer_speed}%')">
+      <rect x="8" y="30" width="74" height="54" rx="8" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.5"/>
+      <text x="45" y="52" class="node-title" font-size="10" fill="#1e3a8a">OHP</text>
+      <text x="45" y="65" class="node-val" font-size="10" fill="#1d4ed8">${S.ohp.feed_rate}</text>
+      <text x="45" y="77" class="node-title" font-size="7" fill="#6b7280">t/h feed</text>
+    </g>
+    <line x1="82" y1="57" x2="100" y2="57" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#ah)"/>
+
+    <!-- SILOS / BUNKERS -->
+    <g class="proc-node" filter="url(#shadow-sm)"
+       onclick="alert('Silos / Bunkers\nOre fines, pellet feed, limestone\nCapacity: 3 × 5000t')">
+      <rect x="101" y="26" width="68" height="22" rx="5" fill="#f9fafb" stroke="#d1d5db" stroke-width="1.2"/>
+      <text x="135" y="40" class="node-title" font-size="8" fill="#4b5563">SILO-1</text>
+      <rect x="101" y="52" width="68" height="22" rx="5" fill="#f9fafb" stroke="#d1d5db" stroke-width="1.2"/>
+      <text x="135" y="66" class="node-title" font-size="8" fill="#4b5563">SILO-2</text>
+      <rect x="101" y="78" width="68" height="22" rx="5" fill="#f9fafb" stroke="#d1d5db" stroke-width="1.2"/>
+      <text x="135" y="92" class="node-title" font-size="8" fill="#4b5563">SILO-3</text>
+    </g>
+    <line x1="169" y1="63" x2="188" y2="63" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#ah)"/>
+
+    <!-- BLENDING -->
+    <g class="proc-node" filter="url(#shadow-sm)"
+       onclick="alert('Blending\nOre Fines: ${S.blending.ore_fines}%\nBlend Efficiency: ${S.blending.blend_eff}%\nFeed Moisture: ${S.blending.moisture_in}%')">
+      <rect x="189" y="33" width="78" height="54" rx="8" fill="#ecfeff" stroke="#0e7490" stroke-width="1.5"/>
+      <text x="228" y="54" class="node-title" font-size="10" fill="#164e63">BLENDING</text>
+      <text x="228" y="67" class="node-val" font-size="10" fill="#0e7490">${S.blending.ore_fines}%</text>
+      <text x="228" y="79" class="node-title" font-size="7" fill="#6b7280">Ore Fines</text>
+    </g>
+    <line x1="267" y1="60" x2="287" y2="60" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#ah)"/>
+
+    <!-- GRINDING -->
+    <g class="proc-node" filter="url(#shadow-sm)"
+       onclick="alert('Ball Mill — Grinding\nBlaine: ${S.grinding.blaine} cm²/g\nMill Speed: ${S.grinding.mill_speed}%\nResidue +45μm: ${S.grinding.residue_45}%\nClassifier: ${S.grinding.classifier_rpm} rpm')">
+      <rect x="288" y="26" width="82" height="68" rx="8" fill="#ecfeff" stroke="#0e7490" stroke-width="1.8"/>
+      <text x="329" y="47" class="node-title" font-size="10" fill="#164e63">GRINDING</text>
+      <text x="329" y="59" class="node-title" font-size="7.5" fill="#6b7280">Ball Mill</text>
+      <text x="329" y="74" class="node-val" font-size="10" fill="#0e7490">${S.grinding.blaine}</text>
+      <text x="329" y="86" class="node-title" font-size="7" fill="#6b7280">cm²/g Blaine</text>
+    </g>
+
+    <!-- ═══ SLURRY SECTION ═══ -->
+    <line x1="370" y1="60" x2="390" y2="60" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#ah-blue)"/>
+
+    <!-- WATER ADD / SLURRY -->
+    <g class="proc-node" filter="url(#shadow-sm)"
+       onclick="alert('Water Addition / Slurry\nConcentration: ${sl.concentration}%\nDensity: ${sl.density} g/cm³\npH: ${sl.pH}\nFlow: ${sl.flow} m³/h')">
+      <rect x="391" y="22" width="84" height="76" rx="8" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.5"/>
+      <text x="433" y="46" class="node-title" font-size="9.5" fill="#1e3a8a">WATER</text>
+      <text x="433" y="58" class="node-title" font-size="9.5" fill="#1e3a8a">ADD / SLURRY</text>
+      <text x="433" y="74" class="node-val" font-size="10.5" fill="#1d4ed8">${sl.concentration}%</text>
+      <text x="433" y="88" class="node-title" font-size="7" fill="#6b7280">pH ${sl.pH}</text>
+    </g>
+    <line x1="475" y1="60" x2="496" y2="60" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#ah-blue)"/>
+
+    <!-- FILTRATION & CAKE -->
+    <g class="proc-node" filter="url(#shadow-sm)"
+       onclick="alert('Filtration & Cake Formation\nVacuum: ${fi.vacuum} mmHg\nCake Moisture: ${fi.cake_moist}%\nCake Thickness: ${fi.cake_thick} mm\nCycle Speed: ${fi.cycle_speed} rpm\nCloth Quality: ${fi.cloth_pct}%')">
+      <rect x="497" y="18" width="92" height="84" rx="8" fill="#ecfdf5" stroke="#065f46" stroke-width="2"/>
+      <text x="543" y="44" class="node-title" font-size="9.5" fill="#064e3b">FILTRATION</text>
+      <text x="543" y="56" class="node-title" font-size="9.5" fill="#064e3b">&amp; CAKE</text>
+      <text x="543" y="72" class="node-val" font-size="11" fill="#065f46">${fi.cake_moist}%</text>
+      <text x="543" y="84" class="node-title" font-size="7.5" fill="#6b7280">${fi.vacuum} mmHg</text>
+      <text x="543" y="95" class="node-title" font-size="7" fill="#6b7280">${fi.cake_thick}mm thick</text>
+    </g>
+
+    <!-- Input specs annotation -->
+    <rect x="391" y="110" width="198" height="40" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="490" y="124" text-anchor="middle" font-size="8" fill="#6b7280"
+      font-family="Rajdhani,sans-serif" font-weight="700">FILTRATION INPUTS</text>
+    <text x="398" y="137" font-size="7.5" fill="#1d4ed8"
+      font-family="Share Tech Mono,monospace">Conc:${sl.concentration}% · Blaine:${S.grinding.blaine}cm²/g · Vac:${fi.vacuum}mmHg</text>
+    <text x="398" y="148" font-size="7.5" fill="#1d4ed8"
+      font-family="Share Tech Mono,monospace">Cloth:${fi.cloth_pct}% · Cycle:${fi.cycle_speed}rpm · ${fi.cake_thick}mm</text>
+
+    <!-- ═══ BALLING SECTION ═══ -->
+    <line x1="589" y1="60" x2="622" y2="60" stroke="#065f46" stroke-width="1.8" marker-end="url(#ah-green)"/>
+
+    <!-- BENTONITE -->
+    <g class="proc-node" filter="url(#shadow-sm)"
+       onclick="alert('Binder — Bentonite\nDose: ${b.bentonite} kg/t\nLimestone: ${b.lime_pct}%\nMix Time: ${b.mix_time} min')">
+      <rect x="624" y="10" width="76" height="28" rx="6" fill="#fffbeb" stroke="#92400e" stroke-width="1.5"/>
+      <text x="662" y="24" class="node-title" font-size="9" fill="#78350f">BENTONITE</text>
+      <text x="662" y="34" class="node-val" font-size="8" fill="#92400e">${b.bentonite}kg/t</text>
+    </g>
+    <line x1="662" y1="38" x2="662" y2="54" stroke="#92400e" stroke-width="1.2" marker-end="url(#ah-amber)"/>
+
+    <!-- GREEN BALL FORMATION -->
+    <g class="proc-node" filter="url(#shadow-md)"
+       onclick="alert('Green Ball Formation\nDisc Angle: ${ball.disc_angle}°\nGreen Burst: ${ball.green_burst} kg\nDrop Number: ${ball.drop_num}\nOn-spec PSD: ${ball.onspec_pct}%\nWater Spray: ${ball.water_spray} l/h')">
+      <rect x="624" y="44" width="76" height="86" rx="8" fill="#fff7ed" stroke="#c2410c" stroke-width="2"/>
+      <text x="662" y="68" class="node-title" font-size="10" fill="#7c2d12">GREEN</text>
+      <text x="662" y="80" class="node-title" font-size="10" fill="#7c2d12">BALL</text>
+      <text x="662" y="93" class="node-title" font-size="7.5" fill="#6b7280">Disc Balling</text>
+      <text x="662" y="108" class="node-val" font-size="10" fill="#c2410c">${ball.disc_angle}°</text>
+      <text x="662" y="122" class="node-val" font-size="9" fill="#92400e">${ball.green_burst}kg</text>
+    </g>
+    <!-- Oversize recycle -->
+    <path d="M 662 130 Q 662 154 580 154 Q 516 154 516 102" fill="none"
+      stroke="#c2410c" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#ah-red)"/>
+    <text x="582" y="163" font-size="7.5" fill="#c2410c" font-family="Rajdhani,sans-serif" font-weight="600">Oversize Recycle</text>
+
+    <!-- Arrow Green Ball → Furnace -->
+    <line x1="700" y1="87" x2="734" y2="87" stroke="#991b1b" stroke-width="2" marker-end="url(#ah-red)"/>
+
+    <!-- ═══ INDURATING FURNACE ═══ -->
+    <!-- Furnace bounding box -->
+    <rect x="733" y="16" width="376" height="116" rx="10"
+      fill="#fff7ed" stroke="#c2410c" stroke-width="2" filter="url(#shadow-md)"/>
+    <text x="921" y="30" text-anchor="middle" font-family="Rajdhani,sans-serif" font-size="10"
+      font-weight="700" fill="#991b1b" letter-spacing="0.5">INDURATING FURNACE — ${f.firing}°C PEAK</text>
+
+    <!-- UDZ -->
+    <g class="proc-node"
+       onclick="alert('Up Drought Drying Zone\nTemp: ${f.udz}°C\nRemoves surface moisture')">
+      <rect x="740" y="36" width="44" height="84" rx="6"
+        fill="${tcol(f.udz)}33" stroke="${tcolStroke(f.udz)}" stroke-width="1.2"/>
+      <text x="762" y="64" class="node-title" font-size="7" fill="${tcolStroke(f.udz)}"
+        transform="rotate(-90,762,78)">Up Drought</text>
+      <text x="762" y="108" class="node-val" font-size="9" fill="${tcolStroke(f.udz)}"
+        text-anchor="middle">${f.udz}°</text>
+    </g>
+
+    <!-- DDD -->
+    <g class="proc-node"
+       onclick="alert('Down Drought Drying Zone\nTemp: ${f.ddd}°C\nRemoves combined moisture')">
+      <rect x="788" y="36" width="44" height="84" rx="6"
+        fill="${tcol(f.ddd)}33" stroke="${tcolStroke(f.ddd)}" stroke-width="1.2"/>
+      <text x="810" y="64" class="node-title" font-size="7" fill="${tcolStroke(f.ddd)}"
+        transform="rotate(-90,810,78)">Down Drought</text>
+      <text x="810" y="108" class="node-val" font-size="9" fill="${tcolStroke(f.ddd)}"
+        text-anchor="middle">${f.ddd}°</text>
+    </g>
+
+    <!-- PH-1 -->
+    <g class="proc-node"
+       onclick="alert('Preheating Zone 1\nTemp: ${f.ph1}°C\nFe₂O₃ oxidation begins')">
+      <rect x="836" y="36" width="44" height="84" rx="6"
+        fill="${tcol(f.ph1)}33" stroke="${tcolStroke(f.ph1)}" stroke-width="1.2"/>
+      <text x="858" y="64" class="node-title" font-size="7" fill="${tcolStroke(f.ph1)}"
+        transform="rotate(-90,858,78)">Preheating-1</text>
+      <text x="858" y="108" class="node-val" font-size="9" fill="${tcolStroke(f.ph1)}"
+        text-anchor="middle">${f.ph1}°</text>
+    </g>
+
+    <!-- PH-2 -->
+    <g class="proc-node"
+       onclick="alert('Preheating Zone 2\nTemp: ${f.ph2}°C\nNear-complete oxidation')">
+      <rect x="884" y="36" width="44" height="84" rx="6"
+        fill="${tcol(f.ph2)}33" stroke="${tcolStroke(f.ph2)}" stroke-width="1.5"/>
+      <text x="906" y="64" class="node-title" font-size="7" fill="${tcolStroke(f.ph2)}"
+        transform="rotate(-90,906,78)">Preheating-2</text>
+      <text x="906" y="108" class="node-val" font-size="9" fill="${tcolStroke(f.ph2)}"
+        text-anchor="middle">${f.ph2}°</text>
+    </g>
+
+    <!-- FIRING ZONE — biggest, most prominent -->
+    <g class="proc-node"
+       onclick="alert('Firing Zone — PEAK\nTemp: ${f.firing}°C\nFuel: ${f.fuel_flow} Nm³/h\nCeramic bonding & CCS development')">
+      <rect x="932" y="28" width="56" height="100" rx="7"
+        fill="${tcol(f.firing)}55" stroke="${tcolStroke(f.firing)}" stroke-width="2.5" filter="url(#shadow-sm)"/>
+      <text x="960" y="65" class="node-title" font-size="7.5" fill="${tcolStroke(f.firing)}"
+        transform="rotate(-90,960,78)">FIRING ZONE</text>
+      <text x="960" y="114" class="node-val" font-size="11" fill="${tcolStroke(f.firing)}"
+        text-anchor="middle" font-weight="700">${f.firing}°</text>
+      <text x="960" y="124" class="node-title" font-size="7" fill="${tcolStroke(f.firing)}"
+        text-anchor="middle">PEAK</text>
+    </g>
+
+    <!-- SOAKING -->
+    <g class="proc-node"
+       onclick="alert('Soaking Zone\nTemp: ${f.soaking}°C')">
+      <rect x="992" y="36" width="40" height="84" rx="6"
+        fill="${tcol(f.soaking)}33" stroke="${tcolStroke(f.soaking)}" stroke-width="1.2"/>
+      <text x="1012" y="64" class="node-title" font-size="7" fill="${tcolStroke(f.soaking)}"
+        transform="rotate(-90,1012,78)">Soaking</text>
+      <text x="1012" y="108" class="node-val" font-size="9" fill="${tcolStroke(f.soaking)}"
+        text-anchor="middle">${f.soaking}°</text>
+    </g>
+
+    <!-- COOLING ZONE (inside furnace) -->
+    <g class="proc-node"
+       onclick="alert('Cooling Zone\nTemp: ${f.cooling_z}°C')">
+      <rect x="1036" y="36" width="66" height="84" rx="6"
+        fill="${tcol(f.cooling_z)}33" stroke="${tcolStroke(f.cooling_z)}" stroke-width="1.2"/>
+      <text x="1069" y="64" class="node-title" font-size="7" fill="${tcolStroke(f.cooling_z)}"
+        transform="rotate(-90,1069,78)">Cooling Zone</text>
+      <text x="1069" y="108" class="node-val" font-size="9" fill="${tcolStroke(f.cooling_z)}"
+        text-anchor="middle">${f.cooling_z}°</text>
+    </g>
+
+    <!-- Grate direction label -->
+    <text x="921" y="145" text-anchor="middle" font-size="8" fill="#6b7280"
+      font-family="Rajdhani,sans-serif" font-weight="600">
+      ← PELLETS ON GRATE · ${f.grate_speed} m/min · BED HEIGHT: ${f.bed_ht} mm →
+    </text>
+
+    <!-- Fuel input indicator -->
+    <line x1="960" y1="148" x2="960" y2="165" stroke="#991b1b" stroke-width="1.2"
+      stroke-dasharray="3,2" marker-end="url(#ah-red)"/>
+    <text x="960" y="176" text-anchor="middle" font-size="7.5" fill="#991b1b"
+      font-family="Share Tech Mono,monospace">${(f.fuel_flow/1000).toFixed(1)}k Nm³/h · AFR ${(f.air_flow/f.fuel_flow).toFixed(1)}</text>
+
+    <!-- ═══ ROW 2: COOLING → SCREENING → OUTPUT → DISPATCH ═══ -->
+    <text x="8" y="204" font-family="Rajdhani,sans-serif" font-size="9" font-weight="700"
+      fill="#9ca3af" letter-spacing="1">POST-PROCESSING &amp; QUALITY CONTROL</text>
+    <line x1="8" y1="208" x2="1112" y2="208" stroke="#e5e7eb" stroke-width="1"/>
+
+    <!-- Arrow from furnace down-right to cooler -->
+    <line x1="1102" y1="78" x2="1112" y2="78" stroke="#991b1b" stroke-width="1.5"/>
+    <line x1="1112" y1="78" x2="1112" y2="228" stroke="#c2410c" stroke-width="1.5"/>
+    <line x1="1112" y1="228" x2="1026" y2="228" stroke="#92400e" stroke-width="1.5" marker-end="url(#ah-amber)"/>
+
+    <!-- CIRCULAR COOLER -->
+    <g class="proc-node" filter="url(#shadow-sm)"
+       onclick="alert('Circular Cooler\nAir Volume: ${S.cooler.air_vol} Nm³/h\nOutlet Temp: ${S.cooler.outlet_temp}°C\nCooler Speed: ${S.cooler.speed} rpm')">
+      <rect x="920" y="213" width="104" height="52" rx="8" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.5"/>
+      <text x="972" y="233" class="node-title" font-size="10" fill="#1e3a8a">CIRCULAR</text>
+      <text x="972" y="246" class="node-title" font-size="10" fill="#1e3a8a">COOLER</text>
+      <text x="972" y="259" class="node-val" font-size="8.5" fill="#1d4ed8">${S.cooler.outlet_temp}°C out</text>
+    </g>
+    <!-- Cooler → Screening -->
+    <line x1="920" y1="239" x2="870" y2="239" stroke="#9ca3af" stroke-width="1.5" marker-end="url(#ah)"/>
+
+    <!-- SCREENING -->
+    <g class="proc-node" filter="url(#shadow-sm)"
+       onclick="alert('Screening\nUpper Deck: ${S.screening.upper_mm}mm\nLower Deck: ${S.screening.lower_mm}mm\nVibration: ${S.screening.vib_hz}Hz\nReturn Fines: ${S.screening.fines_pct}%')">
+      <rect x="758" y="213" width="110" height="52" rx="8" fill="#f5f3ff" stroke="#5b21b6" stroke-width="1.5"/>
+      <text x="813" y="234" class="node-title" font-size="10" fill="#4c1d95">SCREENING</text>
+      <text x="813" y="248" class="node-val" font-size="8.5" fill="#5b21b6">+${S.screening.upper_mm}mm / ${S.screening.lower_mm}mm</text>
+      <text x="813" y="259" class="node-title" font-size="7.5" fill="#6b7280">Fines: ${S.screening.fines_pct}%</text>
+    </g>
+    <!-- Screening → Output -->
+    <line x1="758" y1="239" x2="708" y2="239" stroke="#065f46" stroke-width="2" marker-end="url(#ah-green)"/>
+
+    <!-- OUTPUT PELLET QUALITY — most prominent box -->
+    <g class="proc-node" filter="url(#shadow-md)"
+       onclick="alert('Output Pellet Quality — DRI Grade\nCCS: ${Math.round(q.CCS)} daN (target >250)\nRI: ${parseFloat(q.RI).toFixed(1)}% (target >70%)\nCR: ${q.CR}% (target <6%)\nTII: ${q.TII}%\nFe: ${parseFloat(q.Fe).toFixed(1)}%\nBasicity B₂: ${q.basicity}')">
+      <rect x="498" y="198" width="208" height="82" rx="10"
+        fill="#ecfdf5" stroke="#065f46" stroke-width="2.5"/>
+      <text x="602" y="218" text-anchor="middle" font-family="Rajdhani,sans-serif"
+        font-size="11" font-weight="700" fill="#064e3b">OUTPUT PELLET QUALITY</text>
+      <text x="515" y="236" class="node-val" font-size="10" fill="#065f46" text-anchor="start">CCS: ${Math.round(q.CCS)} daN</text>
+      <text x="515" y="251" class="node-val" font-size="10" fill="#0e7490" text-anchor="start">RI:  ${parseFloat(q.RI).toFixed(1)}%</text>
+      <text x="515" y="266" class="node-val" font-size="10" fill="#065f46" text-anchor="start">Fe:  ${parseFloat(q.Fe).toFixed(1)}%</text>
+      <text x="690" y="236" class="node-val" font-size="10" fill="#0e7490" text-anchor="end">CR:  ${q.CR}%</text>
+      <text x="690" y="251" class="node-val" font-size="10" fill="#065f46" text-anchor="end">TII: ${q.TII}%</text>
+      <text x="690" y="266" class="node-val" font-size="10" fill="#5b21b6" text-anchor="end">B₂:  ${q.basicity}</text>
+    </g>
+
+    <!-- Output → Dispatch -->
+    <line x1="498" y1="239" x2="426" y2="239" stroke="#065f46" stroke-width="2" marker-end="url(#ah-green)"/>
+
+    <!-- DISPATCH -->
+    <g class="proc-node" filter="url(#shadow-sm)"
+       onclick="alert('Product Dispatch — DRI Grade\nThroughput: ${Math.round(KPIS[0].val)} t/h\nFe: ${parseFloat(q.Fe).toFixed(1)}%\nCCS: ${Math.round(q.CCS)} daN')">
+      <rect x="316" y="213" width="108" height="52" rx="8" fill="#ecfdf5" stroke="#065f46" stroke-width="2"/>
+      <text x="370" y="233" class="node-title" font-size="10" fill="#064e3b">DISPATCH</text>
+      <text x="370" y="248" class="node-val" font-size="11" fill="#065f46">${Math.round(KPIS[0].val)} t/h</text>
+      <text x="370" y="260" class="node-title" font-size="7.5" fill="#6b7280">DRI Premium Grade</text>
+    </g>
+
+    <!-- Return fines loop: Screening → Ball Mill -->
+    <path d="M 813 265 Q 813 295 580 295 Q 380 295 329 160 Q 329 115 329 60"
+      fill="none" stroke="#5b21b6" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#ah)"/>
+    <text x="576" y="307" text-anchor="middle" font-size="8" fill="#5b21b6"
+      font-family="Rajdhani,sans-serif" font-weight="700">Return Fines — back to Ball Mill</text>
+
+    <!-- ═══ OBJECTIVE BANNERS ═══ -->
+    <rect x="8" y="322" width="365" height="26" rx="6" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1"/>
+    <text x="190" y="339" text-anchor="middle" font-size="8.5" fill="#065f46"
+      font-family="Rajdhani,sans-serif" font-weight="700">
+      ↑ Throughput ${Math.round(KPIS[0].val)} t/h  ·  ↓ Return Fines ${KPIS[5].val}%  ·  ↓ Fuel ${(f.fuel_flow/1000).toFixed(1)}k Nm³/h
+    </text>
+    <rect x="380" y="322" width="360" height="26" rx="6" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1"/>
+    <text x="560" y="339" text-anchor="middle" font-size="8.5" fill="#1d4ed8"
+      font-family="Rajdhani,sans-serif" font-weight="700">
+      CCS ${Math.round(q.CCS)} daN  ·  RI ${parseFloat(q.RI).toFixed(1)}%  ·  Fe ${parseFloat(q.Fe).toFixed(1)}%  ·  OEE ${KPIS[8].val}%
+    </text>
+    <rect x="748" y="322" width="364" height="26" rx="6" fill="#fff7ed" stroke="#fed7aa" stroke-width="1"/>
+    <text x="930" y="339" text-anchor="middle" font-size="8.5" fill="#92400e"
+      font-family="Rajdhani,sans-serif" font-weight="700">
+      Firing ${f.firing}°C  ·  AFR ${(f.air_flow/f.fuel_flow).toFixed(1)}  ·  Grate ${f.grate_speed} m/min  ·  Energy ${parseFloat(KPIS[1].val).toFixed(1)} GJ/t
+    </text>
+
+    <!-- ═══ LEGEND ═══ -->
+    ${[
+      ['#eff6ff','#1d4ed8','Raw Material / OHP'],
+      ['#ecfeff','#0e7490','Grinding'],
+      ['#eff6ff','#1d4ed8','Slurry / Filtration'],
+      ['#fff7ed','#c2410c','Balling'],
+      ['#fff7ed','#991b1b','Indurating Furnace'],
+      ['#ecfdf5','#065f46','Product Output'],
+    ].map(([bg, stroke, lbl], i) => `
+      <rect x="${8 + i*183}" y="358" width="13" height="13" rx="3"
+        fill="${bg}" stroke="${stroke}" stroke-width="1.5"/>
+      <text x="${27 + i*183}" y="369" font-size="8.5" fill="#6b7280"
+        font-family="Rajdhani,sans-serif" font-weight="600">${lbl}</text>
+    `).join('')}
+  </svg>`;
+
+  document.getElementById('viz-schematic').innerHTML =
+    `<div class="schem-card">
+      <div class="schem-title">AM/NS India Vizag — Iron Pellet Plant Process Flow (Straight Grate · 6 MTPA)</div>
+      ${svgContent}
+    </div>`;
+
+  // Stage metric cards below schematic
+  const cards = [
+    { l:'Blaine',      v:S.grinding.blaine,             u:'cm²/g', c:'#0e7490', pct:S.grinding.blaine/2200*100,         tgt:'1800-2000' },
+    { l:'Cake Moist',  v:S.filtration.cake_moist,        u:'%',     c:'#1d4ed8', pct:S.filtration.cake_moist/12*100,     tgt:'8-10%' },
+    { l:'Green Burst', v:S.balling.green_burst,          u:'kg',    c:'#c2410c', pct:S.balling.green_burst/18*100,       tgt:'>10 kg' },
+    { l:'Firing Temp', v:S.furnace.firing,               u:'°C',    c:'#991b1b', pct:S.furnace.firing/1350*100,          tgt:'1250-1310°C' },
+    { l:'CCS',         v:Math.round(S.quality.CCS),      u:'daN',   c:'#5b21b6', pct:S.quality.CCS/300*100,             tgt:'>250 daN' },
+    { l:'Plant OEE',   v:KPIS[8].val,                   u:'%',     c:'#065f46', pct:KPIS[8].val,                        tgt:'>88%' },
+  ];
+  const row = document.createElement('div');
+  row.className = 'stage-row';
+  row.innerHTML = cards.map(c => `
+    <div class="smc">
+      <div class="smc-lbl">${c.l}</div>
+      <div class="smc-val" style="color:${c.c}">${c.v}<span style="font-size:8px;color:var(--text4)"> ${c.u}</span></div>
+      <div class="smc-sub">Tgt: ${c.tgt}</div>
+      <div class="smc-bar"><div class="smc-fill" style="width:${Math.min(100,c.pct).toFixed(1)}%;background:${c.c}"></div></div>
+    </div>`).join('');
+  document.getElementById('viz-schematic').appendChild(row);
+}
+
+// ══════════════════════════════════════════════
+// TREND CHARTS
+// ══════════════════════════════════════════════
+function renderTrends() {
+  document.getElementById('viz-trends').innerHTML = `
+    <div class="tchart-card">
+      <div class="tchart-hdr">Indurating Furnace — Zone Temperature Profile (Shift)
+        <span class="tbadge tb-ok">STABLE</span></div>
+      <div style="height:175px;position:relative">
+        <canvas id="tc-furnace" role="img" aria-label="Furnace temperature trends over shift">Zone temperature trends</canvas>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div class="tchart-card">
+        <div class="tchart-hdr">CCS &amp; RI Trend
+          <span class="tbadge" style="background:var(--purple2);color:var(--purple)">QUALITY</span></div>
+        <div style="height:150px;position:relative">
+          <canvas id="tc-quality" role="img" aria-label="CCS and RI quality trends">CCS RI trends</canvas>
+        </div>
+      </div>
+      <div class="tchart-card">
+        <div class="tchart-hdr">Fuel vs Throughput
+          <span class="tbadge tb-warn">OPTIMIZING</span></div>
+        <div style="height:150px;position:relative">
+          <canvas id="tc-fuel" role="img" aria-label="Fuel consumption vs throughput">Fuel throughput</canvas>
+        </div>
+      </div>
+    </div>
+    <div class="tchart-card">
+      <div class="tchart-hdr">Slurry Concentration &amp; Cake Moisture
+        <span class="tbadge tb-live">LIVE</span></div>
+      <div style="height:130px;position:relative">
+        <canvas id="tc-slurry" role="img" aria-label="Slurry and filtration trends">Slurry trends</canvas>
+      </div>
+    </div>`;
+  setTimeout(() => {
+    destroyCharts();
+    const baseOpts = (extra={}) => ({
+      responsive:true, maintainAspectRatio:false, animation:{duration:300},
+      plugins:{ legend:{ labels:{ color:'#4b5563', font:{size:9}, boxWidth:10, padding:8 } } },
+      scales:{
+        x:{ ticks:{color:'#9ca3af',font:{size:8}}, grid:{color:'rgba(0,0,0,0.04)'} },
+        y:{ ticks:{color:'#9ca3af',font:{size:8}}, grid:{color:'rgba(0,0,0,0.04)'} },
+        ...extra
+      }
+    });
+    const hrs = Array.from({length:20}, (_,i) => `${Math.floor(i/2+6)}:${i%2?'30':'00'}`);
+    const g   = (base,v) => hrs.map(() => +(base + (Math.random()-0.5)*v).toFixed(1));
+
+    charts.furnace = new Chart(document.getElementById('tc-furnace'),{ type:'line',
+      data:{ labels:hrs, datasets:[
+        { label:'UDZ',   data:g(S.furnace.udz,14),    borderColor:'#93c5fd', fill:false, tension:0.4, pointRadius:0, borderWidth:1.5 },
+        { label:'PH-2',  data:g(S.furnace.ph2,18),    borderColor:'#fb923c', fill:false, tension:0.4, pointRadius:0, borderWidth:1.5 },
+        { label:'Firing',data:g(S.furnace.firing,10), borderColor:'#ef4444', fill:false, tension:0.4, pointRadius:0, borderWidth:2.5 },
+      ]}, options:baseOpts() });
+
+    charts.quality = new Chart(document.getElementById('tc-quality'),{ type:'line',
+      data:{ labels:hrs, datasets:[
+        { label:'CCS (daN)', data:g(S.quality.CCS,8),          borderColor:'#7c3aed', fill:false, tension:0.4, pointRadius:0, borderWidth:2 },
+        { label:'RI (%)',    data:g(parseFloat(S.quality.RI),1.2), borderColor:'#0e7490', fill:false, tension:0.4, pointRadius:0, borderWidth:2, yAxisID:'y2' },
+      ]}, options:baseOpts({ y2:{position:'right',ticks:{color:'#9ca3af',font:{size:8}},grid:{display:false}} }) });
+
+    charts.fuel = new Chart(document.getElementById('tc-fuel'),{ type:'bar',
+      data:{ labels:hrs.slice(0,10), datasets:[
+        { label:'Fuel Nm³/h', data:g(S.furnace.fuel_flow,200).slice(0,10),
+          backgroundColor:'rgba(153,27,27,0.15)', borderColor:'#991b1b', borderWidth:1, borderRadius:3 },
+        { label:'Throughput t/h', data:g(KPIS[0].val,15).slice(0,10),
+          type:'line', borderColor:'#1d4ed8', fill:false, tension:0.4, pointRadius:0, borderWidth:2, yAxisID:'y2' },
+      ]}, options:baseOpts({ y2:{position:'right',ticks:{color:'#9ca3af',font:{size:8}},grid:{display:false}} }) });
+
+    charts.slurry = new Chart(document.getElementById('tc-slurry'),{ type:'line',
+      data:{ labels:hrs, datasets:[
+        { label:'Concentration %',  data:g(S.slurry.concentration,1.5),     borderColor:'#1d4ed8', fill:false, tension:0.4, pointRadius:0, borderWidth:1.5 },
+        { label:'Cake Moisture %',  data:g(S.filtration.cake_moist,0.4),    borderColor:'#0e7490', fill:false, tension:0.4, pointRadius:0, borderWidth:1.5, yAxisID:'y2' },
+      ]}, options:baseOpts({ y2:{position:'right',ticks:{color:'#9ca3af',font:{size:8}},grid:{display:false}} }) });
+  }, 100);
+}
+
+// ══════════════════════════════════════════════
+// QUALITY DASHBOARD
+// ══════════════════════════════════════════════
+function renderQuality() {
+  const q = S.quality;
+  const QGs = [
+    { l:'CCS',        v:Math.round(q.CCS),              u:'daN', tgt:'>250',   c:'#5b21b6', max:320 },
+    { l:'RI',         v:parseFloat(q.RI).toFixed(1),    u:'%',   tgt:'>70%',   c:'#0e7490', max:85  },
+    { l:'CR',         v:q.CR,                           u:'%',   tgt:'<6%',    c:'#991b1b', max:10  },
+    { l:'TII',        v:q.TII,                          u:'%',   tgt:'>94%',   c:'#065f46', max:100 },
+    { l:'Fe Content', v:parseFloat(q.Fe).toFixed(1),    u:'%',   tgt:'>65%',   c:'#1d4ed8', max:68  },
+    { l:'Basicity B₂',v:q.basicity,                     u:'',    tgt:'1.0-1.1',c:'#92400e', max:1.4 },
+    { l:'Tumble Idx', v:q.tumble,                       u:'%',   tgt:'>94%',   c:'#065f46', max:100 },
+    { l:'Bentonite',  v:S.binder.bentonite,             u:'kg/t',tgt:'5.5-7',  c:'#c2410c', max:9   },
+  ];
+  document.getElementById('viz-quality').innerHTML = `
+    <div class="tchart-card" style="margin-bottom:10px">
+      <div class="tchart-hdr">Product Quality Gauges — Current Batch</div>
+      <div class="qgrid">
+        ${QGs.map(g => `<div class="qg-box">
+          <div class="qg-val" style="color:${g.c}">${g.v}</div>
+          <div class="qg-lbl">${g.l} ${g.u}</div>
+          <div class="qg-bar"><div class="qg-fill" style="width:${Math.min(100,parseFloat(g.v)/g.max*100).toFixed(0)}%;background:${g.c}"></div></div>
+          <div class="qg-tgt">Target: ${g.tgt}</div>
+        </div>`).join('')}
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div class="tchart-card">
+        <div class="tchart-hdr">CCS Distribution — 100 Samples</div>
+        <div style="height:160px;position:relative">
+          <canvas id="qc-ccs" role="img" aria-label="CCS histogram">CCS distribution</canvas>
+        </div>
+      </div>
+      <div class="tchart-card">
+        <div class="tchart-hdr">Green Ball Size Distribution</div>
+        <div style="height:160px;position:relative">
+          <canvas id="qc-gb" role="img" aria-label="Green ball PSD">GB PSD</canvas>
+        </div>
+      </div>
+    </div>`;
+  setTimeout(() => {
+    const co = { responsive:true, maintainAspectRatio:false, animation:{duration:300},
+      plugins:{legend:{display:false}},
+      scales:{ x:{ticks:{color:'#9ca3af',font:{size:8}},grid:{color:'rgba(0,0,0,0.04)'}},
+               y:{ticks:{color:'#9ca3af',font:{size:8}},grid:{color:'rgba(0,0,0,0.04)'}} } };
+    charts.ccs = new Chart(document.getElementById('qc-ccs'),{ type:'bar',
+      data:{ labels:['<220','220-240','240-260','260-280','280-300','>300'],
+        datasets:[{ data:[2,8,28,38,18,6],
+          backgroundColor:['#fca5a5','#fcd34d','#a7f3d0','#6ee7b7','#34d399','#10b981'],
+          borderRadius:5, barPercentage:0.75 }] }, options:co });
+    charts.gb = new Chart(document.getElementById('qc-gb'),{ type:'bar',
+      data:{ labels:['<8mm','8-10mm','10-12mm','12-14mm','14-16mm','>16mm'],
+        datasets:[{ data:[1.2,11,40,30,13,4.8],
+          backgroundColor:['#fca5a5','#fcd34d','#34d399','#22c55e','#fcd34d','#fca5a5'],
+          borderRadius:5, barPercentage:0.75 }] }, options:co });
+  }, 100);
+}
+
+// ══════════════════════════════════════════════
+// ENERGY DASHBOARD
+// ══════════════════════════════════════════════
+function renderEnergy() {
+  const f = S.furnace;
+  document.getElementById('viz-energy').innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px">
+      ${[
+        { l:'Specific Energy', v:KPIS[1].val, u:'GJ/t',   c:'#92400e' },
+        { l:'Fuel Flow',       v:(f.fuel_flow/1000).toFixed(2), u:'kNm³/h', c:'#991b1b' },
+        { l:'Air-Fuel Ratio',  v:(f.air_flow/f.fuel_flow).toFixed(2), u:'',c:'#1d4ed8' },
+        { l:'Waste Gas Temp',  v:f.wg_temp,  u:'°C',      c:'#c2410c' },
+        { l:'Grate Speed',     v:f.grate_speed, u:'m/min',c:'#5b21b6' },
+        { l:'Bed Height',      v:f.bed_ht,   u:'mm',      c:'#065f46' },
+      ].map(m => `<div class="smc">
+        <div class="smc-lbl">${m.l}</div>
+        <div style="font-family:var(--mono);font-size:20px;color:${m.c}">${m.v}</div>
+        <div class="smc-sub">${m.u}</div>
+      </div>`).join('')}
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div class="tchart-card">
+        <div class="tchart-hdr">Zone Temperatures — Bar View</div>
+        <div style="height:175px;position:relative">
+          <canvas id="ec-zone" role="img" aria-label="Zone temperature bar chart">Zone temperatures</canvas>
+        </div>
+      </div>
+      <div class="tchart-card">
+        <div class="tchart-hdr">Energy Distribution by Zone</div>
+        <div style="height:175px;position:relative">
+          <canvas id="ec-pie" role="img" aria-label="Energy distribution doughnut chart">Energy distribution</canvas>
+        </div>
+      </div>
+    </div>`;
+  setTimeout(() => {
+    const bo = { responsive:true, maintainAspectRatio:false, animation:{duration:300},
+      plugins:{legend:{labels:{color:'#4b5563',font:{size:9},boxWidth:10}}},
+      scales:{ x:{ticks:{color:'#9ca3af',font:{size:9}},grid:{display:false}},
+               y:{ticks:{color:'#9ca3af',font:{size:9}},grid:{color:'rgba(0,0,0,0.04)'}} } };
+    charts.zone = new Chart(document.getElementById('ec-zone'),{ type:'bar',
+      data:{ labels:['UDZ','DDD','PH-1','PH-2','Firing','Soaking','Cool'],
+        datasets:[{ data:[f.udz,f.ddd,f.ph1,f.ph2,f.firing,f.soaking,f.cooling_z],
+          backgroundColor:['#93c5fd','#7dd3fc','#fcd34d','#fb923c','#ef4444','#f97316','#60a5fa'],
+          borderRadius:5, barPercentage:0.7 }] },
+      options:{ ...bo, plugins:{legend:{display:false}} } });
+    charts.pie = new Chart(document.getElementById('ec-pie'),{ type:'doughnut',
+      data:{ labels:['UDZ','DDD','PH-1','PH-2','Firing','Cooling'],
+        datasets:[{ data:[12,14,20,22,25,7],
+          backgroundColor:['#93c5fd','#7dd3fc','#fcd34d','#fb923c','#ef4444','#60a5fa'],
+          borderWidth:2, borderColor:'#fff' }] },
+      options:{ responsive:true, maintainAspectRatio:false, animation:{duration:300},
+        plugins:{legend:{position:'right',labels:{color:'#4b5563',font:{size:9},boxWidth:10}}} } });
+  }, 100);
+}
+
+function destroyCharts() {
+  Object.values(charts).forEach(c => { try { c.destroy(); } catch(e) {} });
+  charts = {};
+}
+
+// ══════════════════════════════════════════════
+// AI DATA
+// ══════════════════════════════════════════════
+const AI_DATA = [
+  [ // UC 0 — Full
+    { t:'insight',title:'Plant Overview',
+      body:`Throughput ${Math.round(KPIS[0].val)} t/h · CCS ${Math.round(S.quality.CCS)} daN · Furnace ${S.furnace.firing}°C. All zones within spec. Blaine ${S.grinding.blaine} cm²/g optimal for filtration kinetics.` },
+    { t:'action',title:'Feed Rate Uplift',
+      body:`Increasing feed rate 420→445 t/h boosts throughput by +28 t/h. Pre-condition: classifier at 720 rpm. Gradual ramp over 20 min recommended.`, btn:'Apply ramp' },
+    { t:'saving',title:'Fuel Optimization',
+      body:`Firing zone at ${S.furnace.firing}°C — ${S.furnace.firing-1265}°C above CCS-minimum spec. Reducing saves ${Math.round((S.furnace.firing-1265)*12)} Nm³/h immediately.`,
+      save:'₹22,400/day', btn:'Apply setpoint' },
+    { t:'alert',title:'Filter Cloth Wear',
+      body:`Cloth at ${S.filtration.cloth_pct}%. Declining trend — projected below 85% in ~72h. Schedule cloth inspection on sectors 4-7 at next maintenance window.` },
+    { t:'saving',title:'PH-2 Temp Reduction',
+      body:`PH-2 at ${S.furnace.ph2}°C. Reducing to ${S.furnace.ph2-20}°C saves ~180 Nm³/h fuel with no RI impact at current level.`, save:'₹18,500/day' },
+  ],
+  [ // UC 1 — Stacker
+    { t:'insight',title:'Stacker Status',
+      body:`Reclaimer at ${S.ohp.reclaimer_speed}%. Feed ${S.ohp.feed_rate} t/h. Chevron stacking mode optimal. Blend ratio ${S.ohp.blend_ratio}%.` },
+    { t:'action',title:'Reclaimer Speed Optimization',
+      body:`Increasing from ${S.ohp.reclaimer_speed}% → 78% reduces blend Fe variation ±2.1% → ±1.4%. Gradual ramp over 20 min.`, btn:'Ramp reclaimer' },
+    { t:'saving',title:'Stockpile Height',
+      body:`At ${S.ohp.stockpile_ht}m stockpile height. Optimal 12-14m gives >180 chevron layers for best blending.`, save:'₹6,200/day' },
+    { t:'alert',title:'Feed Variability',
+      body:`Feed rate variance ±${(Math.random()*4+2.5).toFixed(1)}% detected last 30 min. Check belt weigher calibration on Conveyor-3.` },
+  ],
+  [ // UC 2 — Slurry
+    { t:'insight',title:'Slurry Quality',
+      body:`Concentration ${S.slurry.concentration}% — optimal 60-70%. pH ${S.slurry.pH} good for Bentonite dispersion. Blaine ${S.grinding.blaine} cm²/g.` },
+    { t:'action',title:'Vacuum Pressure Increase',
+      body:`Current ${S.filtration.vacuum} mmHg. Increasing to 680 mmHg reduces cake moisture ${S.filtration.cake_moist}% → 8.6%, improving green ball quality.`, btn:'Increase vacuum' },
+    { t:'saving',title:'Cloth Backwash Cycle',
+      body:`Adjusting backwash to every 8h (vs current 12h) extends cloth life 18%. Maintains filtration throughput and reduces replacement cost.`, save:'₹4,800/day' },
+    { t:'alert',title:'Cake Moisture Risk',
+      body:`Moisture ${S.filtration.cake_moist}% approaching upper limit. Check disc cycle speed and vacuum seal integrity on sectors 4-7.` },
+  ],
+  [ // UC 3 — Furnace
+    { t:'insight',title:'Combustion Status',
+      body:`AFR ${(S.furnace.air_flow/S.furnace.fuel_flow).toFixed(1)} — slightly rich. Optimal is 21.5 at ${S.furnace.firing}°C. CO: ~85 ppm, O₂: 2.8%.` },
+    { t:'action',title:'Zone 2 Temp Reduction',
+      body:`Firing at ${S.furnace.firing}°C — ${S.furnace.firing-1265}°C above spec minimum. Reducing to 1265°C saves ${Math.round((S.furnace.firing-1265)*12)} Nm³/h.`, btn:'Reduce firing temp' },
+    { t:'saving',title:'WHR Boiler Optimization',
+      body:`Waste gas at ${S.furnace.wg_temp}°C. Increasing WHR utilization 68%→82% adds 1.8 MW equivalent. Reduces grid import cost.`, save:'₹32,000/day' },
+    { t:'action',title:'Grate Speed Adjustment',
+      body:`RL model recommends ${(S.furnace.grate_speed-0.05).toFixed(2)} m/min — increases bed residence +2.7% → CCS +8 daN at same fuel rate.`, btn:'Adjust grate' },
+  ],
+  [ // UC 4 — Quality
+    { t:'insight',title:'Quality Forecast (45 min)',
+      body:`LSTM model: CCS ${Math.round(S.quality.CCS)+3} daN · RI ${(parseFloat(S.quality.RI)+0.2).toFixed(1)}% · Fe ${parseFloat(S.quality.Fe).toFixed(1)}% for next batch based on current process inputs.` },
+    { t:'action',title:'CCS Enhancement Recipe',
+      body:`Bentonite ${S.binder.bentonite}→6.5 kg/t + reduce firing 8°C = same CCS target with 3.2% fuel saving. SHAP model confirms causality.`, btn:'Apply recipe' },
+    { t:'alert',title:'RI Risk',
+      body:`RI at ${parseFloat(S.quality.RI).toFixed(1)}% — target >72%. PH-2 ${S.furnace.ph2}°C may be insufficient for full magnetite→hematite oxidation. Recommend +15°C.` },
+    { t:'saving',title:'DRI Grade Premium',
+      body:`Fe ${parseFloat(S.quality.Fe).toFixed(1)}%. Blend ratio +3% can push Fe to 66.2% → DRI-premium grade pricing from JSPL/Essar.`, save:'₹85,000/day' },
+  ],
+  [ // UC 5 — Balling
+    { t:'insight',title:'Green Ball Status',
+      body:`Disc ${S.balling.disc_angle}° · Burst ${S.balling.green_burst}kg · Drop ${S.balling.drop_num} drops · On-spec ${S.balling.onspec_pct}% (target >90%).` },
+    { t:'action',title:'Disc Angle Correction',
+      body:`At ${S.balling.disc_angle}° producing ~6% oversize. Reducing to ${Math.max(38,S.balling.disc_angle-3)}° shifts PSD to 10-14mm optimal for thermal uniformity.`, btn:'Adjust disc angle' },
+    { t:'saving',title:'Water Spray Reduction',
+      body:`Spray ${S.balling.water_spray}→${Math.max(12,S.balling.water_spray-2.5)} l/h for current cake moisture. Reduces drying zone energy 2.4%.`, save:'₹5,200/day' },
+    { t:'alert',title:'Surface Moisture Trend',
+      body:`Green ball surface moisture trending up. Risk of cracking in UDZ. Monitor first 10m of drying zone exhaust temperature.` },
+  ],
+  [ // UC 6 — Maintenance
+    { t:'alert',title:'Mill-2 Bearing Alert',
+      body:`Drive-end bearing vibration: 4.8 mm/s RMS — +12% week-on-week. Failure probability: 28% within 21 days. Recommend inspection.` },
+    { t:'alert',title:'Filter Cloth Degradation',
+      body:`Sectors 4-7: 6% lower throughput vs baseline. Estimated remaining useful life: 68 hours. Plan replacement next shutdown.` },
+    { t:'action',title:'Grate Chain Tension',
+      body:`Chain elongation 0.8% (limit: 1.2%). Tension adjustment at next 8h window. Estimated duration: 45 min.`, btn:'Log maintenance task' },
+    { t:'insight',title:'Fan Health Summary',
+      body:`Cooler Fan-1: 97%. Fan-2: 94% (+0.6mm/s vib). Furnace exhaust: 91% — monitoring for imbalance. Schedule: 18 Apr.` },
+    { t:'saving',title:'CBM Programme Value',
+      body:`Condition-based maintenance avoids 2.3 unplanned shutdown days/quarter at ${Math.round(KPIS[0].val)} t/h production rate.`, save:'₹2.1Cr/year' },
+  ],
+];
+
+// ══════════════════════════════════════════════
+// RENDER RIGHT PANEL
+// ══════════════════════════════════════════════
+function renderRight() {
+  const panel    = document.getElementById('ai-panel');
+  const titleEl  = document.getElementById('ai-panel-title');
+  const confEl   = document.getElementById('ai-conf-line');
+
+  // ── OPTIMAL MODE ──
+  if (currentMode === 'optimal') {
+    titleEl.textContent = '◉ Optimal Run Status';
+    confEl.textContent  = 'All KPIs computed from live slider inputs';
+    const kpiBars = KPIS.map(k => {
+      const pct  = k.pct.toFixed(1);
+      const dir  = k.delta > 0.05 ? 'up' : k.delta < -0.05 ? 'dn' : 'nt';
+      const arrow= dir === 'up' ? '▲' : dir === 'dn' ? '▼' : '—';
+      const dv   = Math.abs(k.delta) > 0.01 ? (k.delta > 0 ? '+' : '') + k.delta.toFixed(1) : '—';
+      const disp = k.val >= 1000 ? k.val.toLocaleString() : k.val;
+      return `<div style="margin-bottom:9px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px">
+          <span style="font-family:var(--head);font-size:10px;font-weight:700;color:var(--text2);letter-spacing:0.3px">${k.label}</span>
+          <span style="display:flex;align-items:baseline;gap:5px">
+            <span style="font-family:var(--mono);font-size:14px;color:${k.color}">${disp}</span>
+            <span style="font-size:8px;color:var(--text4)">${k.unit}</span>
+            <span style="font-size:9px;font-weight:700;color:${dir==='up'?'#065f46':dir==='dn'?'#991b1b':'var(--text4)'}">${arrow}</span>
+          </span>
+        </div>
+        <div style="height:6px;border-radius:3px;background:var(--surface3);overflow:hidden">
+          <div style="height:100%;width:${pct}%;background:${k.color};border-radius:3px;
+            box-shadow:0 0 4px ${k.color}44;transition:width 0.45s ease"></div>
+        </div>
+      </div>`;
+    }).join('');
+
+    panel.innerHTML = `
+      <div class="ai-sep" style="margin-top:4px">KPI Dashboard — Live</div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:10px">
+        ${kpiBars}
+      </div>
+      <div class="ai-sep">Operating Status</div>
+      ${[
+        `Throughput ${Math.round(KPIS[0].val)} t/h · CCS ${Math.round(S.quality.CCS)} daN · All zones within spec.`,
+        `Furnace firing at ${S.furnace.firing}°C · AFR ${(S.furnace.air_flow/S.furnace.fuel_flow).toFixed(1)} · combustion efficiency: good.`,
+        `Slurry concentration ${S.slurry.concentration}% · Cake moisture ${S.filtration.cake_moist}% — target range.`,
+        `Green ball disc angle ${S.balling.disc_angle}° · ${S.balling.onspec_pct}% on-spec PSD.`,
+        `Plant OEE: ${KPIS[8].val}% — above 85% threshold. Running to plan.`,
+      ].map(tip => `<div class="ai-card ai-insight" style="margin-bottom:5px">
+        <div style="font-size:10px;color:var(--text2);line-height:1.7">◈ ${tip}</div>
+      </div>`).join('')}
+      <div style="background:linear-gradient(135deg,#ecfdf5,#eff6ff);border:1px solid #a7f3d0;
+        border-radius:10px;padding:12px 14px;text-align:center;margin-top:8px">
+        <div style="font-family:var(--mono);font-size:24px;color:var(--green)">${Math.round(KPIS[0].val)} t/h</div>
+        <div style="font-size:9px;color:var(--text3);font-family:var(--head);text-transform:uppercase;
+          letter-spacing:0.5px;margin-top:3px">Current Throughput</div>
+      </div>`;
+    return;
+  }
+
+  // ── RESET MODE ──
+  if (currentMode === 'reset') {
+    titleEl.textContent = '↺ Baseline Reset';
+    confEl.textContent  = 'Compare current parameters vs plant baseline';
+    panel.innerHTML = `
+      <div class="ai-sep" style="margin-top:4px">KPI vs Baseline</div>
+      ${KPIS.map(k => `<div style="display:flex;justify-content:space-between;align-items:center;
+        padding:6px 10px;background:var(--surface2);border-radius:7px;margin-bottom:4px;
+        border:1px solid var(--border)">
+        <span style="font-size:10px;color:var(--text2);font-family:var(--head);font-weight:600">${k.label}</span>
+        <span style="display:flex;align-items:baseline;gap:6px">
+          <span style="font-family:var(--mono);font-size:11px;color:${k.color}">${k.val >= 1000 ? k.val.toLocaleString() : k.val}</span>
+          <span style="font-size:8px;color:var(--text4)">${k.unit}</span>
+        </span>
+      </div>`).join('')}
+      <div class="ai-sep">Actions</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+        <button class="rbtn rbtn-primary" onclick="doReset()">↺ Reset All</button>
+        <button class="rbtn rbtn-secondary" onclick="doReset()">Apply Optimal</button>
+      </div>
+      <div style="background:var(--green2);border:1px solid var(--green3);border-radius:9px;
+        padding:10px 12px;font-size:10px;color:var(--text2);line-height:1.7">
+        <strong style="color:var(--green)">Last Confirmed Baseline</strong><br>
+        Shift B · 2026-04-21 06:00 IST<br>
+        Throughput: 480 t/h · CCS: 255 daN<br>
+        Firing: 1280°C · Energy: 49.1 GJ/t
+      </div>`;
+    return;
+  }
+
+  // ── ADVISORY MODE ──
+  titleEl.textContent = '◈ AI Advisory Engine';
+  confEl.textContent  = 'ML confidence · Updated every 45s · 94.2% accuracy';
+
+  const typeMap = {
+    insight: { cls:'ai-insight', tc:'ait-insight', icon:'◈' },
+    action:  { cls:'ai-action',  tc:'ait-action',  icon:'→' },
+    alert:   { cls:'ai-alert',   tc:'ait-alert',   icon:'⚠' },
+    saving:  { cls:'ai-saving',  tc:'ait-saving',  icon:'₹' },
+  };
+  const ucData = AI_DATA[currentUC] || AI_DATA[0];
+
+  let html = `<div class="savings-total">
+    <div class="savings-val">₹1,46,700</div>
+    <div class="savings-lbl">Total Savings / Day Identified</div>
+  </div>
+  <div class="ai-sep">Use Case Recommendations</div>`;
+
+  ucData.forEach(c => {
+    const t = typeMap[c.t] || typeMap.insight;
+    html += `<div class="ai-card ${t.cls}">
+      <div class="ai-card-title ${t.tc}">${t.icon} ${c.title}</div>
+      <div class="ai-card-body">${c.body}</div>
+      ${c.save ? `<div class="ai-saving-val">${c.save}</div>` : ''}
+      ${c.btn  ? `<button class="ai-btn ab-blue" onclick="alert('Action logged: ${c.btn}')">Apply ▸ ${c.btn}</button>` : ''}
+    </div>`;
+  });
+
+  html += `<div class="ai-sep">Model Confidence</div>
+  <div style="background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:10px 12px">
+    ${[['Quality Prediction','#5b21b6',94],['Fuel Optimization','#991b1b',92],
+       ['Anomaly Detection','#065f46',96],['Throughput Model','#1d4ed8',89]]
+    .map(([lbl, c, pct]) => `<div class="conf-row">
+      <div class="conf-label">${lbl}</div>
+      <div class="conf-track"><div class="conf-fill" style="width:${pct}%;background:${c}"></div></div>
+      <div class="conf-pct">${pct}%</div>
+    </div>`).join('')}
+  </div>`;
+
+  panel.innerHTML = html;
+}
+
+// ══════════════════════════════════════════════
+// LIVE JITTER SIMULATION
+// ══════════════════════════════════════════════
+setInterval(() => {
+  S.filtration.cake_moist = Math.max(7.5, Math.min(11,
+    S.filtration.cake_moist + (Math.random()-0.5)*0.06));
+  S.slurry.concentration  = Math.max(58,  Math.min(72,
+    S.slurry.concentration  + (Math.random()-0.5)*0.08));
+  S.furnace.firing        = Math.max(1200,Math.min(1340,
+    S.furnace.firing        + (Math.random()-0.5)*1.5));
+  renderKPIs();
+  if (currentViz === 'schematic') renderSchematic();
+  if (currentMode !== 'reset')    renderRight();
+}, 3500);
+
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+compute();
+renderKPIs();
+renderLeft();
+renderSchematic();
+renderRight();
+</script>
+</body>
+</html>
