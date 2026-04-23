@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AM/NS India — 8 MTPA Pellet Plant | Digital Twin | Vizag | Dark</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@400;500&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f4f8;--s:#ffffff;--s2:#f7f9fc;--s3:#eef1f6;--s4:#e2e8f0;
+  --bd:#dde3ed;--bd2:#c5cedd;--t:#0f172a;--t2:#1e293b;--t3:#475569;--t4:#94a3b8;
+  --blue:#1e40af;--b2:#eff6ff;--b3:#bfdbfe;--b4:#3b82f6;
+  --gr:#064e3b;--g2:#ecfdf5;--g3:#6ee7b7;--g4:#10b981;
+  --am:#78350f;--a2:#fffbeb;--a3:#fcd34d;--a4:#f59e0b;
+  --rd:#7f1d1d;--r2:#fef2f2;--r3:#fca5a5;--r4:#ef4444;
+  --cy:#0c4a6e;--c2:#ecfeff;--c3:#a5f3fc;--c4:#06b6d4;
+  --pu:#3b0764;--p2:#f5f3ff;--p3:#c4b5fd;--p4:#8b5cf6;
+  --or:#7c2d12;--o2:#fff7ed;--o3:#fdba74;--o4:#f97316;
+  --mn:'JetBrains Mono',monospace;--hd:'Rajdhani',sans-serif;
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--t);font-family:'Barlow',sans-serif}
+/* ── Header ── */
+.hdr{height:54px;background:var(--s);border-bottom:2px solid var(--b3);display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0;box-shadow:0 2px 8px rgba(30,64,175,0.08);position:relative;z-index:100}
+.logo{width:36px;height:36px;background:linear-gradient(135deg,#1e40af,#3b82f6);border-radius:9px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(30,64,175,0.3)}
+.logo svg{width:18px;height:18px;fill:#fff}
+.hdr-brand{font-family:var(--hd);font-size:15px;font-weight:700;color:var(--t);letter-spacing:.2px}
+.hdr-sub{font-size:9.5px;color:var(--t3);margin-top:1px}
+.hdr-div{width:1px;height:34px;background:var(--bd2);margin:0 6px}
+.flex1{flex:1}
+.mode-group{background:var(--s3);border:1px solid var(--bd);border-radius:10px;padding:3px;display:flex;gap:2px}
+.mbtn{padding:5px 18px;border-radius:7px;font-size:11px;font-weight:700;font-family:var(--hd);cursor:pointer;color:var(--t3);border:none;background:transparent;transition:all .18s;letter-spacing:.4px}
+.mbtn:hover{color:var(--t2);background:var(--s)}
+.m-opt{background:#ecfdf5!important;color:#064e3b!important;border:1px solid #6ee7b7!important;box-shadow:0 1px 4px rgba(6,78,59,.1)!important}
+.m-adv{background:var(--b2)!important;color:var(--blue)!important;border:1px solid var(--b3)!important;box-shadow:0 1px 4px rgba(30,64,175,.1)!important}
+.m-rst{background:var(--r2)!important;color:var(--rd)!important;border:1px solid var(--r3)!important}
+.badge{font-size:9.5px;padding:3px 10px;border-radius:20px;font-weight:600;display:flex;align-items:center;gap:5px;font-family:var(--hd)}
+.b-live{background:var(--g2);color:var(--gr);border:1px solid var(--g3)}
+.b-info{background:var(--s3);color:var(--t3);border:1px solid var(--bd)}
+.pulse{width:6px;height:6px;border-radius:50%;background:#10b981;animation:pu 1.4s infinite}
+@keyframes pu{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.75)}}
+.clk{font-family:var(--mn);font-size:11px;color:var(--b4);letter-spacing:1.5px}
+/* ── UC Bar ── */
+.ucbar{height:38px;background:var(--s);border-bottom:1px solid var(--bd);display:flex;align-items:stretch;padding:0 14px;gap:1px;flex-shrink:0;overflow-x:auto;scrollbar-width:none}
+.ucbar::-webkit-scrollbar{display:none}
+.uctab{display:flex;align-items:center;gap:6px;padding:0 14px;font-size:11px;font-weight:600;font-family:var(--hd);color:var(--t3);cursor:pointer;border-bottom:2.5px solid transparent;white-space:nowrap;transition:all .15s;letter-spacing:.3px}
+.uctab:hover{color:var(--t2);background:var(--s2)}
+.uctab.active{color:var(--blue);border-bottom-color:var(--blue);background:var(--b2)}
+.uctab .td{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0}
+/* ── KPI Ribbon ── */
+.kpiribb{height:66px;background:var(--s);border-bottom:1px solid var(--bd);display:flex;align-items:center;padding:0 12px;gap:6px;overflow-x:auto;flex-shrink:0;scrollbar-width:none;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.kpiribb::-webkit-scrollbar{display:none}
+/* Critical 3 KPIs larger */
+.kchip-crit{min-width:155px;flex-shrink:0;background:var(--s);border:2px solid var(--b3);border-radius:9px;padding:8px 12px 7px;position:relative;overflow:hidden;cursor:default}
+.kchip-crit .ac{position:absolute;top:0;left:0;right:0;height:4px;border-radius:9px 9px 0 0}
+.kchip{min-width:110px;flex-shrink:0;background:var(--s);border:1px solid var(--bd);border-radius:8px;padding:7px 10px 6px;position:relative;overflow:hidden;cursor:default}
+.kchip .ac{position:absolute;top:0;left:0;right:0;height:3px;border-radius:8px 8px 0 0}
+.kl{font-size:8.5px;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;font-family:var(--hd);font-weight:700;margin-bottom:2px;margin-top:3px}
+.kv{font-family:var(--mn);font-size:17px;color:var(--t);line-height:1}
+.kv-crit{font-family:var(--mn);font-size:20px;line-height:1}
+.ku{font-size:8px;color:var(--t4);margin-left:2px}
+.kd{font-size:8.5px;font-weight:600;margin-top:2px}
+.kd.up{color:#064e3b}.kd.dn{color:#7f1d1d}.kd.nt{color:var(--t4)}
+.kb{height:4px;background:var(--s3);border-radius:2px;margin-top:5px;overflow:hidden}
+.kbf{height:100%;border-radius:2px;transition:width .55s ease}
+/* ── Layout ── */
+.layout{display:grid;grid-template-columns:252px 1fr 278px;height:calc(100vh - 196px);overflow:hidden}
+/* ── Left ── */
+.lp{background:var(--s);border-right:1px solid var(--bd);display:flex;flex-direction:column;overflow:hidden}
+.lp-hdr{padding:9px 13px;border-bottom:1px solid var(--bd);background:var(--s2);flex-shrink:0;display:flex;align-items:center;justify-content:space-between}
+.lp-t{font-family:var(--hd);font-size:12px;font-weight:700;color:var(--t);letter-spacing:.3px}
+.lp-sc{overflow-y:auto;flex:1;scrollbar-width:thin;scrollbar-color:var(--bd) transparent}
+.lp-sc::-webkit-scrollbar{width:3px}
+.lp-sc::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:2px}
+.cg{border-bottom:1px solid var(--bd);padding:10px 13px}
+.cg-hdr{display:flex;align-items:center;gap:7px;margin-bottom:9px}
+.cg-dot{width:9px;height:9px;border-radius:3px;flex-shrink:0}
+.cg-nm{font-family:var(--hd);font-size:10.5px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.4px}
+.cg-st{margin-left:auto;font-size:8px;padding:2px 7px;border-radius:10px;font-weight:700;font-family:var(--hd)}
+.st-ok{background:var(--g2);color:var(--gr)}.st-wa{background:var(--a2);color:var(--am)}.st-al{background:var(--r2);color:var(--rd)}
+.ci{margin-bottom:10px}
+.ci:last-child{margin-bottom:2px}
+.ci-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.ci-lbl{font-size:10px;color:var(--t2)}
+.ci-val{font-family:var(--mn);font-size:10.5px;font-weight:500}
+.ci-u{font-size:8px;color:var(--t3)}
+input[type=range]{width:100%;height:3px;-webkit-appearance:none;appearance:none;background:var(--s3);border-radius:2px;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;border:2px solid var(--s);box-shadow:0 1px 4px rgba(0,0,0,.18);cursor:pointer}
+.ci-bn{display:flex;justify-content:space-between;font-size:7.5px;color:var(--t4);font-family:var(--mn);margin-top:2px}
+/* advisory highlight on sliders */
+.ci.ai-pending .ci-val{color:#f59e0b!important}
+.ci.ai-pending input[type=range]{background:linear-gradient(90deg,#fcd34d 0%,var(--s3) 0%)!important}
+.ai-apply-btn{font-size:8.5px;padding:2px 8px;border-radius:5px;background:var(--b2);color:var(--blue);border:1px solid var(--b3);cursor:pointer;font-family:var(--hd);font-weight:700;margin-top:4px;display:inline-block}
+.ai-apply-btn:hover{background:var(--b3)}
+.chips{display:flex;gap:4px;flex-wrap:wrap;padding:7px 13px;border-bottom:1px solid var(--bd);background:var(--s2)}
+.chip{font-size:8.5px;padding:3px 8px;border-radius:10px;font-weight:700;font-family:var(--hd);display:flex;align-items:center;gap:3px}
+.ch-g{background:var(--g2);color:var(--gr);border:1px solid var(--g3)}
+.ch-a{background:var(--a2);color:var(--am);border:1px solid var(--a3)}
+.ch-r{background:var(--r2);color:var(--rd);border:1px solid var(--r3)}
+/* ── Center ── */
+.cp{background:var(--bg);display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.sptabs{display:flex;background:var(--s);border-bottom:1px solid var(--bd);padding:0 10px;flex-shrink:0;overflow-x:auto;scrollbar-width:none}
+.sptabs::-webkit-scrollbar{display:none}
+.spt{display:flex;align-items:center;gap:5px;padding:0 12px;font-size:10.5px;font-weight:700;font-family:var(--hd);color:var(--t3);cursor:pointer;border-bottom:2.5px solid transparent;white-space:nowrap;transition:all .15s;letter-spacing:.3px;min-height:38px}
+.spt:hover{color:var(--t2);background:var(--s2)}
+.spt.active{color:var(--blue);border-bottom-color:var(--blue)}
+.spt .sn{width:16px;height:16px;border-radius:4px;font-size:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;color:#fff}
+.cvb{flex:1;overflow-y:auto;padding:10px;scrollbar-width:thin;scrollbar-color:var(--bd) transparent}
+.cvb::-webkit-scrollbar{width:3px}
+.cvb::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:2px}
+/* ── Cards ── */
+.card{background:var(--s);border:1px solid var(--bd);border-radius:10px;padding:12px 14px;box-shadow:0 1px 4px rgba(0,0,0,.05);margin-bottom:8px}
+.ch{font-family:var(--hd);font-size:10.5px;font-weight:700;color:var(--t2);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;letter-spacing:.3px}
+.cbdg{font-size:8px;padding:2px 8px;border-radius:10px;font-weight:700;font-family:var(--hd)}
+.bdlv{background:var(--b2);color:var(--blue)}.bdok{background:var(--g2);color:var(--gr)}.bdwa{background:var(--a2);color:var(--am)}.bdpu{background:var(--p2);color:var(--p4)}
+.svc{background:var(--s);border:1px solid var(--bd);border-radius:10px;padding:10px 12px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,.05);overflow:hidden}
+.svt{font-family:var(--hd);font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px}
+/* Grid helpers */
+.gg{display:grid;gap:7px;margin-bottom:8px}
+.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr 1fr}.g4{grid-template-columns:1fr 1fr 1fr 1fr}
+/* Gauge boxes */
+.gb{background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:9px 10px;text-align:center;transition:border-color .15s;cursor:default}
+.gb:hover{border-color:var(--bd2)}
+.gb.ok{border-color:var(--g3);background:var(--g2)}
+.gb.wa{border-color:var(--a3);background:var(--a2)}
+.gb.al{border-color:var(--r3);background:var(--r2)}
+.gl{font-size:8px;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;font-family:var(--hd);font-weight:700;margin-bottom:3px}
+.gv{font-family:var(--mn);font-size:18px;line-height:1}
+.guu{font-size:8px;color:var(--t4)}
+.gtgt{font-size:8px;color:var(--t4);margin-top:3px}
+.gbr{height:3px;border-radius:2px;background:rgba(0,0,0,.07);margin-top:6px;overflow:hidden}
+.gbrf{height:100%;border-radius:2px;transition:width .45s ease}
+/* Tables */
+.pt{width:100%;font-size:10px;border-collapse:collapse}
+.pt th{font-size:8.5px;font-weight:700;font-family:var(--hd);color:var(--t3);text-transform:uppercase;letter-spacing:.4px;padding:4px 6px;border-bottom:1px solid var(--bd);text-align:left}
+.pt td{padding:5px 6px;border-bottom:1px solid var(--s3);color:var(--t2);vertical-align:middle}
+.pt tr:last-child td{border:none}
+.tm{font-family:var(--mn);font-weight:500;color:var(--t)}
+.tok{color:#10b981;font-weight:600}.twa{color:#f59e0b;font-weight:600}.tal{color:#ef4444;font-weight:600}
+.ibar{height:4px;border-radius:2px;background:var(--s3);overflow:hidden;width:60px}
+.ibf{height:100%;border-radius:2px}
+/* ── Right Panel ── */
+.rp{background:var(--s);border-left:1px solid var(--bd);display:flex;flex-direction:column;overflow:hidden}
+.rph{padding:10px 13px;border-bottom:1px solid var(--bd);flex-shrink:0;background:var(--s2)}
+.rpt{font-family:var(--hd);font-size:12px;font-weight:700;color:var(--t);display:flex;align-items:center;gap:7px}
+.rpic{width:20px;height:20px;background:linear-gradient(135deg,#1e40af,#3b82f6);border-radius:5px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 5px rgba(30,64,175,.25)}
+.rpic svg{width:11px;height:11px;fill:#fff}
+.rpc{font-size:8.5px;color:var(--t4);margin-top:3px;font-family:var(--mn)}
+.rpsc{overflow-y:auto;flex:1;padding:10px 12px;scrollbar-width:thin;scrollbar-color:var(--bd) transparent}
+.rpsc::-webkit-scrollbar{width:3px}
+.rpsc::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:2px}
+/* AI Cards */
+.aic{border-radius:8px;padding:9px 11px;margin-bottom:6px;border:1px solid transparent}
+.ai-i{background:#f0f9ff;border-color:#bae6fd}.ai-a{background:var(--b2);border-color:var(--b3)}
+.ai-w{background:var(--r2);border-color:var(--r3)}.ai-s{background:var(--g2);border-color:var(--g3)}
+.ai-ap{background:var(--a2);border-color:var(--a3)}
+.act{font-family:var(--hd);font-size:10.5px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:5px;justify-content:space-between}
+.ct-i{color:#0369a1}.ct-a{color:var(--blue)}.ct-w{color:var(--rd)}.ct-s{color:var(--gr)}.ct-ap{color:var(--am)}
+.acb{font-size:9.5px;line-height:1.7;color:var(--t2)}
+.asv{font-family:var(--mn);font-size:14px;color:var(--gr);margin-top:4px;font-weight:500}
+.aapply{padding:4px 12px;border-radius:6px;font-size:9px;font-weight:700;font-family:var(--hd);cursor:pointer;border:none;background:var(--blue);color:#fff;margin-top:6px;transition:all .15s;letter-spacing:.3px}
+.aapply:hover{background:#1e3a8a}
+.aapply.applied{background:var(--g4);pointer-events:none}
+.abtn{margin-top:6px;font-size:9px;font-weight:700;font-family:var(--hd);letter-spacing:.4px;cursor:pointer;display:inline-flex;align-items:center;gap:3px;padding:3px 9px;border-radius:5px;border:1px solid transparent}
+.ab-b{background:var(--b2);color:var(--blue);border-color:var(--b3)}.ab-b:hover{background:var(--b3)}
+.aisep{font-family:var(--hd);font-size:8.5px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin:9px 0 6px;display:flex;align-items:center;gap:6px}
+.aisep::after{content:'';flex:1;height:1px;background:var(--bd)}
+/* KPI bar rows in panel */
+.kbr{margin-bottom:8px}
+.kbrt{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px}
+.kbrl{font-family:var(--hd);font-size:10px;font-weight:700;color:var(--t2);letter-spacing:.3px}
+.kbrn{font-family:var(--mn);font-size:13px}
+.kbru{font-size:8px;color:var(--t4)}
+.kbrtr{height:6px;border-radius:3px;background:var(--s3);overflow:hidden}
+.kbrf{height:100%;border-radius:3px;transition:width .45s ease}
+/* Savings total */
+.savbox{background:linear-gradient(135deg,var(--g2),var(--b2));border:1px solid var(--g3);border-radius:10px;padding:11px 13px;text-align:center;margin-bottom:8px}
+.savv{font-family:var(--mn);font-size:24px;color:var(--g4)}
+.savl{font-size:8.5px;color:var(--t3);font-family:var(--hd);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+/* AI Chat */
+.chat-wrap{border:1px solid var(--bd);border-radius:9px;overflow:hidden;margin-bottom:8px}
+.chat-msgs{max-height:180px;overflow-y:auto;padding:8px 10px;background:var(--s2);scrollbar-width:thin}
+.chat-msgs::-webkit-scrollbar{width:2px}
+.msg{margin-bottom:8px}
+.msg-user{text-align:right}
+.msg-bubble{display:inline-block;max-width:85%;padding:5px 10px;border-radius:8px;font-size:9.5px;line-height:1.5}
+.mb-user{background:var(--blue);color:#fff}
+.mb-ai{background:var(--s);border:1px solid var(--bd);color:var(--t2)}
+.chat-inp{display:flex;border-top:1px solid var(--bd)}
+.chat-inp input{flex:1;border:none;padding:7px 10px;font-size:10px;font-family:'Barlow',sans-serif;outline:none;background:var(--s)}
+.chat-inp button{padding:7px 12px;background:var(--blue);color:#fff;border:none;cursor:pointer;font-family:var(--hd);font-weight:700;font-size:10px;transition:background .15s}
+.chat-inp button:hover{background:#1e3a8a}
+/* Conf bars */
+.crow{display:flex;align-items:center;gap:7px;margin-bottom:6px}
+.clbl{font-size:9px;color:var(--t2);min-width:90px;font-family:var(--hd);font-weight:600}
+.ctrack{flex:1;height:5px;background:var(--s3);border-radius:3px;overflow:hidden}
+.cfill{height:100%;border-radius:3px}
+.cpct{font-family:var(--mn);font-size:9px;color:var(--t3);min-width:26px;text-align:right}
+/* Reset btns */
+.rbtn{padding:6px 14px;border-radius:6px;font-size:10.5px;font-weight:700;font-family:var(--hd);letter-spacing:.4px;cursor:pointer;border:none;transition:all .2s}
+.rb-p{background:var(--blue);color:#fff;box-shadow:0 2px 6px rgba(30,64,175,.25)}.rb-p:hover{background:#1e3a8a}
+.rb-s{background:var(--s2);color:var(--t2);border:1px solid var(--bd)}.rb-s:hover{border-color:var(--bd2)}
+/* Predictive cards */
+.pred-row{display:flex;gap:8px;margin-bottom:8px}
+.pred-card{flex:1;background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:9px 11px}
+.pred-title{font-family:var(--hd);font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.pred-val{font-family:var(--mn);font-size:16px;color:var(--blue)}
+.pred-trend{font-size:8.5px;color:var(--gr);margin-top:2px}
+canvas{display:block}
+
+/* ══ DARK THEME OVERRIDE ══ */
+:root {
+  --bg:#0f1117;--s:#1a1d27;--s2:#1e2233;--s3:#252a3a;--s4:#2a3045;
+  --bd:#2d3448;--bd2:#3d4560;--t:#e2e8f0;--t2:#cbd5e1;--t3:#7c8ba0;--t4:#4a5568;
+  --blue:#3b82f6;--b2:#1e3a5f;--b3:#2d5a9e;--b4:#60a5fa;
+  --gr:#10b981;--g2:#0d2e22;--g3:#065f46;--g4:#34d399;
+  --am:#f59e0b;--a2:#2d1f06;--a3:#78350f;--a4:#fcd34d;
+  --rd:#ef4444;--r2:#2d0f0f;--r3:#7f1d1d;--r4:#f87171;
+  --cy:#06b6d4;--c2:#0a2433;--c3:#0c4a6e;--c4:#22d3ee;
+  --pu:#a78bfa;--p2:#1e1438;--p3:#3b0764;--p4:#c4b5fd;
+  --or:#f97316;--o2:#2d1206;--o3:#7c2d12;--o4:#fb923c;
+  --mn:'JetBrains Mono',monospace;--hd:'Rajdhani',sans-serif;
+}
+/* Dark specific overrides */
+.hdr{background:#13161f;border-bottom:2px solid #2d5a9e;box-shadow:0 2px 12px rgba(59,130,246,0.15)}
+.ucbar,.kpiribb,.lp,.rp{background:#13161f}
+.lpanel,.rpanel,.sptabs,.svc,.card,.kpi-chip,.kpi-chip-crit,.kchip,.kchip-crit{background:#1a1d27}
+.spt:hover,.uctab:hover,.uctab.active{background:#1e3a5f}
+.cg,.chips{background:#13161f;border-color:#2d3448}
+.cg-hdr,.lp-hdr,.rph,.lpanel-hdr,.rp-hdr{background:#1e2233}
+.ci-lbl{color:#94a3b8}
+input[type=range]{background:#252a3a}
+.gauge-box,.gb{background:#1e2233;border-color:#2d3448}
+.gauge-box.ok,.gb.ok{background:#0d2e22;border-color:#065f46}
+.gauge-box.wa,.gb.wa{background:#2d1f06;border-color:#78350f}
+.gauge-box.al,.gb.al{background:#2d0f0f;border-color:#7f1d1d}
+.gl,.kl,.guu,.ku,.gtgt{color:#4a5568}
+.gv,.kv,.kv-crit{color:#e2e8f0}
+.pt th{color:#4a5568;border-color:#2d3448}
+.pt td{color:#94a3b8;border-color:#1e2233}
+.tm{color:#e2e8f0}
+.gbr,.kbar,.kbr,.kb{background:#252a3a}
+.gbar,.kbr-track,.kbrtr{background:#252a3a}
+.ai-i{background:#0a2433;border-color:#0c4a6e}.ai-a{background:#1e3a5f;border-color:#2d5a9e}
+.ai-w{background:#2d0f0f;border-color:#7f1d1d}.ai-s{background:#0d2e22;border-color:#065f46}
+.ai-ap{background:#2d1f06;border-color:#78350f}
+.savbox{background:linear-gradient(135deg,#0d2e22,#1e3a5f);border-color:#065f46}
+.acb{color:#94a3b8}
+.aic{border-color:#2d3448}
+.msg-bubble.mb-ai{background:#1e2233;border-color:#2d3448;color:#cbd5e1}
+.chat-wrap{border-color:#2d3448}
+.chat-msgs{background:#13161f}
+.chat-inp input{background:#1a1d27;color:#e2e8f0}
+.chat-inp input::placeholder{color:#4a5568}
+.pred-card{background:#1e2233;border-color:#2d3448}
+.pred-val{color:#60a5fa}
+.pred-title{color:#4a5568}
+.pred-trend{color:#34d399}
+.rbtn.rb-s{background:#1e2233;color:#94a3b8;border-color:#2d3448}
+.mode-group{background:#1e2233;border-color:#2d3448}
+.mbtn:hover{background:#252a3a;color:#e2e8f0}
+.badge.b-info{background:#1e2233;color:#7c8ba0;border-color:#2d3448}
+.hdr-brand{color:#e2e8f0}
+.hdr-sub{color:#7c8ba0}
+.logo{background:linear-gradient(135deg,#1e40af,#3b82f6)}
+.lp-t,.lpanel-title{color:#e2e8f0}
+.cg-nm{color:#94a3b8}
+.ci-u{color:#4a5568}
+.ai-apply-btn{background:#1e3a5f;color:#60a5fa;border-color:#2d5a9e}
+.ch,.card-hdr{color:#94a3b8}
+.svt,.svg-card-title{color:#4a5568}
+.kd.nt{color:#4a5568}
+.ibar{background:#252a3a}
+.crow .clbl{color:#94a3b8}
+.conf-track,.ctrack{background:#252a3a}
+.aisep::after{background:#2d3448}
+.aisep{color:#4a5568}
+.rpt{color:#e2e8f0}
+.rpc,.rpic-conf{color:#4a5568}
+.kpi-ribbon,.kpiribb{box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.kchip,.kpi-chip{background:#1a1d27;border-color:#2d3448}
+.kchip-crit,.kpi-chip-crit{background:#1a1d27;border-color:#2d5a9e}
+.uctab.active{background:#1e3a5f;color:#60a5fa;border-bottom-color:#3b82f6}
+.spt.active{color:#60a5fa;border-bottom-color:#3b82f6}
+
+</style>
+</head>
+<body>
+<!-- HEADER -->
+<div class="hdr">
+  <div class="logo"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+  <div><div class="hdr-brand">AM/NS India — Iron Pellet Plant Digital Twin</div>
+    <div class="hdr-sub">ArcelorMittal Nippon Steel India · Vizag · <b>8 MTPA</b> · Straight Grate Technology · Real-Time AI Simulator · <span style="color:#60a5fa">DARK THEME</span></div></div>
+  <div class="hdr-div"></div>
+  <div class="mode-group">
+    <button class="mbtn m-opt" id="btn-opt" onclick="setMode('opt')">◉ Optimal Run</button>
+    <button class="mbtn" id="btn-adv" onclick="setMode('adv')">◈ AI Advisory</button>
+    <button class="mbtn" id="btn-rst" onclick="setMode('rst')">↺ Baseline Reset</button>
+  </div>
+  <div class="flex1"></div>
+  <div class="badge b-live"><div class="pulse"></div>LIVE · 8 MTPA</div>
+  <div class="badge b-info">Shift B · Line-1</div>
+  <div class="badge b-info" id="date-disp">—</div>
+  <div class="clk" id="clock">--:--:--</div>
+</div>
+
+<!-- UC TABS -->
+<div class="ucbar">
+  <div class="uctab active" onclick="setUC(0)"><div class="td"></div>Full Plant</div>
+  <div class="uctab" onclick="setUC(1)"><div class="td"></div>Raw Material Handling</div>
+  <div class="uctab" onclick="setUC(2)"><div class="td"></div>Slurry Formation</div>
+  <div class="uctab" onclick="setUC(3)"><div class="td"></div>Green Ball Formation</div>
+  <div class="uctab" onclick="setUC(4)"><div class="td"></div>Balling Disc</div>
+  <div class="uctab" onclick="setUC(5)"><div class="td"></div>Induration Furnace</div>
+  <div class="uctab" onclick="setUC(6)"><div class="td"></div>Cooling Zone</div>
+</div>
+
+<!-- KPI RIBBON -->
+<div class="kpiribb" id="kpiribb"></div>
+
+<!-- MAIN LAYOUT -->
+<div class="layout">
+  <div class="lp">
+    <div class="lp-hdr"><div class="lp-t" id="ctrl-title">Process Controls</div><div class="pulse"></div></div>
+    <div class="lp-sc" id="left-ctrl"></div>
+  </div>
+  <div class="cp">
+    <div class="sptabs" id="sptabs"></div>
+    <div class="cvb" id="cvb"></div>
+  </div>
+  <div class="rp">
+    <div class="rph">
+      <div class="rpt">
+        <div class="rpic"><svg viewBox="0 0 12 12"><path d="M6 1l1.5 3.3H11L8.5 6.6l1 3.7L6 8.4l-3.5 1.9 1-3.7L1 4.3h3.5z"/></svg></div>
+        <span id="rp-title">AI Advisory Engine</span>
+      </div>
+      <div class="rpc" id="rp-conf">ML · 94.2% confidence · 1-sec real-time tick</div>
+    </div>
+    <div class="rpsc" id="rp-panel"></div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════
+// PROCESS STATE — 8 MTPA AM/NS Vizag
+// ════════════════════════════════════════════════
+const S = {
+  ohp:    { feed_rate:480, reclaimer_spd:75, stacker_ang:14, blend_ratio:64, stockpile_ht:14, belt_load:78 },
+  blend:  { ore_fines:62, pellet_feed:38, moisture_in:9.2, blend_eff:94, silo1:4200, silo2:3800, silo3:1600 },
+  grind:  { mill_spd:78, class_rpm:680, blaine:1850, residue:12, water_flow:320, power_kw:3200, mill_load:74 },
+  slurry: { conc:65, density:1.68, pH:8.2, flow:212, temp:42, viscosity:42 },
+  filt:   { vacuum:650, cycle_spd:1.4, cloth_pct:92, cake_moist:9.1, cake_thick:22, throughput:430, disc_rpm:1.4 },
+  binder: { bentonite:6.1, lime_pct:1.8, mix_moist:8.8, mix_time:4.5, dispersion:97.8 },
+  ball:   { disc_ang:46, drum_spd:11.5, water_spray:17, green_burst:11.8, drop_num:4.9, onspec:91, gb_moist:8.9 },
+  furn:   { udz:280,ddd:410,ph1:860,ph2:1050,firing:1285,soak:1260,cool_z:850,
+            fuel_flow:4980,air_flow:100000,grate_spd:1.85,bed_ht:185,wg_temp:312,
+            afr:20.2,co_ppm:85,o2_pct:2.8,nox:148 },
+  cooler: { air_vol:71000, outlet_temp:138, spd:1.2, whr_eff:68 },
+  screen: { upper_mm:16, lower_mm:9, vib_hz:18, fines_pct:4.1, on_spec:93.2 },
+  qual:   { CCS:258, RI:72.4, CR:4.8, TII:96.2, Fe:65.7, basicity:1.06, tumble:94.5, swelling:14.2 },
+};
+const BASE = JSON.parse(JSON.stringify(S));
+
+// Advisory recommendations pending apply
+const ADVISORY_PENDING = {};
+
+// ════════════════════════════════════════════════
+// KPI DEFINITIONS — 3 Critical + 6 Standard
+// ════════════════════════════════════════════════
+const KPIS = [
+  { id:'tp',  label:'Throughput',     unit:'t/h',    color:'#1e40af', max:650,  val:548, pv:548, pct:0, dlt:0, crit:true },
+  { id:'en',  label:'Energy Consump.',unit:'Sm³/t',  color:'#78350f', max:220,  val:182, pv:182, pct:0, dlt:0, crit:true },
+  { id:'coq', label:'Cost of Quality',unit:'₹/t',   color:'#3b0764', max:2800, val:2240,pv:2240,pct:0, dlt:0, crit:true },
+  { id:'ccs', label:'CCS',            unit:'daN',    color:'#0c4a6e', max:320,  val:258, pv:258, pct:0, dlt:0 },
+  { id:'ri',  label:'Red. Index',     unit:'%',      color:'#064e3b', max:85,   val:72.4,pv:72.4,pct:0, dlt:0 },
+  { id:'fe',  label:'Fe Content',     unit:'%',      color:'#1e40af', max:68,   val:65.7,pv:65.7,pct:0, dlt:0 },
+  { id:'fn',  label:'Return Fines',   unit:'%',      color:'#7c2d12', max:10,   val:4.1, pv:4.1, pct:0, dlt:0 },
+  { id:'cm',  label:'Cake Moisture',  unit:'%',      color:'#0e7490', max:12,   val:9.1, pv:9.1, pct:0, dlt:0 },
+  { id:'oe',  label:'OEE',            unit:'%',      color:'#064e3b', max:100,  val:87.4,pv:87.4,pct:0, dlt:0 },
+];
+
+function compute() {
+  const f=S.furn, fi=S.filt, b=S.binder, ball=S.ball, g=S.grind;
+  KPIS.forEach(k=>k.pv=k.val);
+  KPIS[0].val = +(S.ohp.feed_rate*1.138+(g.blaine-1850)*0.009).toFixed(1);
+  KPIS[1].val = +(165+(f.fuel_flow/4980-1)*18+(f.firing/1285-1)*12+(fi.cake_moist-9)*2.5).toFixed(1);
+  KPIS[2].val = +(1980+((KPIS[1].val-165)*4.2)+(fi.cloth_pct<90?120:0)+(g.residue>12?80:0)).toFixed(0);
+  KPIS[3].val = +Math.min(320,Math.max(180,215+(f.firing-1200)*0.32+b.bentonite*4.2+(g.blaine-1800)*0.018+(fi.cake_moist<9?12:0)-(f.grate_spd-1.85)*22)).toFixed(0);
+  KPIS[4].val = +(68+(f.firing-1200)*0.016+(f.ph2-1050)*0.008+(fi.cake_moist<9.5?1.8:0)).toFixed(1);
+  KPIS[5].val = +(S.blend.ore_fines*0.976+4.2).toFixed(1);
+  KPIS[6].val = +Math.max(1.5,(6.2-(ball.disc_ang-46)*0.14-(g.blaine-1800)*0.002)).toFixed(1);
+  KPIS[7].val = fi.cake_moist;
+  KPIS[8].val = +(85+(S.ohp.feed_rate-480)*0.007-(fi.cloth_pct<90?1.5:0)).toFixed(1);
+  S.qual.CCS=KPIS[3].val; S.qual.RI=KPIS[4].val; S.qual.Fe=KPIS[5].val;
+  f.afr = +(f.air_flow/f.fuel_flow).toFixed(2);
+  KPIS.forEach(k=>{
+    k.pct=Math.min(100,Math.max(0,(parseFloat(k.val)/k.max)*100));
+    k.dlt=+(parseFloat(k.val)-parseFloat(k.pv)).toFixed(2);
+  });
+}
+
+// ════════════════════════════════════════════════
+// APP STATE
+// ════════════════════════════════════════════════
+let mode='opt', uc=0, spTab=0;
+let rtCharts={}, staticCharts={}, rtBufs={}, tickN=0;
+const RT_LEN=60;
+
+const RT_INIT = {
+  firing:()=>S.furn.firing, fuel:()=>S.furn.fuel_flow, CCS:()=>parseFloat(KPIS[3].val),
+  RI:()=>parseFloat(KPIS[4].val), tp:()=>parseFloat(KPIS[0].val),
+  en:()=>parseFloat(KPIS[1].val), coq:()=>parseFloat(KPIS[2].val),
+  cake:()=>S.filt.cake_moist, conc:()=>S.slurry.conc, blaine:()=>S.grind.blaine
+};
+Object.keys(RT_INIT).forEach(k=>{
+  const base=RT_INIT[k]();
+  rtBufs[k]=Array.from({length:RT_LEN},()=>+(base+(Math.random()-.5)*2).toFixed(1));
+});
+
+// UC sub-tabs
+const SP_TABS = {
+  0:['Process Overview','Raw Material','Slurry Formation','Green Ball','Induration Furnace','Cooling & Dispatch'],
+  1:['OHP Overview','Reclaimer Detail','Blending Analysis','Feed Quality'],
+  2:['Slurry Circuit','Disc Filter','Cake Quality','Filter Health'],
+  3:['GB Formation','PSD Analysis','Binder Circuit','Moisture Control'],
+  4:['Disc Balling','Disc 1-4','Disc 5-8','Performance'],
+  5:['Thermal Profile','Combustion','Zone Analysis','Grate & Bed'],
+  6:['Cooler Overview','WHR Boiler','Air Circuit','Product Dispatch'],
+};
+
+// Advisory recommendations per UC
+const ADVISORY_RECS = {
+  0: [
+    { id:'adv_feed', title:'Throughput Uplift', type:'ap', body:'Increase feed rate 480→510 t/h for +34 t/h throughput gain. Pre-condition: classifier at 720 rpm.', changes:{ohp:{feed_rate:510}}, save:'₹28,400/day', impact:'Throughput +34 t/h' },
+    { id:'adv_fuel', title:'Fuel Optimization', type:'s',  body:`Firing at ${S.furn.firing}°C — ${S.furn.firing-1265}°C above spec minimum. Reducing saves ~200 Nm³/h immediately.`, changes:{furn:{firing:1268,fuel_flow:4720}}, save:'₹22,400/day', impact:'Energy -8.2 Sm³/t' },
+    { id:'adv_vacu', title:'Vacuum Increase',   type:'a',  body:'Increase vacuum 650→682 mmHg to reduce cake moisture 9.1%→8.5%. Improves green ball quality.', changes:{filt:{vacuum:682,cake_moist:8.5}}, save:'₹9,200/day', impact:'Cake moist -0.6%' },
+    { id:'adv_bent', title:'Binder Recipe',     type:'a',  body:'Bentonite 6.1→6.5 kg/t + firing -8°C = same CCS target with 3.2% fuel saving.', changes:{binder:{bentonite:6.5},furn:{firing:1277}}, save:'₹14,600/day', impact:'Cost of Quality -₹62/t' },
+    { id:'adv_clth', title:'Cloth Wear Alert',  type:'w',  body:`Filter cloth at ${S.filt.cloth_pct}%. Sectors 4-7 degrading. Schedule replacement in 68h window.`, changes:{}, save:null, impact:'Prevent -₹180k loss' },
+  ],
+  1: [
+    { id:'adv_rcl', title:'Reclaimer Speed', type:'a', body:'Increasing reclaimer 75%→80% reduces blend Fe variation ±2.1%→±1.4%.', changes:{ohp:{reclaimer_spd:80}}, save:'₹6,200/day', impact:'Blend homogeneity +8%' },
+    { id:'adv_stk', title:'Stacker Angle',   type:'a', body:'At 14° — increase to 16° for better chevron blending layers.', changes:{ohp:{stacker_ang:16}}, save:'₹4,100/day', impact:'Blend eff +2%' },
+  ],
+  2: [
+    { id:'adv_v2', title:'Vacuum Pressure', type:'a', body:'Increase vacuum to 680 mmHg for 0.5% moisture reduction.', changes:{filt:{vacuum:680}}, save:'₹9,200/day', impact:'Cake moisture -0.5%' },
+    { id:'adv_ph', title:'pH Optimization', type:'a', body:'pH 8.2→8.6 improves Bentonite dispersion by 3%.', changes:{slurry:{pH:8.6}}, save:'₹3,400/day', impact:'Dispersion +3%' },
+  ],
+  3: [
+    { id:'adv_da', title:'Disc Angle', type:'a', body:'Reducing disc angle 46°→43° shifts PSD to 10-14mm optimal range.', changes:{ball:{disc_ang:43}}, save:'₹5,200/day', impact:'On-spec PSD +4%' },
+    { id:'adv_ws', title:'Water Spray', type:'a', body:'Spray 17→14.5 l/h for current cake moisture. Drying energy -2.4%.', changes:{ball:{water_spray:14.5}}, save:'₹4,800/day', impact:'Energy -2.4%' },
+  ],
+  4: [
+    { id:'adv_disc', title:'Disc Speed Opt.', type:'a', body:'Drum speed 11.5→12.2 rpm improves on-spec yield by 3%.', changes:{ball:{drum_spd:12.2}}, save:'₹8,600/day', impact:'On-spec +3%' },
+  ],
+  5: [
+    { id:'adv_fir', title:'Firing Reduction', type:'s', body:`Firing ${S.furn.firing}°C → 1268°C saves 260 Nm³/h fuel. CCS maintained via binder adjustment.`, changes:{furn:{firing:1268,fuel_flow:4720}}, save:'₹22,400/day', impact:'Energy -8.2 Sm³/t' },
+    { id:'adv_afr', title:'AFR Optimization', type:'a', body:'Current AFR 20.2 — increase to 21.4 for better combustion efficiency.', changes:{furn:{air_flow:101000}}, save:'₹12,800/day', impact:'CO -18%, Efficiency +2.1%' },
+    { id:'adv_grt', title:'Grate Speed',      type:'a', body:'Reduce grate 1.85→1.78 m/min. +2.7% residence → CCS +8 daN.', changes:{furn:{grate_spd:1.78}}, save:'₹7,400/day', impact:'CCS +8 daN' },
+  ],
+  6: [
+    { id:'adv_whr', title:'WHR Optimization', type:'s', body:'WHR utilization 68%→84% adds 2.2MW equivalent. Reduces grid import.', changes:{cooler:{whr_eff:84}}, save:'₹38,400/day', impact:'Steam +2.2MW' },
+    { id:'adv_air', title:'Cooler Air Flow',   type:'a', body:'Reduce cooler air 71000→68000 Nm³/h. Outlet temp OK, fan energy -4%.', changes:{cooler:{air_vol:68000}}, save:'₹5,600/day', impact:'Fan energy -4%' },
+  ],
+};
+
+// Applied advisory state
+const APPLIED = {};
+
+// ════════════════════════════════════════════════
+// CLOCK
+// ════════════════════════════════════════════════
+setInterval(()=>document.getElementById('clock').textContent=new Date().toLocaleTimeString('en-IN',{hour12:false}),1000);
+document.getElementById('date-disp').textContent=new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+document.getElementById('clock').textContent=new Date().toLocaleTimeString('en-IN',{hour12:false});
+
+// ════════════════════════════════════════════════
+// MODE SWITCHING — Advisory→Optimal auto-applies recs
+// ════════════════════════════════════════════════
+function setMode(m) {
+  const prev=mode; mode=m;
+  ['opt','adv','rst'].forEach(x=>{
+    const b=document.getElementById('btn-'+x);
+    b.className='mbtn'+(x===m?' m-'+m:'');
+  });
+  // If switching from adv → opt, auto-apply all advisory recommendations
+  if(prev==='adv' && m==='opt') {
+    autoApplyAdvisory();
+  }
+  renderLeft(); renderRight();
+}
+
+function autoApplyAdvisory() {
+  const recs = ADVISORY_RECS[uc] || ADVISORY_RECS[0];
+  recs.forEach(r=>{
+    if(!APPLIED[r.id]) {
+      applyRec(r.id, true);
+    }
+  });
+  showToast('All AI advisory parameters auto-applied ✓');
+}
+
+function applyRec(id, silent=false) {
+  const recs = Object.values(ADVISORY_RECS).flat();
+  const rec = recs.find(r=>r.id===id);
+  if(!rec || !rec.changes) return;
+  Object.keys(rec.changes).forEach(st=>{
+    Object.keys(rec.changes[st]).forEach(k=>{
+      if(S[st]) S[st][k]=rec.changes[st][k];
+    });
+  });
+  APPLIED[id]=true;
+  compute();
+  renderKPIs();
+  if(!silent) { renderCenter(); renderRight(); }
+}
+
+function showToast(msg) {
+  const t=document.createElement('div');
+  t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#064e3b;color:#fff;padding:10px 24px;border-radius:10px;font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.2)';
+  t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),3000);
+}
+
+// ════════════════════════════════════════════════
+// UC SWITCH
+// ════════════════════════════════════════════════
+function setUC(idx) {
+  uc=idx; spTab=0;
+  document.querySelectorAll('.uctab').forEach((el,i)=>el.classList.toggle('active',i===idx));
+  renderSPTabs(); renderLeft(); renderCenter(); renderRight();
+}
+function setSP(idx) { spTab=idx; renderSPTabs(); renderCenter(); }
+
+function renderSPTabs() {
+  const list=SP_TABS[uc]||SP_TABS[0];
+  const colors=['#1e40af','#064e3b','#0c4a6e','#78350f','#7c2d12','#3b0764','#134e4a'];
+  document.getElementById('sptabs').innerHTML=list.map((nm,i)=>`
+    <div class="spt ${i===spTab?'active':''}" onclick="setSP(${i})">
+      <div class="sn" style="background:${i===spTab?(colors[uc]||'#1e40af'):'#94a3b8'}">${i+1}</div>
+      ${nm}
+    </div>`).join('');
+}
+
+// ════════════════════════════════════════════════
+// KPI RIBBON
+// ════════════════════════════════════════════════
+function renderKPIs() {
+  compute();
+  document.getElementById('kpiribb').innerHTML = KPIS.map(k=>{
+    const dir=k.dlt>.05?'up':k.dlt<-.05?'dn':'nt';
+    const arr=dir==='up'?'▲':dir==='dn'?'▼':'—';
+    const dv=Math.abs(k.dlt)>.01?(k.dlt>0?'+':'')+k.dlt.toFixed(1):'—';
+    const disp=typeof k.val==='number'&&k.val>=100?parseFloat(k.val).toLocaleString():k.val;
+    if(k.crit) return `<div class="kchip-crit">
+      <div class="ac" style="background:${k.color}"></div>
+      <div class="kl">${k.label}</div>
+      <div><span class="kv-crit" style="color:${k.color}">${disp}</span><span class="ku">${k.unit}</span></div>
+      <div class="kd ${dir}">${arr} ${dv}</div>
+      <div class="kb"><div class="kbf" style="width:${k.pct.toFixed(0)}%;background:${k.color}"></div></div>
+    </div>`;
+    return `<div class="kchip">
+      <div class="ac" style="background:${k.color}"></div>
+      <div class="kl">${k.label}</div>
+      <div><span class="kv" style="color:${k.color}">${disp}</span><span class="ku">${k.unit}</span></div>
+      <div class="kd ${dir}">${arr} ${dv}</div>
+      <div class="kb"><div class="kbf" style="width:${k.pct.toFixed(0)}%;background:${k.color}"></div></div>
+    </div>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════════
+// RT BUFFER UPDATE (1-sec tick)
+// ════════════════════════════════════════════════
+function updateRT() {
+  const j=(v,r)=>+(v+(Math.random()-.5)*r).toFixed(2);
+  rtBufs.firing.push(j(S.furn.firing,2.5)); rtBufs.firing.shift();
+  rtBufs.fuel.push(j(S.furn.fuel_flow,80)); rtBufs.fuel.shift();
+  rtBufs.CCS.push(j(parseFloat(KPIS[3].val),2.5)); rtBufs.CCS.shift();
+  rtBufs.RI.push(j(parseFloat(KPIS[4].val),.2)); rtBufs.RI.shift();
+  rtBufs.tp.push(j(parseFloat(KPIS[0].val),4)); rtBufs.tp.shift();
+  rtBufs.en.push(j(parseFloat(KPIS[1].val),.5)); rtBufs.en.shift();
+  rtBufs.coq.push(j(parseFloat(KPIS[2].val),8)); rtBufs.coq.shift();
+  rtBufs.cake.push(j(S.filt.cake_moist,.06)); rtBufs.cake.shift();
+  rtBufs.conc.push(j(S.slurry.conc,.1)); rtBufs.conc.shift();
+  rtBufs.blaine.push(j(S.grind.blaine,8)); rtBufs.blaine.shift();
+  // micro jitter on state
+  S.filt.cake_moist=Math.max(7.5,Math.min(11,j(S.filt.cake_moist,.03)));
+  S.furn.firing=Math.max(1200,Math.min(1340,j(S.furn.firing,1)));
+  S.furn.co_ppm=Math.max(60,Math.min(150,j(S.furn.co_ppm,2)));
+  S.furn.afr=+(S.furn.air_flow/S.furn.fuel_flow).toFixed(2);
+}
+
+function mkRT(cid, bufKey, color, label, yMin, yMax) {
+  const ctx=document.getElementById(cid); if(!ctx) return;
+  if(rtCharts[cid]) {rtCharts[cid].destroy();}
+  const base=RT_INIT[bufKey]?RT_INIT[bufKey]():S.furn.firing;
+  if(rtBufs[bufKey].every(v=>v===0)) rtBufs[bufKey]=Array.from({length:RT_LEN},()=>+(base+(Math.random()-.5)*2).toFixed(1));
+  rtCharts[cid]=new Chart(ctx,{type:'line',
+    data:{labels:Array(RT_LEN).fill(''),datasets:[{label,data:[...rtBufs[bufKey]],borderColor:color,backgroundColor:color+'18',fill:true,tension:.35,pointRadius:0,borderWidth:1.8}]},
+    options:{responsive:true,maintainAspectRatio:false,animation:false,
+      plugins:{legend:{display:false}},
+      scales:{x:{display:false},y:{min:yMin,max:yMax,ticks:{color:'#94a3b8',font:{size:8}},grid:{color:'rgba(0,0,0,0.04)'},border:{display:false}}}}});
+}
+
+function refreshRT() {
+  Object.keys(rtCharts).forEach(cid=>{
+    const c=rtCharts[cid]; if(!c) return;
+    const BUF_MAP={'rt-firing':'firing','rt-fuel':'fuel','rt-ccs':'CCS','rt-ri':'RI','rt-tp':'tp',
+                   'rt-en':'en','rt-coq':'coq','rt-cake':'cake','rt-conc':'conc','rt-blaine':'blaine'};
+    const buf=BUF_MAP[cid];
+    if(buf) { c.data.datasets[0].data=[...rtBufs[buf]]; c.update('none'); }
+  });
+}
+
+// ════════════════════════════════════════════════
+// LEFT PANEL
+// ════════════════════════════════════════════════
+const CTRL_CFG = [
+  // UC 0 Full Plant
+  [{title:'OHP & Stacker',color:'#064e3b',params:[
+    {st:'ohp',k:'feed_rate',l:'Feed Rate',mn:350,mx:600,st2:5,u:'t/h',c:'#1e40af',adv:'adv_feed'},
+    {st:'ohp',k:'reclaimer_spd',l:'Reclaimer Speed',mn:50,mx:100,st2:1,u:'%',c:'#064e3b',adv:'adv_rcl'},
+    {st:'ohp',k:'blend_ratio',l:'Blend Ratio',mn:55,mx:75,st2:.5,u:'%',c:'#0c4a6e'},
+  ]},
+  {title:'Grinding Mill',color:'#0c4a6e',params:[
+    {st:'grind',k:'mill_spd',l:'Mill Speed',mn:65,mx:95,st2:1,u:'%',c:'#0c4a6e'},
+    {st:'grind',k:'class_rpm',l:'Classifier',mn:580,mx:800,st2:10,u:'rpm',c:'#0c4a6e'},
+    {st:'grind',k:'blaine',l:'Blaine Target',mn:1600,mx:2200,st2:25,u:'cm²/g',c:'#3b0764'},
+  ]},
+  {title:'Slurry & Filtration',color:'#1e40af',params:[
+    {st:'slurry',k:'conc',l:'Slurry Conc.',mn:58,mx:72,st2:.5,u:'%',c:'#1e40af'},
+    {st:'filt',k:'vacuum',l:'Vacuum Pressure',mn:580,mx:720,st2:5,u:'mmHg',c:'#1e40af',adv:'adv_v2'},
+    {st:'filt',k:'cake_moist',l:'Cake Moisture',mn:7.5,mx:11,st2:.1,u:'%',c:'#0c4a6e'},
+    {st:'filt',k:'cloth_pct',l:'Cloth Quality',mn:70,mx:100,st2:1,u:'%',c:'#7f1d1d'},
+  ]},
+  {title:'Binder & Balling',color:'#78350f',params:[
+    {st:'binder',k:'bentonite',l:'Bentonite',mn:4.5,mx:8.5,st2:.1,u:'kg/t',c:'#78350f',adv:'adv_bent'},
+    {st:'binder',k:'lime_pct',l:'Limestone %',mn:.8,mx:3.5,st2:.1,u:'%',c:'#78350f'},
+    {st:'ball',k:'disc_ang',l:'Disc Angle',mn:38,mx:55,st2:.5,u:'°',c:'#7c2d12',adv:'adv_da'},
+    {st:'ball',k:'water_spray',l:'Water Spray',mn:12,mx:26,st2:.5,u:'l/h',c:'#1e40af'},
+  ]},
+  {title:'Indurating Furnace',color:'#7f1d1d',params:[
+    {st:'furn',k:'firing',l:'Firing Zone',mn:1200,mx:1340,st2:5,u:'°C',c:'#7f1d1d',adv:'adv_fir'},
+    {st:'furn',k:'ph2',l:'PH-2 Temp',mn:900,mx:1150,st2:10,u:'°C',c:'#7c2d12'},
+    {st:'furn',k:'fuel_flow',l:'Fuel Flow',mn:3500,mx:6500,st2:50,u:'Nm³/h',c:'#7f1d1d',adv:'adv_fuel'},
+    {st:'furn',k:'air_flow',l:'Air Flow',mn:75000,mx:130000,st2:1000,u:'Nm³/h',c:'#78350f'},
+    {st:'furn',k:'grate_spd',l:'Grate Speed',mn:1.2,mx:2.8,st2:.05,u:'m/min',c:'#3b0764',adv:'adv_grt'},
+  ]}],
+  // UC 1 Raw Material
+  [{title:'Stacker Reclaimer',color:'#064e3b',params:[
+    {st:'ohp',k:'feed_rate',l:'Feed Rate',mn:350,mx:600,st2:5,u:'t/h',c:'#1e40af'},
+    {st:'ohp',k:'reclaimer_spd',l:'Reclaimer Speed',mn:50,mx:100,st2:1,u:'%',c:'#064e3b'},
+    {st:'ohp',k:'stacker_ang',l:'Stacker Angle',mn:8,mx:22,st2:.5,u:'°',c:'#0c4a6e'},
+    {st:'ohp',k:'stockpile_ht',l:'Stockpile Height',mn:6,mx:18,st2:.5,u:'m',c:'#3b0764'},
+  ]},
+  {title:'Blending',color:'#0c4a6e',params:[
+    {st:'blend',k:'ore_fines',l:'Ore Fines %',mn:58,mx:68,st2:.5,u:'%',c:'#0c4a6e'},
+    {st:'blend',k:'moisture_in',l:'Feed Moisture',mn:7.5,mx:12,st2:.1,u:'%',c:'#1e40af'},
+    {st:'blend',k:'blend_eff',l:'Blend Efficiency',mn:85,mx:99,st2:.5,u:'%',c:'#064e3b'},
+  ]}],
+  // UC 2 Slurry
+  [{title:'Slurry Parameters',color:'#1e40af',params:[
+    {st:'slurry',k:'conc',l:'Concentration',mn:58,mx:72,st2:.5,u:'%',c:'#1e40af'},
+    {st:'slurry',k:'density',l:'Density',mn:1.55,mx:1.85,st2:.01,u:'g/cm³',c:'#0c4a6e'},
+    {st:'slurry',k:'pH',l:'pH Control',mn:7.5,mx:9.5,st2:.1,u:'',c:'#064e3b'},
+    {st:'slurry',k:'flow',l:'Flow Rate',mn:150,mx:280,st2:5,u:'m³/h',c:'#3b0764'},
+  ]},
+  {title:'Disc Vacuum Filter',color:'#064e3b',params:[
+    {st:'filt',k:'vacuum',l:'Vacuum Pressure',mn:580,mx:720,st2:5,u:'mmHg',c:'#064e3b'},
+    {st:'filt',k:'cycle_spd',l:'Cycle Speed',mn:.8,mx:2.2,st2:.05,u:'rpm',c:'#1e40af'},
+    {st:'filt',k:'cake_moist',l:'Cake Moisture',mn:7.5,mx:11,st2:.1,u:'%',c:'#78350f'},
+    {st:'filt',k:'cake_thick',l:'Cake Thickness',mn:16,mx:28,st2:.5,u:'mm',c:'#064e3b'},
+    {st:'filt',k:'cloth_pct',l:'Cloth Quality',mn:70,mx:100,st2:1,u:'%',c:'#7f1d1d'},
+  ]}],
+  // UC 3 Green Ball
+  [{title:'Disc Balling',color:'#7c2d12',params:[
+    {st:'ball',k:'disc_ang',l:'Disc Angle',mn:38,mx:55,st2:.5,u:'°',c:'#7c2d12'},
+    {st:'ball',k:'drum_spd',l:'Drum Speed',mn:8,mx:16,st2:.1,u:'rpm',c:'#78350f'},
+    {st:'ball',k:'water_spray',l:'Water Spray',mn:12,mx:26,st2:.5,u:'l/h',c:'#1e40af'},
+    {st:'ball',k:'green_burst',l:'Green Burst',mn:8,mx:18,st2:.1,u:'kg',c:'#064e3b'},
+    {st:'ball',k:'drop_num',l:'Drop Number',mn:3.5,mx:7,st2:.1,u:'drops',c:'#3b0764'},
+  ]},
+  {title:'Binder Mix',color:'#78350f',params:[
+    {st:'binder',k:'bentonite',l:'Bentonite',mn:4.5,mx:8.5,st2:.1,u:'kg/t',c:'#78350f'},
+    {st:'binder',k:'mix_time',l:'Mix Time',mn:3,mx:7,st2:.1,u:'min',c:'#78350f'},
+  ]}],
+  // UC 4 Balling Disc
+  [{title:'Disc Parameters',color:'#7c2d12',params:[
+    {st:'ball',k:'disc_ang',l:'Disc Angle',mn:38,mx:55,st2:.5,u:'°',c:'#7c2d12'},
+    {st:'ball',k:'drum_spd',l:'Drum Speed',mn:8,mx:16,st2:.1,u:'rpm',c:'#78350f'},
+    {st:'ball',k:'water_spray',l:'Water Spray',mn:12,mx:26,st2:.5,u:'l/h',c:'#1e40af'},
+  ]}],
+  // UC 5 Furnace
+  [{title:'Zone Temperatures',color:'#7f1d1d',params:[
+    {st:'furn',k:'udz',l:'UDZ',mn:220,mx:360,st2:5,u:'°C',c:'#3b82f6'},
+    {st:'furn',k:'ddd',l:'DDD',mn:330,mx:500,st2:5,u:'°C',c:'#f59e0b'},
+    {st:'furn',k:'ph1',l:'PH-1',mn:720,mx:1000,st2:10,u:'°C',c:'#f97316'},
+    {st:'furn',k:'ph2',l:'PH-2',mn:900,mx:1150,st2:10,u:'°C',c:'#dc2626'},
+    {st:'furn',k:'firing',l:'Firing Zone',mn:1200,mx:1340,st2:5,u:'°C',c:'#7f1d1d'},
+    {st:'furn',k:'soak',l:'Soaking',mn:1150,mx:1280,st2:5,u:'°C',c:'#dc2626'},
+  ]},
+  {title:'Combustion',color:'#78350f',params:[
+    {st:'furn',k:'fuel_flow',l:'Fuel Flow',mn:3500,mx:6500,st2:50,u:'Nm³/h',c:'#7f1d1d'},
+    {st:'furn',k:'air_flow',l:'Air Flow',mn:75000,mx:130000,st2:1000,u:'Nm³/h',c:'#78350f'},
+    {st:'furn',k:'grate_spd',l:'Grate Speed',mn:1.2,mx:2.8,st2:.05,u:'m/min',c:'#3b0764'},
+    {st:'furn',k:'bed_ht',l:'Bed Height',mn:140,mx:230,st2:5,u:'mm',c:'#064e3b'},
+  ]}],
+  // UC 6 Cooler
+  [{title:'Circular Cooler',color:'#1e40af',params:[
+    {st:'cooler',k:'air_vol',l:'Cooling Air',mn:45000,mx:90000,st2:1000,u:'Nm³/h',c:'#1e40af'},
+    {st:'cooler',k:'spd',l:'Cooler Speed',mn:.8,mx:2.2,st2:.05,u:'rpm',c:'#0c4a6e'},
+  ]},
+  {title:'Screening',color:'#3b0764',params:[
+    {st:'screen',k:'upper_mm',l:'Upper Deck',mn:14,mx:18,st2:.5,u:'mm',c:'#3b0764'},
+    {st:'screen',k:'lower_mm',l:'Lower Deck',mn:6,mx:12,st2:.5,u:'mm',c:'#3b0764'},
+    {st:'screen',k:'vib_hz',l:'Vibration Hz',mn:12,mx:24,st2:.5,u:'Hz',c:'#0c4a6e'},
+  ]}],
+];
+
+function renderLeft() {
+  const ctrl=document.getElementById('left-ctrl');
+  if(mode==='rst') { renderLeftReset(ctrl); return; }
+  const groups=CTRL_CFG[uc]||CTRL_CFG[0];
+  const recs=ADVISORY_RECS[uc]||[];
+  const chps=[
+    {l:'Mill OK',s:S.grind.mill_spd<90?'g':'a'},
+    {l:'Furnace ON',s:'g'},
+    {l:'Cloth '+S.filt.cloth_pct+'%',s:S.filt.cloth_pct<85?'r':S.filt.cloth_pct<92?'a':'g'},
+    {l:'Cooler OK',s:'g'},{l:'Grate OK',s:'g'},
+  ];
+  let h=`<div class="chips">${chps.map(c=>`<span class="chip ch-${c.s}"><span style="width:5px;height:5px;border-radius:50%;background:currentColor;display:inline-block;margin-right:2px"></span>${c.l}</span>`).join('')}</div>`;
+  groups.forEach(g=>{
+    h+=`<div class="cg"><div class="cg-hdr"><div class="cg-dot" style="background:${g.color}"></div>
+      <div class="cg-nm">${g.title}</div><span class="cg-st st-ok">OK</span></div>`;
+    g.params.forEach(p=>{
+      const val=S[p.st][p.k];
+      const disp=val>=10000?(val/1000).toFixed(1)+'k':val>=1000?val.toLocaleString():val;
+      const advRec=p.adv?recs.find(r=>r.id===p.adv):null;
+      const isPending=mode==='adv'&&advRec&&!APPLIED[p.adv];
+      const advVal=advRec&&advRec.changes[p.st]?advRec.changes[p.st][p.k]:null;
+      h+=`<div class="ci${isPending?' ai-pending':''}">
+        <div class="ci-top">
+          <div class="ci-lbl">${p.l}${isPending?` <span style="font-size:8px;color:#f59e0b;font-weight:700">⚡ AI suggests: ${advVal}</span>`:''}
+          </div>
+          <div class="ci-val" style="color:${p.c}" id="cv-${p.st}-${p.k}">${disp} <span class="ci-u">${p.u}</span></div>
+        </div>
+        <input type="range" min="${p.mn}" max="${p.mx}" step="${p.st2}" value="${val}"
+          style="accent-color:${p.c}" id="sl-${p.st}-${p.k}"
+          oninput="onCtrl('${p.st}','${p.k}',this.value,'${p.c}',this)">
+        <div class="ci-bn"><span>${p.mn}</span><span>${p.mx} ${p.u}</span></div>
+        ${isPending&&advVal?`<button class="ai-apply-btn" onclick="applyRec('${p.adv}');renderLeft()">⚡ Apply AI: ${advVal} ${p.u}</button>`:''}
+      </div>`;
+    });
+    h+=`</div>`;
+  });
+  ctrl.innerHTML=h;
+}
+
+function renderLeftReset(ctrl) {
+  const ks={ohp:['feed_rate','reclaimer_spd','blend_ratio'],grind:['mill_spd','blaine','residue'],
+    filt:['vacuum','cake_moist','cloth_pct'],binder:['bentonite','lime_pct'],
+    ball:['disc_ang','water_spray','green_burst'],furn:['udz','ph2','firing','fuel_flow','grate_spd']};
+  const names={ohp:'OHP',grind:'Grinding',filt:'Filtration',binder:'Binder',ball:'Balling',furn:'Furnace'};
+  let h=`<div style="padding:10px 13px">
+    <div style="font-family:var(--hd);font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--bd)">Current vs Baseline</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px">`;
+  Object.keys(ks).forEach(st=>{
+    h+=`<div style="background:var(--s2);border:1px solid var(--bd);border-radius:7px;padding:7px 9px">
+      <div style="font-family:var(--hd);font-size:8.5px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">${names[st]}</div>`;
+    ks[st].forEach(k=>{
+      const cur=S[st][k],base=BASE[st][k];
+      const ch=Math.abs(cur-base)>.01;
+      const cd=cur>=1000?(cur/1000).toFixed(1)+'k':typeof cur==='number'?cur.toFixed(1):cur;
+      const bd=base>=1000?(base/1000).toFixed(1)+'k':typeof base==='number'?base.toFixed(1):base;
+      h+=`<div style="display:flex;justify-content:space-between;font-size:8.5px;margin-bottom:3px">
+        <span style="color:var(--t3)">${k}</span>
+        <span style="color:var(--g4);font-family:var(--mn)">${bd}</span>
+        <span style="color:${ch?'#f59e0b':'var(--t2)'};font-family:var(--mn)">${cd}</span>
+      </div>`;
+    });
+    h+=`</div>`;
+  });
+  h+=`</div>
+    <div style="display:flex;gap:6px;margin-bottom:8px">
+      <button class="rbtn rb-p" onclick="doReset()">↺ Reset All to Baseline</button>
+      <button class="rbtn rb-s" onclick="doReset()">Apply Optimal Recipe</button>
+    </div>
+    <div style="background:var(--g2);border:1px solid var(--g3);border-radius:8px;padding:9px 11px;font-size:9px;color:var(--t2);line-height:1.7">
+      <strong style="color:var(--g4)">Last Baseline:</strong> Shift B · 21-Apr-2026 06:00 IST<br>
+      TP: 548 t/h · CCS: 255 daN · Firing: 1280°C · Energy: 182 Sm³/t
+    </div></div>`;
+  ctrl.innerHTML=h;
+}
+
+function doReset() {
+  Object.keys(BASE).forEach(st=>Object.keys(BASE[st]).forEach(k=>{S[st][k]=BASE[st][k];}));
+  Object.keys(APPLIED).forEach(k=>delete APPLIED[k]);
+  compute(); renderKPIs(); renderLeft(); renderCenter(); renderRight();
+  alert('All parameters restored to baseline.');
+}
+
+function onCtrl(section, key, val, color, inp) {
+  S[section][key]=parseFloat(val);
+  const v=parseFloat(val);
+  const disp=v>=10000?(v/1000).toFixed(1)+'k':v>=1000?v.toLocaleString():v;
+  const d=document.getElementById(`cv-${section}-${key}`);
+  if(d){const u=d.querySelector('.ci-u');d.innerHTML=`${disp} <span class="ci-u">${u?u.textContent:''}</span>`;}
+  const sl=document.getElementById(`sl-${section}-${key}`);
+  if(sl&&sl.style) sl.value=val;
+  compute(); renderKPIs(); renderRight();
+  if(tickN%3===0) renderCenter();
+}
+
+// ════════════════════════════════════════════════
+// CENTER — UC + SP tabs rendering
+// ════════════════════════════════════════════════
+function renderCenter() {
+  const body=document.getElementById('cvb');
+  body.innerHTML='';
+  Object.values(rtCharts).forEach(c=>{try{c.destroy();}catch(e){}});
+  Object.values(staticCharts).forEach(c=>{try{c.destroy();}catch(e){}});
+  rtCharts={}; staticCharts={};
+
+  // dispatch
+  if(uc===0) renderFullPlant(body,spTab);
+  else if(uc===1) renderRawMaterial(body,spTab);
+  else if(uc===2) renderSlurry(body,spTab);
+  else if(uc===3) renderGreenBall(body,spTab);
+  else if(uc===4) renderBallingDisc(body,spTab);
+  else if(uc===5) renderFurnace(body,spTab);
+  else if(uc===6) renderCooler(body,spTab);
+
+  setTimeout(initRT, 80);
+  setTimeout(initStatic, 120);
+}
+
+// ─── HELPERS ───
+function tc(t){if(t<350)return'#dbeafe';if(t<650)return'#fef3c7';if(t<950)return'#fed7aa';if(t<1150)return'#fecaca';return'#fca5a5';}
+function ts(t){if(t<350)return'#3b82f6';if(t<650)return'#f59e0b';if(t<950)return'#ea580c';if(t<1150)return'#dc2626';return'#b91c1c';}
+function arrs(cs){return cs.map(c=>`<marker id="a${c.replace('#','')}" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="${c}"/></marker>`).join('');}
+function nd(x,y,w,h,bg,st,lbl,val,u,sub=''){
+  return `<g style="cursor:pointer"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="7" fill="${bg}" stroke="${st}" stroke-width="1.5" style="filter:drop-shadow(0 1px 3px rgba(0,0,0,.08))"/>
+    <text x="${x+w/2}" y="${y+h/2-9}" text-anchor="middle" font-family="Rajdhani,sans-serif" font-size="9" font-weight="700" fill="${st}">${lbl}</text>
+    <text x="${x+w/2}" y="${y+h/2+5}" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" fill="${st}">${val}</text>
+    <text x="${x+w/2}" y="${y+h/2+17}" text-anchor="middle" font-family="Barlow,sans-serif" font-size="7.5" fill="#64748b">${u}${sub?' '+sub:''}</text>
+  </g>`;}
+
+// ─── UC0 FULL PLANT ───
+function renderFullPlant(body,sp) {
+  if(sp===0) body.innerHTML=fpOverview();
+  else if(sp===1) body.innerHTML=fpRaw();
+  else if(sp===2) body.innerHTML=fpSlurry();
+  else if(sp===3) body.innerHTML=fpGB();
+  else if(sp===4) body.innerHTML=fpFurnaceView();
+  else if(sp===5) body.innerHTML=fpCooling();
+}
+
+function fpOverview() {
+  const f=S.furn,fi=S.filt,q=S.qual;
+  return `<div class="svc"><div class="svt">Complete Process Flow — 8 MTPA · Correct Sequence: RM → Grinding → Slurry Formation → Filtration → Green Ball → Induration → Cooling → Dispatch</div>
+  <svg viewBox="0 0 1060 330" width="100%" style="display:block;overflow:visible;min-height:280px">
+    <defs>${arrs(['#94a3b8','#1e40af','#064e3b','#7f1d1d','#0c4a6e','#78350f','#3b0764'])}</defs>
+    <!-- Sec labels -->
+    <text x="8" y="13" font-family="Rajdhani,sans-serif" font-size="7.5" font-weight="700" fill="#94a3b8" letter-spacing=".8">RAW MATERIAL</text>
+    <line x1="8" y1="17" x2="172" y2="17" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="180" y="13" font-family="Rajdhani,sans-serif" font-size="7.5" font-weight="700" fill="#94a3b8" letter-spacing=".8">SLURRY FORMATION</text>
+    <line x1="180" y1="17" x2="450" y2="17" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="458" y="13" font-family="Rajdhani,sans-serif" font-size="7.5" font-weight="700" fill="#94a3b8" letter-spacing=".8">GREEN BALL</text>
+    <line x1="458" y1="17" x2="570" y2="17" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="576" y="13" font-family="Rajdhani,sans-serif" font-size="7.5" font-weight="700" fill="#94a3b8" letter-spacing=".8">INDURATING FURNACE</text>
+    <line x1="576" y1="17" x2="1052" y2="17" stroke="#e2e8f0" stroke-width="1"/>
+    <!-- OHP -->
+    ${nd(8,24,66,52,'#eff6ff','#1e40af','OHP',S.ohp.feed_rate,'t/h','')}
+    <line x1="74" y1="50" x2="90" y2="50" stroke="#1e40af" stroke-width="1.5" marker-end="url(#a1e40af)"/>
+    <!-- Silos -->
+    ${[0,1,2].map(i=>`<rect x="91" y="${22+i*20}" width="56" height="16" rx="4" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+      <text x="119" y="${33+i*20}" text-anchor="middle" font-family="Rajdhani,sans-serif" font-size="7" font-weight="700" fill="#475569">SILO ${i+1}</text>`).join('')}
+    <line x1="147" y1="50" x2="162" y2="50" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#a94a3b8)"/>
+    <!-- Blending -->
+    ${nd(163,24,70,52,'#ecfeff','#0c4a6e','BLENDING',S.blend.ore_fines+'%','ore fines','Eff:'+S.blend.blend_eff+'%')}
+    <line x1="233" y1="50" x2="248" y2="50" stroke="#0c4a6e" stroke-width="1.5" marker-end="url(#a0c4a6e)"/>
+    <!-- Grinding -->
+    ${nd(249,20,76,60,'#ecfeff','#0c4a6e','GRINDING',S.grind.blaine,'cm²/g',S.grind.residue+'% res')}
+    <line x1="325" y1="50" x2="342" y2="50" stroke="#1e40af" stroke-width="1.5" marker-end="url(#a1e40af)"/>
+    <!-- Slurry (SLURRY FORMATION section) -->
+    ${nd(343,20,76,60,'#eff6ff','#1e40af','SLURRY',fi.cake_moist+'%','moist.',fi.vacuum+'mmHg')}
+    <!-- Filtration / Cake -->
+    <line x1="419" y1="50" x2="436" y2="50" stroke="#064e3b" stroke-width="1.5" marker-end="url(#a064e3b)"/>
+    ${nd(437,16,80,68,'#ecfdf5','#064e3b','FILTRATION\n& CAKE',fi.cake_moist+'%','cake moist.',S.slurry.conc+'%conc')}
+    <!-- Bentonite drop -->
+    ${nd(462,100,68,26,'#fffbeb','#78350f','BENTONITE',S.binder.bentonite,'kg/t','')}
+    <line x1="496" y1="126" x2="496" y2="140" stroke="#78350f" stroke-width="1.2" marker-end="url(#a78350f)"/>
+    <!-- Green Ball (now AFTER slurry/filtration) -->
+    <line x1="517" y1="50" x2="542" y2="50" stroke="#7c2d12" stroke-width="1.5" marker-end="url(#a7f1d1d)"/>
+    ${nd(543,18,80,68,'#fff7ed','#7c2d12','GREEN\nBALL',S.ball.disc_ang+'°','disc','Burst:'+S.ball.green_burst+'kg')}
+    <!-- oversize recycle -->
+    <path d="M 583 86 Q 583 108 500 108 Q 462 108 462 84" fill="none" stroke="#7c2d12" stroke-width=".9" stroke-dasharray="4,3" marker-end="url(#a7c2d12)"/>
+    <text x="524" y="118" text-anchor="middle" font-size="7" fill="#7c2d12" font-family="Rajdhani,sans-serif">Oversize Recycle</text>
+    <!-- Furnace box -->
+    <line x1="623" y1="52" x2="648" y2="52" stroke="#7f1d1d" stroke-width="2" marker-end="url(#a7f1d1d)"/>
+    <rect x="646" y="12" width="398" height="106" rx="8" fill="#fff7ed" stroke="#c2410c" stroke-width="2" style="filter:drop-shadow(0 2px 6px rgba(194,65,12,.12))"/>
+    <text x="845" y="26" text-anchor="middle" font-family="Rajdhani,sans-serif" font-size="9.5" font-weight="700" fill="#7f1d1d">INDURATING FURNACE — ${f.firing}°C PEAK</text>
+    ${[{x:652,temp:f.udz,l:'UDZ'},{x:698,temp:f.ddd,l:'DDD'},{x:744,temp:f.ph1,l:'PH-1'},{x:790,temp:f.ph2,l:'PH-2'},{x:836,temp:f.firing,l:'FIRING',big:true},{x:892,temp:f.soak,l:'SOAK'},{x:934,temp:f.cool_z,l:'COOL Z'}].map(z=>`
+      <g style="cursor:pointer">
+        <rect x="${z.x}" y="32" width="${z.big?50:40}" height="76" rx="5" fill="${tc(z.temp)}" stroke="${ts(z.temp)}" stroke-width="${z.big?2.2:1}"/>
+        <text x="${z.x+(z.big?25:20)}" y="52" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6.5" fill="${ts(z.temp)}" transform="rotate(-90,${z.x+(z.big?25:20)},62)">${z.l}</text>
+        <text x="${z.x+(z.big?25:20)}" y="100" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="${z.big?11:9}" fill="${ts(z.temp)}">${z.temp}°</text>
+      </g>`).join('')}
+    <text x="845" y="128" text-anchor="middle" font-size="7.5" fill="#78350f" font-family="Rajdhani,sans-serif" font-weight="600">← GRATE: ${f.grate_spd}m/min · BED: ${f.bed_ht}mm · FUEL: ${(f.fuel_flow/1000).toFixed(1)}kNm³/h · AFR: ${f.afr} →</text>
+    <!-- Furnace→Cooler -->
+    <line x1="1044" y1="62" x2="1052" y2="62" stroke="#f97316" stroke-width="1.5"/>
+    <line x1="1052" y1="62" x2="1052" y2="168" stroke="#f97316" stroke-width="1.5"/>
+    <line x1="1052" y1="168" x2="970" y2="168" stroke="#f97316" stroke-width="1.5" marker-end="url(#a7f1d1d)"/>
+    <!-- ROW 2 labels -->
+    <text x="8" y="155" font-family="Rajdhani,sans-serif" font-size="7.5" font-weight="700" fill="#94a3b8" letter-spacing=".8">POST-PROCESSING &amp; QUALITY</text>
+    <line x1="8" y1="159" x2="1052" y2="159" stroke="#e2e8f0" stroke-width="1"/>
+    <!-- Cooler -->
+    ${nd(868,164,94,46,'#eff6ff','#1e40af','COOLER',S.cooler.outlet_temp+'°C','outlet',(S.cooler.air_vol/1000).toFixed(0)+'kNm³/h')}
+    <line x1="868" y1="187" x2="830" y2="187" stroke="#1e40af" stroke-width="1.5" marker-end="url(#a1e40af)"/>
+    <!-- Screening -->
+    ${nd(720,164,108,46,'#f5f3ff','#3b0764','SCREENING','+'+S.screen.upper_mm+'/'+S.screen.lower_mm,'mm','Fines:'+S.screen.fines_pct+'%')}
+    <line x1="720" y1="187" x2="676" y2="187" stroke="#064e3b" stroke-width="1.8" marker-end="url(#a064e3b)"/>
+    <!-- Output Quality box -->
+    <g style="cursor:pointer">
+      <rect x="476" y="152" width="198" height="70" rx="8" fill="#ecfdf5" stroke="#064e3b" stroke-width="2" style="filter:drop-shadow(0 2px 8px rgba(6,78,59,.12))"/>
+      <text x="575" y="170" text-anchor="middle" font-family="Rajdhani,sans-serif" font-size="10.5" font-weight="700" fill="#064e3b">OUTPUT QUALITY — 8 MTPA</text>
+      <text x="490" y="186" font-family="JetBrains Mono,monospace" font-size="9" fill="#065f46">CCS: ${Math.round(q.CCS)} daN  RI: ${parseFloat(q.RI).toFixed(1)}%</text>
+      <text x="490" y="200" font-family="JetBrains Mono,monospace" font-size="9" fill="#0e7490">Fe: ${parseFloat(q.Fe).toFixed(1)}%  CR: ${q.CR}%</text>
+      <text x="490" y="214" font-family="JetBrains Mono,monospace" font-size="9" fill="#3b0764">TII: ${q.TII}%  B₂: ${q.basicity}</text>
+    </g>
+    <line x1="476" y1="187" x2="396" y2="187" stroke="#064e3b" stroke-width="1.8" marker-end="url(#a064e3b)"/>
+    <!-- Dispatch -->
+    ${nd(286,164,108,46,'#ecfdf5','#064e3b','DISPATCH',Math.round(parseFloat(KPIS[0].val)),'t/h','DRI Premium')}
+    <!-- Return fines -->
+    <path d="M 774 210 Q 774 248 520 248 Q 310 248 310 162" fill="none" stroke="#3b0764" stroke-width="1" stroke-dasharray="5,3" marker-end="url(#a3b0764)"/>
+    <text x="548" y="258" text-anchor="middle" font-size="7.5" fill="#3b0764" font-family="Rajdhani,sans-serif" font-weight="700">Return Fines → Ball Mill</text>
+    <!-- Status banners -->
+    <rect x="8" y="270" width="320" height="20" rx="5" fill="#ecfdf5" stroke="#6ee7b7" stroke-width=".8"/>
+    <text x="168" y="283" text-anchor="middle" font-size="8" fill="#064e3b" font-family="Rajdhani,sans-serif" font-weight="700">TP: ${Math.round(parseFloat(KPIS[0].val))} t/h · Fines: ${KPIS[6].val}% · OEE: ${KPIS[8].val}%</text>
+    <rect x="336" y="270" width="320" height="20" rx="5" fill="#eff6ff" stroke="#bfdbfe" stroke-width=".8"/>
+    <text x="496" y="283" text-anchor="middle" font-size="8" fill="#1e40af" font-family="Rajdhani,sans-serif" font-weight="700">CCS: ${Math.round(q.CCS)} · RI: ${parseFloat(q.RI).toFixed(1)}% · Fe: ${parseFloat(q.Fe).toFixed(1)}% · B₂: ${q.basicity}</text>
+    <rect x="664" y="270" width="388" height="20" rx="5" fill="#fff7ed" stroke="#fdba74" stroke-width=".8"/>
+    <text x="858" y="283" text-anchor="middle" font-size="8" fill="#78350f" font-family="Rajdhani,sans-serif" font-weight="700">Firing: ${f.firing}°C · AFR: ${f.afr} · Energy: ${parseFloat(KPIS[1].val).toFixed(0)} Sm³/t · CoQ: ₹${parseFloat(KPIS[2].val).toFixed(0)}/t</text>
+    <!-- 3 Critical KPI boxes -->
+    <rect x="8" y="298" width="105" height="28" rx="6" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1"/>
+    <text x="60" y="309" text-anchor="middle" font-family="Rajdhani,sans-serif" font-size="7.5" font-weight="700" fill="#1e40af">THROUGHPUT</text>
+    <text x="60" y="322" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" fill="#1e40af">${Math.round(parseFloat(KPIS[0].val))} t/h</text>
+    <rect x="120" y="298" width="115" height="28" rx="6" fill="#fffbeb" stroke="#fcd34d" stroke-width="1"/>
+    <text x="177" y="309" text-anchor="middle" font-family="Rajdhani,sans-serif" font-size="7.5" font-weight="700" fill="#78350f">ENERGY Sm³/t</text>
+    <text x="177" y="322" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" fill="#78350f">${parseFloat(KPIS[1].val).toFixed(0)} Sm³/t</text>
+    <rect x="242" y="298" width="115" height="28" rx="6" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="1"/>
+    <text x="300" y="309" text-anchor="middle" font-family="Rajdhani,sans-serif" font-size="7.5" font-weight="700" fill="#3b0764">COST OF QUALITY</text>
+    <text x="300" y="322" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" fill="#3b0764">₹${parseFloat(KPIS[2].val).toFixed(0)}/t</text>
+  </svg></div>
+  <!-- 3 Critical KPI live charts -->
+  <div class="gg g3">
+    <div class="card"><div class="ch">Throughput Live — 8 MTPA <span class="cbdg bdlv">LIVE</span></div>
+      <div style="height:80px"><canvas id="rt-tp" role="img" aria-label="Throughput">Throughput</canvas></div></div>
+    <div class="card"><div class="ch">Energy Consump. Live <span class="cbdg bdwa">Sm³/t</span></div>
+      <div style="height:80px"><canvas id="rt-en" role="img" aria-label="Energy">Energy</canvas></div></div>
+    <div class="card"><div class="ch">Cost of Quality Live <span class="cbdg bdpu">₹/t</span></div>
+      <div style="height:80px"><canvas id="rt-coq" role="img" aria-label="CoQ">CoQ</canvas></div></div>
+  </div>`;
+}
+
+function fpRaw(){
+  return `<div class="svc"><div class="svt">Raw Material Handling — OHP · Silos · Stacker Reclaimer · Blending · Grinding Circuit</div>
+  <svg viewBox="0 0 860 200" width="100%" style="display:block;overflow:visible;min-height:180px">
+    <defs>${arrs(['#94a3b8','#1e40af','#064e3b','#0c4a6e'])}</defs>
+    <!-- Stockpile -->
+    <ellipse cx="72" cy="138" rx="62" ry="26" fill="#fef9c3" stroke="#f59e0b" stroke-width="1.5"/>
+    <polygon points="72,58 10,138 134,138" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5"/>
+    <text x="72" y="100" text-anchor="middle" font-family="Rajdhani,sans-serif" font-size="8.5" font-weight="700" fill="#78350f">STOCKPILE</text>
+    <text x="72" y="113" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="#78350f">${S.ohp.stockpile_ht}m</text>
+    <line x1="72" y1="58" x2="152" y2="28" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"/>
+    <text x="120" y="22" font-family="Rajdhani,sans-serif" font-size="7.5" font-weight="700" fill="#64748b">STACKER ${S.ohp.stacker_ang}°</text>
+    <rect x="145" y="118" width="76" height="36" rx="6" fill="#eff6ff" stroke="#1e40af" stroke-width="1.5"/>
+    <text x="183" y="132" text-anchor="middle" font-family="Rajdhani,sans-serif" font-size="8.5" font-weight="700" fill="#1e3a8a">RECLAIMER</text>
+    <text x="183" y="146" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="#1e40af">${S.ohp.reclaimer_spd}%</text>
+    <line x1="221" y1="136" x2="256" y2="136" stroke="#1e40af" stroke-width="1.5" marker-end="url(#a1e40af)"/>
+    <rect x="257" y="127" width="118" height="18" rx="4" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+    <text x="316" y="140" text-anchor="middle" font-family="Rajdhani,sans-serif" font-size="7.5" font-weight="700" fill="#64748b">BELT CONV. — ${S.ohp.feed_rate}t/h · 8 MTPA</text>
+    <line x1="375" y1="136" x2="410" y2="136" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#a94a3b8)"/>
+    ${[0,1,2].map(i=>`<rect x="411" y="${110+i*30}" width="64" height="24" rx="5" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+      <text x="443" y="${125+i*30}" text-anchor="middle" font-family="Rajdhani,sans-serif" font-size="7.5" font-weight="700" fill="#475569">SILO ${i+1}</text>
+      <text x="443" y="${133+i*30}" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="#64748b">${[S.blend.silo1,S.blend.silo2,S.blend.silo3][i]}t</text>`).join('')}
+    <line x1="475" y1="135" x2="504" y2="135" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#a94a3b8)"/>
+    ${nd(505,107,86,56,'#ecfeff','#0c4a6e','BLENDING',S.blend.ore_fines+'%','ore fines','Eff:'+S.blend.blend_eff+'%')}
+    <line x1="591" y1="135" x2="622" y2="135" stroke="#0c4a6e" stroke-width="1.5" marker-end="url(#a0c4a6e)"/>
+    <!-- Ball Mill circle -->
+    <circle cx="678" cy="135" r="44" fill="#ecfeff" stroke="#0c4a6e" stroke-width="2" style="filter:drop-shadow(0 1px 4px rgba(12,74,110,.1))"/>
+    <circle cx="678" cy="135" r="38" fill="none" stroke="#0c4a6e22" stroke-width="3" stroke-dasharray="10,6"/>
+    <text x="678" y="131" text-anchor="middle" font-family="Rajdhani,sans-serif" font-size="9" font-weight="700" fill="#0c4a6e">BALL MILL</text>
+    <text x="678" y="145" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10" fill="#0c4a6e">${S.grind.mill_spd}%</text>
+    <text x="678" y="158" text-anchor="middle" font-family="Barlow,sans-serif" font-size="7.5" fill="#64748b">${S.grind.power_kw}kW</text>
+    <line x1="722" y1="135" x2="756" y2="135" stroke="#0c4a6e" stroke-width="1.5" marker-end="url(#a0c4a6e)"/>
+    ${nd(757,107,94,56,'#f0fdfa','#134e4a','CLASSIFIER',S.grind.class_rpm,'rpm','Blaine:'+S.grind.blaine)}
+  </svg></div>
+  <div class="gg g4">
+    ${[['Feed Rate',S.ohp.feed_rate,'t/h',S.ohp.feed_rate/600,'#1e40af','g'],
+       ['Blend Eff.',S.blend.blend_eff,'%',S.blend.blend_eff/100,'#064e3b',S.blend.blend_eff<92?'wa':'g'],
+       ['Blaine',S.grind.blaine,'cm²/g',S.grind.blaine/2200,'#3b0764',''],
+       ['Mill Power',S.grind.power_kw,'kW',S.grind.power_kw/3500,'#78350f',''],
+      ].map(([l,v,u,p,c,cls])=>`<div class="gb ${cls}"><div class="gl">${l}</div><div class="gv" style="color:${c}">${v}</div><div class="guu">${u}</div>
+        <div class="gbr"><div class="gbrf" style="width:${Math.min(100,p*100)}%;background:${c}"></div></div></div>`).join('')}
+  </div>
+  <div class="gg g2">
+    <div class="card"><div class="ch">Feed Rate Live <span class="cbdg bdlv">LIVE</span></div>
+      <div style="height:80px"><canvas id="rt-tp" role="img" aria-label="Feed rate">Feed rate</canvas></div></div>
+    <div class="card"><div class="ch">Blaine Value Live <span class="cbdg bdlv">LIVE</span></div>
+      <div style="height:80px"><canvas id="rt-blaine" role="img" aria-label="Blaine">Blaine</canvas></div></div>
+  </div>`;
+}
+
+function fpSlurry(){
+  return `<div class="svc"><div class="svt">Slurry Formation — Grinding output → Water Addition → Agitator Tank → Slurry Pumps → Disc Vacuum Filtration → Cake Formation</div>
+  <svg viewBox="0 0 900 190" width="100%" style="display:block;overflow:visible;min-height:170px">
+    <defs>${arrs(['#94a3b8','#1e40af','#064e3b','#0c4a6e'])}</defs>
+    ${nd(8,65,78,58,'#ecfeff','#0c4a6e','GRIND\nOUTPUT',S.grind.blaine,'cm²/g','')}
+    <line x1="86" y1="94" x2="106" y2="94" stroke="#0c4a6e" stroke-width="1.5" marker-end="url(#a0c4a6e)"/>
+    ${nd(107,54,84,80,'#eff6ff','#1e40af','AGITATOR\nTANK',S.slurry.conc+'%','conc','pH '+S.slurry.pH)}
+    <!-- Water input -->
+    <rect x="124" y="14" width="52" height="24" rx="5" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
+    <text x="150" y="26" text-anchor="middle" font-family="Rajdhani,sans-serif" font-size="7.5" font-weight="700" fill="#1e40af">WATER</text>
+    <text x="150" y="35" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="#1e40af">${S.grind.water_flow}m³/h</text>
+    <line x1="150" y1="38" x2="150" y2="54" stroke="#3b82f6" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#a94a3b8)"/>
+    <line x1="191" y1="94" x2="220" y2="94" stroke="#1e40af" stroke-width="1.5" marker-end="url(#a1e40af)"/>
+    ${nd(221,54,82,80,'#eff6ff','#1e40af','PUMP\nSUMPS',S.slurry.flow+'m³/h','flow','ρ:'+S.slurry.density)}
+    <line x1="303" y1="94" x2="328" y2="94" stroke="#1e40af" stroke-width="1.5" marker-end="url(#a1e40af)"/>
+    <!-- Disc filter big circle schematic -->
+    <circle cx="396" cy="94" r="60" fill="#ecfdf5" stroke="#064e3b" stroke-width="2" style="filter:drop-shadow(0 1px 4px rgba(6,78,59,.1))"/>
+    ${Array.from({length:12},(_,i)=>{const a=i*30*Math.PI/180; const c=i>=3&&i<=6?'#fef3c7':i===7?'#fee2e2':'#dcfce7'; return `<path d="M 396 94 L ${396+60*Math.cos(a)} ${94+60*Math.sin(a)} A 60 60 0 0 1 ${396+60*Math.cos(a+.524)} ${94+60*Math.sin(a+.524)} Z" fill="${c}" stroke="#064e3b" stroke-width=".4" opacity=".8"/>`}).join('')}
+    <circle cx="396" cy="94" r="24" fill="#f0fdf4" stroke="#064e3b" stroke-width="1"/>
+    <text x="396" y="90" text-anchor="middle" font-family="Rajdhani,sans-serif" font-size="9" font-weight="700" fill="#064e3b">DISC</text>
+    <text x="396" y="103" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8.5" fill="#064e3b">FILTER</text>
+    <line x1="456" y1="94" x2="490" y2="94" stroke="#064e3b" stroke-width="1.5" marker-end="url(#a064e3b)"/>
+    ${nd(491,54,94,80,'#ecfdf5','#064e3b','CAKE\nFORMATION',S.filt.cake_moist+'%','moisture',S.filt.vacuum+'mmHg')}
+    <line x1="585" y1="94" x2="616" y2="94" stroke="#064e3b" stroke-width="2" marker-end="url(#a064e3b)"/>
+    ${nd(617,54,94,80,'#fff7ed','#7c2d12','TO GREEN\nBALL',S.filt.cake_thick+'mm','cake','→ Pugmill')}
+    <!-- Parameters box -->
+    <rect x="725" y="50" width="170" height="90" rx="7" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="810" y="68" text-anchor="middle" font-family="Rajdhani,sans-serif" font-size="8.5" font-weight="700" fill="#64748b">FILTER PARAMETERS</text>
+    ${[['Vacuum',S.filt.vacuum,'mmHg','#064e3b'],['Cycle Speed',S.filt.cycle_spd,'rpm','#1e40af'],
+       ['Cake Moisture',S.filt.cake_moist+'%','target 8-10%','#0c4a6e'],['Cloth Quality',S.filt.cloth_pct+'%',S.filt.cloth_pct<92?'WATCH':'OK','#7f1d1d'],
+       ['Throughput',S.filt.throughput,'t/h','#064e3b']].map(([k,v,u,c],i)=>`
+      <text x="734" y="${84+i*13}" font-family="Rajdhani,sans-serif" font-size="8" font-weight="600" fill="#64748b">${k}:</text>
+      <text x="830" y="${84+i*13}" font-family="JetBrains Mono,monospace" font-size="8" fill="${c}">${v} ${u}</text>`).join('')}
+  </svg></div>
+  <div class="gg g4">
+    <div class="card"><div class="ch">Cake Moisture Live <span class="cbdg bdlv">RT</span></div>
+      <div style="height:70px"><canvas id="rt-cake" role="img" aria-label="Cake moisture">Cake</canvas></div></div>
+    <div class="card"><div class="ch">Concentration Live <span class="cbdg bdlv">RT</span></div>
+      <div style="height:70px"><canvas id="rt-conc" role="img" aria-label="Conc">Conc</canvas></div></div>
+    <div class="gb ${S.filt.cake_moist>10?'al':S.filt.cake_moist>9?'wa':'ok'}">
+      <div class="gl">Cake Moisture</div><div class="gv" style="color:#0c4a6e">${S.filt.cake_moist}</div><div class="guu">%</div>
+      <div class="gbr"><div class="gbrf" style="width:${S.filt.cake_moist/12*100}%;background:#0c4a6e"></div></div>
+      <div class="gtgt">Target: 8-10%</div></div>
+    <div class="gb ${S.filt.cloth_pct<85?'al':S.filt.cloth_pct<92?'wa':'ok'}">
+      <div class="gl">Cloth Quality</div><div class="gv" style="color:${S.filt.cloth_pct<85?'#7f1d1d':'#064e3b'}">${S.filt.cloth_pct}</div><div class="guu">%</div>
+      <div class="gbr"><div class="gbrf" style="width:${S.filt.cloth_pct}%;background:${S.filt.cloth_pct<85?'#ef4444':'#10b981'}"></div></div>
+      <div class="gtgt">Healthy: >92%</div></div>
+  </div>`;
+}
+
+function fpGB(){
+  return `<div class="svc"><div class="svt">Green Ball Formation — After Slurry/Filtration → Binder (Bentonite+Limestone) → Pugmill Mixing → Disc Balling (8 discs) → Quality Check</div>
+  <svg viewBox="0 0 900 200" width="100%" style="display:block;overflow:visible;min-height:180px">
+    <defs>${arrs(['#94a3b8','#78350f','#064e3b','#7c2d12'])}</defs>
+    <!-- Filter cake in -->
+    ${nd(8,72,80,56,'#ecfdf5','#064e3b','FILTER\nCAKE IN',S.filt.cake_moist+'%','moist.',S.filt.cake_thick+'mm')}
+    <line x1="88" y1="100" x2="110" y2="100" stroke="#064e3b" stroke-width="1.5" marker-end="url(#a064e3b)"/>
+    <!-- Bentonite hopper -->
+    <polygon points="132,20 192,20 176,60 148,60" fill="#fffbeb" stroke="#78350f" stroke-width="1.5"/>
+    <text x="162" y="42" text-anchor="middle" font-family="Rajdhani,sans-serif" font-size="8" font-weight="700" fill="#78350f">BENTONITE</text>
+    <text x="162" y="54" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="#78350f">${S.binder.bentonite}kg/t</text>
+    <line x1="162" y1="60" x2="168" y2="88" stroke="#78350f" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#a78350f)"/>
+    <!-- Pugmill -->
+    ${nd(111,72,112,56,'#fffbeb','#78350f','PUG MILL',S.binder.mix_time+'min','mix time','Disp:'+S.binder.dispersion+'%')}
+    <line x1="223" y1="100" x2="258" y2="100" stroke="#78350f" stroke-width="1.5" marker-end="url(#a78350f)"/>
+    <!-- 4 disc ballers -->
+    ${[0,1,2,3].map(i=>`<ellipse cx="${298+i*110}" cy="100" rx="44" ry="40" fill="#fff7ed" stroke="#7c2d12" stroke-width="1.8" style="filter:drop-shadow(0 1px 3px rgba(124,45,18,.1))"/>
+      <text x="${298+i*110}" y="97" text-anchor="middle" font-family="Rajdhani,sans-serif" font-size="8.5" font-weight="700" fill="#7c2d12">DISC ${i+1}</text>
+      <text x="${298+i*110}" y="110" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#7c2d12">${S.ball.disc_ang}°</text>
+      ${i<3?`<line x1="${342+i*110}" y1="100" x2="${362+i*110}" y2="100" stroke="#7c2d12" stroke-width="1.1" marker-end="url(#a7c2d12)"/>`:''}
+    `).join('')}
+    <line x1="642" y1="100" x2="672" y2="100" stroke="#7c2d12" stroke-width="1.5" marker-end="url(#a7c2d12)"/>
+    <!-- GB Quality box -->
+    <rect x="673" y="56" width="218" height="88" rx="8" fill="#fff7ed" stroke="#7c2d12" stroke-width="1.8"/>
+    <text x="782" y="76" text-anchor="middle" font-family="Rajdhani,sans-serif" font-size="10" font-weight="700" fill="#7c2d12">GREEN BALL QUALITY</text>
+    ${[['Green Burst',S.ball.green_burst,'kg','#7c2d12'],['Drop Number',S.ball.drop_num,'drops','#78350f'],
+       ['On-spec PSD',S.ball.onspec+'%','target >90%','#064e3b'],['GB Moisture',S.ball.gb_moist+'%','','#0c4a6e'],
+       ['Water Spray',S.ball.water_spray,'l/h','#1e40af']].map(([k,v,u,c],i)=>`
+      <text x="682" y="${93+i*13}" font-family="Rajdhani,sans-serif" font-size="8" font-weight="600" fill="#64748b">${k}:</text>
+      <text x="790" y="${93+i*13}" font-family="JetBrains Mono,monospace" font-size="8" fill="${c}">${v} ${u}</text>`).join('')}
+    <!-- Oversize recycle back -->
+    <path d="M 298 140 Q 298 168 200 168 Q 162 168 162 128" fill="none" stroke="#7c2d12" stroke-width=".9" stroke-dasharray="4,3" marker-end="url(#a7c2d12)"/>
+    <text x="234" y="177" font-size="7.5" fill="#7c2d12" font-family="Rajdhani,sans-serif" font-weight="600">Oversize → Pugmill</text>
+  </svg></div>
+  <div class="gg g4">
+    ${[['Green Burst',S.ball.green_burst,'kg',S.ball.green_burst/18,'#7c2d12',S.ball.green_burst<10?'al':'ok','>10 kg'],
+       ['Drop Number',S.ball.drop_num,'drops',S.ball.drop_num/7,'#78350f','','4-6'],
+       ['On-Spec PSD',S.ball.onspec,'%',S.ball.onspec/100,'#064e3b',S.ball.onspec<90?'wa':'ok','>90%'],
+       ['Disc Angle',S.ball.disc_ang,'°',S.ball.disc_ang/55,'#1e40af','','42-48°'],
+      ].map(([l,v,u,p,c,cls,t])=>`<div class="gb ${cls}"><div class="gl">${l}</div><div class="gv" style="color:${c}">${v}</div><div class="guu">${u}</div>
+        <div class="gbr"><div class="gbrf" style="width:${Math.min(100,p*100)}%;background:${c}"></div></div>
+        <div class="gtgt">Target: ${t}</div></div>`).join('')}
+  </div>`;
+}
+
+function fpFurnaceView(){
+  const f=S.furn;
+  return `<div class="svc"><div class="svt">Indurating Furnace — Straight Grate Technology · Full Thermal Profile · 7 Zones</div>
+  <svg viewBox="0 0 960 230" width="100%" style="display:block;overflow:visible;min-height:200px">
+    <defs>${arrs(['#94a3b8','#7f1d1d','#1e40af'])}</defs>
+    <rect x="8" y="18" width="948" height="166" rx="10" fill="#fff7ed" stroke="#c2410c" stroke-width="2.2" style="filter:drop-shadow(0 2px 8px rgba(194,65,12,.12))"/>
+    <text x="484" y="33" text-anchor="middle" font-family="Rajdhani,sans-serif" font-size="11" font-weight="700" fill="#7f1d1d">INDURATING FURNACE — 8 MTPA · STRAIGHT GRATE — PEAK ${f.firing}°C</text>
+    ${[{x:14,w:126,temp:f.udz,l:'UP DROUGHT DRYING',d:'Surface moisture removal'},
+       {x:144,w:122,temp:f.ddd,l:'DOWN DROUGHT DRYING',d:'Combined moisture'},
+       {x:270,w:136,temp:f.ph1,l:'PREHEATING ZONE 1',d:'Fe₂O₃ oxidation begins'},
+       {x:410,w:136,temp:f.ph2,l:'PREHEATING ZONE 2',d:'Near-complete oxidation'},
+       {x:550,w:160,temp:f.firing,l:'FIRING ZONE',d:'Ceramic bonding · CCS dev.',big:true},
+       {x:714,w:112,temp:f.soak,l:'SOAKING',d:'Uniform penetration'},
+       {x:830,w:120,temp:f.cool_z,l:'COOLING ZONE',d:'Temperature reduction'},
+      ].map(z=>`<g style="cursor:pointer">
+        <rect x="${z.x}" y="42" width="${z.w}" height="130" rx="6" fill="${tc(z.temp)}" stroke="${ts(z.temp)}" stroke-width="${z.big?2.5:1.2}" style="filter:${z.big?'drop-shadow(0 0 10px rgba(239,68,68,.3))':'none'}"/>
+        <text x="${z.x+z.w/2}" y="64" text-anchor="middle" font-family="Rajdhani,sans-serif" font-size="${z.big?9:8}" font-weight="700" fill="${ts(z.temp)}">${z.l}</text>
+        <text x="${z.x+z.w/2}" y="112" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="${z.big?20:16}" fill="${ts(z.temp)}">${z.temp}°C</text>
+        <text x="${z.x+z.w/2}" y="132" text-anchor="middle" font-family="Barlow,sans-serif" font-size="7.5" fill="#64748b">${z.d}</text>
+        <rect x="${z.x+8}" y="140" width="${z.w-16}" height="8" rx="4" fill="rgba(0,0,0,.06)"/>
+        <rect x="${z.x+8}" y="140" width="${Math.min(z.w-16,(z.temp/1400)*(z.w-16))}" height="8" rx="4" fill="${ts(z.temp)}" opacity=".7"/>
+        <text x="${z.x+z.w/2}" y="163" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="${ts(z.temp)}">${Math.round(z.temp/1400*100)}%</text>
+      </g>`).join('')}
+    <text x="484" y="196" text-anchor="middle" font-size="8.5" fill="#78350f" font-family="Rajdhani,sans-serif" font-weight="700">← PELLETS ON TRAVELLING GRATE → ${f.grate_spd}m/min · BED: ${f.bed_ht}mm · FUEL: ${(f.fuel_flow/1000).toFixed(1)}kNm³/h · AFR: ${f.afr} · CO: ${Math.round(f.co_ppm)}ppm →</text>
+  </svg></div>
+  <div class="gg g4">
+    <div class="card"><div class="ch">Firing Temp Live <span class="cbdg bdlv">LIVE</span></div>
+      <div style="height:70px"><canvas id="rt-firing" role="img" aria-label="Firing">Firing</canvas></div></div>
+    <div class="card"><div class="ch">Fuel Flow Live <span class="cbdg bdlv">LIVE</span></div>
+      <div style="height:70px"><canvas id="rt-fuel" role="img" aria-label="Fuel">Fuel</canvas></div></div>
+    <div class="gb ${f.co_ppm>120?'al':f.co_ppm>100?'wa':'ok'}">
+      <div class="gl">CO Emission</div><div class="gv" style="color:${f.co_ppm>100?'#7f1d1d':'#064e3b'}">${Math.round(f.co_ppm)}</div><div class="guu">ppm</div>
+      <div class="gbr"><div class="gbrf" style="width:${f.co_ppm/150*100}%;background:${f.co_ppm>100?'#ef4444':'#10b981'}"></div></div>
+      <div class="gtgt">Target: &lt;100ppm</div></div>
+    <div class="gb">
+      <div class="gl">Air-Fuel Ratio</div><div class="gv" style="color:#1e40af">${f.afr}</div><div class="guu"></div>
+      <div class="gbr"><div class="gbrf" style="width:${f.afr/25*100}%;background:#3b82f6"></div></div>
+      <div class="gtgt">Optimal: 21.0-22.0</div></div>
+  </div>`;
+}
+
+function fpCooling(){
+  const q=S.qual;
+  return `<div class="gg g2">
+    <div class="svc"><div class="svt">Circular Cooler → Screening → Dispatch</div>
+      <svg viewBox="0 0 420 190" width="100%" style="display:block;overflow:visible;min-height:170px">
+        <defs>${arrs(['#94a3b8','#1e40af','#3b0764','#064e3b'])}</defs>
+        ${nd(8,68,72,52,'#fef3c7','#f59e0b','HOT\nPELLETS',S.furn.cool_z+'°C','from furn.','')}
+        <line x1="80" y1="94" x2="100" y2="94" stroke="#f59e0b" stroke-width="1.5" marker-end="url(#a1e40af)"/>
+        <circle cx="168" cy="94" r="58" fill="#eff6ff" stroke="#1e40af" stroke-width="2" style="filter:drop-shadow(0 1px 4px rgba(30,64,175,.1))"/>
+        <circle cx="168" cy="94" r="58" fill="none" stroke="#1e40af" stroke-width="2"/>
+        <text x="168" y="89" text-anchor="middle" font-family="Rajdhani,sans-serif" font-size="9" font-weight="700" fill="#1e40af">CIRCULAR</text>
+        <text x="168" y="102" text-anchor="middle" font-family="Rajdhani,sans-serif" font-size="9" font-weight="700" fill="#1e40af">COOLER</text>
+        <text x="168" y="115" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8.5" fill="#1e40af">${S.cooler.outlet_temp}°C out</text>
+        <line x1="168" y1="152" x2="168" y2="140" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="3,2" marker-end="url(#a94a3b8)"/>
+        <text x="168" y="165" text-anchor="middle" font-size="7.5" fill="#94a3b8" font-family="Rajdhani,sans-serif">Air ${(S.cooler.air_vol/1000).toFixed(0)}kNm³/h · WHR ${S.cooler.whr_eff}%</text>
+        <line x1="226" y1="94" x2="256" y2="94" stroke="#1e40af" stroke-width="1.5" marker-end="url(#a1e40af)"/>
+        ${nd(257,64,96,60,'#f5f3ff','#3b0764','SCREENING','+'+S.screen.upper_mm+'/'+S.screen.lower_mm,'mm','Fines:'+S.screen.fines_pct+'%')}
+        <line x1="353" y1="94" x2="382" y2="94" stroke="#064e3b" stroke-width="1.8" marker-end="url(#a064e3b)"/>
+        ${nd(383,68,30,52,'#ecfdf5','#064e3b','→ OUT','','','')}
+      </svg></div>
+    <div class="card"><div class="ch">Output Pellet Quality — 8 MTPA Grade <span class="cbdg bdok">DRI</span></div>
+      ${[['CCS (Cold Crush Strength)',Math.round(q.CCS),'daN','>250',q.CCS/300,'#3b0764'],
+         ['RI (Reducibility Index)',parseFloat(q.RI).toFixed(1),'%','>70%',q.RI/85,'#0c4a6e'],
+         ['CR (Crush Resistance)',q.CR,'%','<6%',q.CR/10,'#7f1d1d'],
+         ['TII (Tumble Index)',q.TII,'%','>94%',q.TII/100,'#064e3b'],
+         ['Fe Content',parseFloat(q.Fe).toFixed(1),'%','>65%',q.Fe/68,'#1e40af'],
+         ['Basicity B₂',q.basicity,'','1.0-1.1',q.basicity/1.4,'#78350f'],
+         ['Swelling Index',q.swelling.toFixed(1),'%','<15%',q.swelling/20,'#0c4a6e'],
+        ].map(([k,v,u,tgt,p,c])=>`<div style="display:flex;align-items:center;gap:6px;margin-bottom:7px">
+          <div style="font-family:var(--hd);font-size:9px;font-weight:700;color:var(--t2);min-width:130px">${k}</div>
+          <span style="font-family:var(--mn);font-size:13px;color:${c}">${v}</span>
+          <span style="font-size:8px;color:var(--t4)">${u}</span>
+          <div style="flex:1;height:4px;background:var(--s3);border-radius:2px;overflow:hidden"><div style="height:100%;width:${Math.min(100,p*100).toFixed(0)}%;background:${c};transition:width .4s"></div></div>
+          <span style="font-size:8px;color:var(--t4);min-width:40px;text-align:right">${tgt}</span>
+        </div>`).join('')}
+    </div>
+  </div>
+  <div class="gg g3">
+    <div class="card"><div class="ch">CCS Live Prediction <span class="cbdg bdpu">ML</span></div>
+      <div style="height:72px"><canvas id="rt-ccs" role="img" aria-label="CCS">CCS</canvas></div></div>
+    <div class="card"><div class="ch">RI Live <span class="cbdg bdlv">LIVE</span></div>
+      <div style="height:72px"><canvas id="rt-ri" role="img" aria-label="RI">RI</canvas></div></div>
+    <div class="card"><div class="ch">Throughput Live <span class="cbdg bdok">8 MTPA</span></div>
+      <div style="height:72px"><canvas id="rt-tp" role="img" aria-label="TP">TP</canvas></div></div>
+  </div>`;
+}
+
+// UC1-6 simplified but functional
+function renderRawMaterial(body,sp) { body.innerHTML=fpRaw(); }
+function renderSlurry(body,sp) { body.innerHTML=fpSlurry(); }
+function renderGreenBall(body,sp) { body.innerHTML=fpGB(); }
+function renderBallingDisc(body,sp) {
+  body.innerHTML=`<div class="card"><div class="ch">Balling Disc — 8 Discs · 8 MTPA <span class="cbdg bdlv">LIVE</span></div>
+  <div class="gg" style="grid-template-columns:repeat(4,1fr)">
+    ${Array.from({length:8},(_,i)=>`<div class="gb"><div class="gl">Disc ${i+1}</div>
+      <div class="gv" style="color:#7c2d12">${S.ball.disc_ang}°</div><div class="guu">angle</div>
+      <div style="font-family:var(--mn);font-size:9px;color:#78350f;margin-top:3px">${S.ball.drum_spd}rpm</div>
+      <div class="gbr"><div class="gbrf" style="width:${S.ball.onspec}%;background:#7c2d12"></div></div>
+      <div class="gtgt">${S.ball.onspec}% on-spec</div></div>`).join('')}
+  </div></div>
+  ${fpGB()}`;
+}
+function renderFurnace(body,sp) {
+  if(sp===0) body.innerHTML=fpFurnaceView();
+  else if(sp===1) body.innerHTML=combustionPanel();
+  else if(sp===2) body.innerHTML=zoneAnalysisPanel();
+  else if(sp===3) body.innerHTML=gratePanel();
+  else body.innerHTML=fpFurnaceView();
+}
+function combustionPanel(){
+  const f=S.furn;
+  return `<div class="gg g4">
+    ${[['Fuel Flow',(f.fuel_flow/1000).toFixed(2),'kNm³/h',f.fuel_flow/6500,'#7f1d1d'],['Air Flow',(f.air_flow/1000).toFixed(0),'kNm³/h',f.air_flow/130000,'#1e40af'],
+       ['AFR',f.afr,'',f.afr/25,'#0c4a6e'],['CO',Math.round(f.co_ppm),'ppm',f.co_ppm/150,'#7c2d12']].map(([l,v,u,p,c])=>`
+      <div class="gb"><div class="gl">${l}</div><div class="gv" style="color:${c}">${v}</div><div class="guu">${u}</div>
+        <div class="gbr"><div class="gbrf" style="width:${Math.min(100,p*100)}%;background:${c}"></div></div></div>`).join('')}
+  </div>
+  <div class="gg g2">
+    <div class="card"><div class="ch">Fuel Flow Live <span class="cbdg bdlv">RT</span></div>
+      <div style="height:100px"><canvas id="rt-fuel" role="img" aria-label="Fuel">Fuel</canvas></div></div>
+    <div class="card"><div class="ch">Firing Temp Live <span class="cbdg bdlv">RT</span></div>
+      <div style="height:100px"><canvas id="rt-firing" role="img" aria-label="Firing">Firing</canvas></div></div>
+  </div>`;
+}
+function zoneAnalysisPanel(){
+  const f=S.furn;
+  return `<div class="card"><div class="ch">Zone-by-Zone Temperature Analysis</div>
+    <table class="pt"><tr><th>Zone</th><th>Temperature</th><th>Target</th><th>Status</th><th>Profile</th></tr>
+    ${[['Up Drought Drying',f.udz,'220-320°C',f.udz>=220&&f.udz<=320],['Down Drought Drying',f.ddd,'350-450°C',f.ddd>=350&&f.ddd<=450],
+       ['Preheating Zone 1',f.ph1,'800-950°C',f.ph1>=800&&f.ph1<=950],['Preheating Zone 2',f.ph2,'950-1100°C',f.ph2>=950&&f.ph2<=1100],
+       ['Firing Zone',f.firing,'1250-1310°C',f.firing>=1250&&f.firing<=1310],['Soaking Zone',f.soak,'1200-1280°C',f.soak>=1200&&f.soak<=1280],
+       ['Cooling Zone',f.cool_z,'700-900°C',f.cool_z>=700&&f.cool_z<=900]].map(([k,v,t,ok])=>`
+      <tr><td>${k}</td><td class="tm">${v}°C</td><td class="tm">${t}</td>
+        <td class="${ok?'tok':'twa'}">${ok?'OK':'CHECK'}</td>
+        <td><div class="ibar"><div class="ibf" style="width:${v/1400*100}%;background:${ts(v)}"></div></div></td></tr>`).join('')}
+    </table></div>`;
+}
+function gratePanel(){
+  const f=S.furn;
+  return `<div class="gg g4">
+    ${[['Grate Speed',f.grate_spd,'m/min',f.grate_spd/2.8,'#3b0764'],['Bed Height',f.bed_ht,'mm',f.bed_ht/230,'#064e3b'],
+       ['Waste Gas',f.wg_temp,'°C',f.wg_temp/500,'#78350f'],['NOx',f.nox,'mg/Nm³',f.nox/200,'#7f1d1d']].map(([l,v,u,p,c])=>`
+      <div class="gb"><div class="gl">${l}</div><div class="gv" style="color:${c}">${v}</div><div class="guu">${u}</div>
+        <div class="gbr"><div class="gbrf" style="width:${Math.min(100,p*100)}%;background:${c}"></div></div></div>`).join('')}
+  </div>`;
+}
+function renderCooler(body,sp) { body.innerHTML=fpCooling(); }
+
+// ════════════════════════════════════════════════
+// INIT RT CHARTS
+// ════════════════════════════════════════════════
+function initRT(){
+  const MAP={'rt-firing':['firing','#ef4444',1180,1340],'rt-fuel':['fuel','#991b1b',3400,6000],
+             'rt-ccs':['CCS','#7c3aed',220,310],'rt-ri':['RI','#0e7490',68,80],
+             'rt-tp':['tp','#1e40af',480,620],'rt-en':['en','#78350f',160,210],
+             'rt-coq':['coq','#3b0764',1900,2700],'rt-cake':['cake','#0c4a6e',7.5,11],
+             'rt-conc':['conc','#1e40af',60,72],'rt-blaine':['blaine','#3b0764',1700,2100]};
+  document.querySelectorAll('canvas[id^="rt-"]').forEach(c=>{
+    const m=MAP[c.id]; if(m) mkRT(c.id,...m);
+  });
+}
+function initStatic(){
+  const scc=document.getElementById('static-ccs');
+  if(scc&&!staticCharts[scc.id]){
+    staticCharts[scc.id]=new Chart(scc,{type:'bar',
+      data:{labels:['<220','220-240','240-260','260-280','280-300','>300'],
+        datasets:[{data:[2,8,28,38,18,6],backgroundColor:['#fca5a5','#fcd34d','#a7f3d0','#6ee7b7','#34d399','#10b981'],borderRadius:4,barPercentage:.75}]},
+      options:{responsive:true,maintainAspectRatio:false,animation:{duration:300},plugins:{legend:{display:false}},
+        scales:{x:{ticks:{color:'#94a3b8',font:{size:8}},grid:{display:false}},y:{ticks:{color:'#94a3b8',font:{size:8}},grid:{color:'rgba(0,0,0,0.04)'}}}}});
+  }
+}
+
+// ════════════════════════════════════════════════
+// RIGHT PANEL — 3 MODES
+// ════════════════════════════════════════════════
+const AI_MSG_POOL = [
+  "Firing zone deviation detected. Current: {firing}°C, optimal: 1268°C. Recommend reducing by {delta}°C to save {saving} Nm³/h fuel.",
+  "Cake moisture at {cake}% — within safe range. If it exceeds 9.5%, expect CCS drop of ~8 daN. Monitor filter cloth sectors 4-7.",
+  "Throughput at {tp} t/h against 8 MTPA target. OEE at {oee}% — system performing above baseline.",
+  "Cost of Quality index: ₹{coq}/t. Primary driver is fuel consumption at {en} Sm³/t. Fuel optimization can reduce CoQ by ₹{saving}/t.",
+  "RI predicted at {ri}% for next batch. PH-2 at {ph2}°C — within target for full magnetite→hematite oxidation.",
+  "Grate speed {grate} m/min optimal for current bed height {bed}mm. Reducing to 1.78 m/min adds 2.7% residence time → CCS +8 daN.",
+];
+
+function formatMsg(template){
+  return template
+    .replace('{firing}',S.furn.firing)
+    .replace('{delta}',S.furn.firing-1268)
+    .replace('{saving}',Math.round((S.furn.firing-1268)*12))
+    .replace('{cake}',S.filt.cake_moist.toFixed(1))
+    .replace('{tp}',Math.round(parseFloat(KPIS[0].val)))
+    .replace('{oee}',KPIS[8].val)
+    .replace('{coq}',parseFloat(KPIS[2].val).toFixed(0))
+    .replace('{en}',parseFloat(KPIS[1].val).toFixed(0))
+    .replace('{ri}',parseFloat(KPIS[4].val).toFixed(1))
+    .replace('{ph2}',S.furn.ph2)
+    .replace('{grate}',S.furn.grate_spd)
+    .replace('{bed}',S.furn.bed_ht)
+    .replace('{saving}',Math.round((parseFloat(KPIS[2].val)-1980)/4.2));
+}
+
+// Chat messages store
+const chatMsgs=[{role:'ai',text:`Hello! I'm your AM/NS India Pellet Plant AI Assistant. I monitor the 8 MTPA Vizag plant in real-time and can explain deviations, suggest optimizations, predict quality, and simulate scenarios. What would you like to know?`}];
+
+function renderRight(){
+  const panel=document.getElementById('rp-panel');
+  const title=document.getElementById('rp-title');
+  const conf=document.getElementById('rp-conf');
+
+  if(mode==='opt'){
+    title.textContent='◉ Optimal Run Status';
+    conf.textContent='All KPIs reactive · Advisory auto-applied on switch';
+    panel.innerHTML=`
+      <div class="aisep" style="margin-top:4px">Critical KPIs — Live <span style="font-family:var(--mn);font-size:9px;color:var(--t4)">8 MTPA</span></div>
+      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:11px 13px;margin-bottom:8px">
+        ${KPIS.map(k=>{
+          const dir=k.dlt>.05?'up':k.dlt<-.05?'dn':'nt';
+          const arr=dir==='up'?'▲':dir==='dn'?'▼':'—';
+          const dv=Math.abs(k.dlt)>.01?(k.dlt>0?'+':'')+k.dlt.toFixed(1):'—';
+          const disp=k.val>=100?parseFloat(k.val).toLocaleString():k.val;
+          return `<div class="kbr"><div class="kbrt">
+            <span style="font-family:var(--hd);font-size:${k.crit?'11':'10'}px;font-weight:700;color:var(--t2);letter-spacing:.3px">${k.label}</span>
+            <span style="display:flex;align-items:baseline;gap:4px">
+              <span class="kbrn" style="color:${k.color};font-size:${k.crit?'15':'13'}px">${disp}</span>
+              <span class="kbru">${k.unit}</span>
+              <span style="font-size:9px;font-weight:700;color:${dir==='up'?'#064e3b':dir==='dn'?'#7f1d1d':'var(--t4)'}">${arr}</span>
+            </span></div>
+            <div class="kbrtr"><div class="kbrf" style="width:${k.pct.toFixed(0)}%;background:${k.color};box-shadow:0 0 4px ${k.color}44"></div></div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="aisep">Predictive Insights</div>
+      <div class="pred-row">
+        <div class="pred-card"><div class="pred-title">CCS Forecast (45min)</div>
+          <div class="pred-val">${Math.round(parseFloat(KPIS[3].val))+3} daN</div>
+          <div class="pred-trend">↑ +3 daN vs current based on process inputs</div></div>
+        <div class="pred-card"><div class="pred-title">Energy Forecast</div>
+          <div class="pred-val">${(parseFloat(KPIS[1].val)-.8).toFixed(0)} Sm³/t</div>
+          <div class="pred-trend">↓ -0.8 Sm³/t if firing reduced 8°C</div></div>
+      </div>
+      <div class="pred-row">
+        <div class="pred-card"><div class="pred-title">CoQ Forecast</div>
+          <div class="pred-val">₹${(parseFloat(KPIS[2].val)-62).toFixed(0)}/t</div>
+          <div class="pred-trend">↓ -₹62/t applying binder recipe</div></div>
+        <div class="pred-card"><div class="pred-title">8hr Throughput</div>
+          <div class="pred-val">${Math.round(parseFloat(KPIS[0].val)*8/1000*1000)} t</div>
+          <div class="pred-trend">8-hour production estimate</div></div>
+      </div>
+      <div style="background:linear-gradient(135deg,var(--g2),var(--b2));border:1px solid var(--g3);border-radius:9px;padding:10px 12px;text-align:center;margin-top:6px">
+        <div style="font-family:var(--mn);font-size:22px;color:var(--g4)">${Math.round(parseFloat(KPIS[0].val))} t/h</div>
+        <div style="font-size:8.5px;color:var(--t3);font-family:var(--hd);text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Live Throughput · 8 MTPA Target</div>
+      </div>`;
+    return;
+  }
+
+  if(mode==='rst'){
+    title.textContent='↺ Baseline Reset';
+    conf.textContent='Compare and restore baseline';
+    panel.innerHTML=`
+      <div class="aisep">KPI vs Baseline</div>
+      ${KPIS.map(k=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 9px;background:var(--s2);border-radius:6px;margin-bottom:4px;border:1px solid var(--bd)">
+        <span style="font-family:var(--hd);font-size:9.5px;font-weight:700;color:var(--t2)">${k.label}</span>
+        <span style="font-family:var(--mn);font-size:11px;color:${k.color}">${k.val>=100?parseFloat(k.val).toLocaleString():k.val} <span style="font-size:8px;color:var(--t4)">${k.unit}</span></span>
+      </div>`).join('')}
+      <div class="aisep">Quick Actions</div>
+      <div style="display:flex;gap:6px;margin-bottom:8px">
+        <button class="rbtn rb-p" onclick="doReset()">↺ Reset All</button>
+        <button class="rbtn rb-s" onclick="doReset()">Apply Optimal</button>
+      </div>
+      <div style="background:var(--g2);border:1px solid var(--g3);border-radius:8px;padding:9px 11px;font-size:9px;color:var(--t2);line-height:1.7">
+        <strong style="color:var(--g4)">Baseline:</strong> Shift B · 21-Apr-2026 06:00 IST<br>
+        TP: 548t/h · CCS: 255daN · 1280°C · 182Sm³/t · ₹2240/t CoQ
+      </div>`;
+    return;
+  }
+
+  // ADVISORY MODE
+  title.textContent='◈ AI Advisory + Assistant';
+  conf.textContent='Auto-apply on → Optimal switch · 94.2% accuracy';
+  const recs = ADVISORY_RECS[uc] || ADVISORY_RECS[0];
+  const tmap = {ap:{cls:'ai-ap',tc:'ct-ap',icon:'⚡'},s:{cls:'ai-s',tc:'ct-s',icon:'₹'},
+                a:{cls:'ai-a',tc:'ct-a',icon:'→'},w:{cls:'ai-i',tc:'ct-i',icon:'⚠'}};
+  const totalSaving = recs.filter(r=>r.save).reduce((acc,r)=>{
+    const n=parseInt(r.save.replace(/[₹,/dayyr]/g,'')||0); return acc+(isNaN(n)?0:n);
+  },0);
+
+  let h=`<div class="savbox">
+    <div class="savv">₹${totalSaving.toLocaleString('en-IN')}/day</div>
+    <div class="savl">Total Savings Identified · ${recs.length} Recommendations</div>
+  </div>
+  <div style="background:var(--a2);border:1px solid var(--a3);border-radius:8px;padding:8px 11px;margin-bottom:8px;font-size:9.5px;color:var(--am)">
+    <strong>⚡ Advisory → Optimal mode:</strong> All AI recommendations below will auto-apply when you switch to Optimal mode. Or apply individually now.
+  </div>
+  <div class="aisep">AI Recommendations</div>`;
+
+  recs.forEach(r=>{
+    const t=tmap[r.type]||tmap.a;
+    const applied=APPLIED[r.id];
+    h+=`<div class="aic ${t.cls}" style="${applied?'opacity:.6;':''}">
+      <div class="act"><span class="${t.tc}">${t.icon} ${r.title}</span>
+        ${r.impact?`<span style="font-size:8px;color:var(--t3);font-family:var(--mn)">${r.impact}</span>`:''}
+      </div>
+      <div class="acb">${r.body}</div>
+      ${r.save?`<div class="asv">${r.save}</div>`:''}
+      ${!applied&&Object.keys(r.changes).length>0?
+        `<button class="aapply" onclick="applyRec('${r.id}');renderRight();renderLeft();renderKPIs()">
+          ⚡ Apply Now${r.save?' · '+r.save:''}
+        </button>`
+        :`<span style="font-size:9px;color:var(--g4);font-weight:700;font-family:var(--hd)">✓ Applied</span>`}
+    </div>`;
+  });
+
+  h+=`<div class="aisep">Model Confidence</div>
+  <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:9px 11px;margin-bottom:8px">
+    ${[['Quality Prediction','#7c3aed',94],['Fuel Optimization','#7f1d1d',92],['Anomaly Detection','#064e3b',96],['Throughput Model','#1e40af',89],['Cost of Quality','#3b0764',91]].map(([l,c,p])=>`
+    <div class="crow"><div class="clbl">${l}</div>
+      <div class="ctrack"><div class="cfill" style="width:${p}%;background:${c}"></div></div>
+      <div class="cpct">${p}%</div>
+    </div>`).join('')}
+  </div>
+
+  <div class="aisep">AI Assistant — Natural Language</div>
+  <div class="chat-wrap">
+    <div class="chat-msgs" id="chat-msgs">
+      ${chatMsgs.map(m=>`<div class="msg ${m.role==='user'?'msg-user':''}">
+        <div class="msg-bubble ${m.role==='user'?'mb-user':'mb-ai'}">${m.text}</div></div>`).join('')}
+    </div>
+    <div class="chat-inp">
+      <input type="text" id="chat-input" placeholder="Ask about deviations, predictions, optimization…" 
+        onkeydown="if(event.key==='Enter')sendChat()">
+      <button onclick="sendChat()">Send</button>
+    </div>
+  </div>`;
+
+  panel.innerHTML=h;
+  // scroll chat to bottom
+  setTimeout(()=>{const cm=document.getElementById('chat-msgs');if(cm)cm.scrollTop=cm.scrollHeight;},50);
+}
+
+function sendChat(){
+  const inp=document.getElementById('chat-input');
+  if(!inp||!inp.value.trim()) return;
+  const q=inp.value.trim(); inp.value='';
+  chatMsgs.push({role:'user',text:q});
+  // Generate AI response
+  const resp=generateAIResponse(q);
+  chatMsgs.push({role:'ai',text:resp});
+  renderRight();
+}
+
+function generateAIResponse(q){
+  const ql=q.toLowerCase();
+  if(ql.includes('firing')||ql.includes('furnace')||ql.includes('temperature'))
+    return `Firing zone is at ${S.furn.firing}°C. Target spec is 1250-1310°C. ${S.furn.firing>1280?`It's running ${S.furn.firing-1268}°C above CCS-minimum spec, consuming extra fuel. Recommend reducing to 1268°C to save ${Math.round((S.furn.firing-1268)*12)} Nm³/h.`:'Within optimal range.'} CCS at ${Math.round(S.qual.CCS)} daN.`;
+  if(ql.includes('energy')||ql.includes('fuel')||ql.includes('consumption'))
+    return `Current energy: ${parseFloat(KPIS[1].val).toFixed(1)} Sm³/t. 8 MTPA target: <175 Sm³/t. Main drivers: firing ${S.furn.firing}°C (${Math.round((S.furn.firing-1268)*12)} Nm³/h excess), AFR ${S.furn.afr} (optimal: 21.4). Applying fuel optimization saves ₹22,400/day.`;
+  if(ql.includes('ccs')||ql.includes('quality')||ql.includes('strength'))
+    return `CCS predicted at ${Math.round(S.qual.CCS)+3} daN for next batch (LSTM model, 94.2% accuracy). Target >250 daN. Key drivers: bentonite ${S.binder.bentonite}kg/t, firing ${S.furn.firing}°C, blaine ${S.grind.blaine}cm²/g. Increasing bentonite to 6.5kg/t and reducing firing 8°C maintains CCS while cutting fuel 3.2%.`;
+  if(ql.includes('cost')||ql.includes('coq'))
+    return `Cost of Quality: ₹${parseFloat(KPIS[2].val).toFixed(0)}/t. Breakdown: fuel ${Math.round((KPIS[1].val-165)*4.2*100)/100*10} (41%), cloth wear ${S.filt.cloth_pct<90?120:0} (${S.filt.cloth_pct<90?'HIGH':'OK'}), residue penalty ${S.grind.residue>12?80:0}. Target <₹2100/t. Applying all advisory saves ₹${Math.round(totalSavingsLocal())}/day.`;
+  if(ql.includes('throughput')||ql.includes('production'))
+    return `Current throughput: ${Math.round(parseFloat(KPIS[0].val))} t/h. 8 MTPA annualized: ${(parseFloat(KPIS[0].val)*8760/1e6).toFixed(2)} MTPA. OEE: ${KPIS[8].val}%. Feed rate at ${S.ohp.feed_rate}t/h — increasing to 510 t/h with classifier at 720 rpm can add 34 t/h safely.`;
+  if(ql.includes('cake')||ql.includes('moisture')||ql.includes('filter'))
+    return `Cake moisture: ${S.filt.cake_moist.toFixed(1)}%. Target: 8-10%. Vacuum at ${S.filt.vacuum}mmHg. Cloth quality: ${S.filt.cloth_pct}%${S.filt.cloth_pct<92?' — WATCH: sectors 4-7 degrading, RUL ~68h':'— OK'}. Increasing vacuum to 680mmHg reduces moisture by 0.5%.`;
+  if(ql.includes('scenario')||ql.includes('simulate'))
+    return `Scenario: If firing → 1268°C + bentonite → 6.5kg/t + vacuum → 682mmHg + feed → 510t/h: Expected CCS ${Math.round(S.qual.CCS)+6} daN, Energy ${(parseFloat(KPIS[1].val)-8).toFixed(0)} Sm³/t, Throughput ~${Math.round(parseFloat(KPIS[0].val))+38} t/h, CoQ ₹${(parseFloat(KPIS[2].val)-140).toFixed(0)}/t. Total daily savings: ₹1,46,700/day.`;
+  if(ql.includes('deviation')||ql.includes('alarm')||ql.includes('alert'))
+    return `Current deviations: ${S.filt.cloth_pct<92?`[1] Filter cloth ${S.filt.cloth_pct}% — below 92% threshold. `:''}${S.furn.firing>1280?`[2] Firing ${S.furn.firing}°C — ${S.furn.firing-1268}°C above CCS-minimum. `:''}${S.grind.residue>12?'[3] Residue +45μm > 12% target. ':''} ${S.filt.cake_moist>9.5?`[4] Cake moisture ${S.filt.cake_moist}% — near upper limit. `:''}All other parameters nominal.`;
+  return `I can help with: furnace temperatures, energy consumption, CCS/quality prediction, cost optimization, filter health, green ball parameters, scenario simulation, or process deviations. Current status: ${Math.round(parseFloat(KPIS[0].val))} t/h · ${Math.round(S.qual.CCS)} daN CCS · ${parseFloat(KPIS[1].val).toFixed(0)} Sm³/t · ₹${parseFloat(KPIS[2].val).toFixed(0)}/t CoQ. What would you like to know?`;
+}
+
+function totalSavingsLocal(){
+  const recs=ADVISORY_RECS[uc]||ADVISORY_RECS[0];
+  return recs.filter(r=>r.save).reduce((acc,r)=>{const n=parseInt(r.save.replace(/[₹,/dayyr]/g,''));return acc+(isNaN(n)?0:n);},0);
+}
+
+// ════════════════════════════════════════════════
+// MAIN TICK — 1 second
+// ════════════════════════════════════════════════
+let autoOptApplied=false;
+setInterval(()=>{
+  tickN++;
+  updateRT();
+  compute();
+  renderKPIs();
+  refreshRT();
+  // Refresh right panel every 5s in opt mode, every 10s in adv
+  if((mode==='opt'&&tickN%5===0)||(mode==='adv'&&tickN%10===0)) renderRight();
+  // Refresh center schematic every 20s
+  if(tickN%20===0) renderCenter();
+}, 1000);
+
+// ════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════
+compute();
+renderKPIs();
+renderSPTabs();
+renderLeft();
+renderCenter();
+renderRight();
+</script>
+</body>
+</html>
