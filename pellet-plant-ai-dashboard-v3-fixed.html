@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PELLET-IQ · AI Transformation Dashboard · AM/NS Vizag · 8 MTPA</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --ink:       #0a1628;
+  --ink2:      #0d1f3c;
+  --blue:      #1a56db;
+  --blue-md:   #2563eb;
+  --blue-lt:   #dbeafe;
+  --blue-dk:   #1e3a8a;
+  --blue-xlt:  #eff6ff;
+  --teal:      #0891b2;
+  --teal-lt:   #cffafe;
+  --green:     #059669;
+  --green-lt:  #d1fae5;
+  --amber:     #d97706;
+  --amber-lt:  #fef3c7;
+  --red:       #dc2626;
+  --red-lt:    #fee2e2;
+  --silver:    #f8fafc;
+  --silver2:   #f1f5f9;
+  --silver3:   #e2e8f0;
+  --silver4:   #cbd5e1;
+  --slate:     #475569;
+  --slate-lt:  #94a3b8;
+  --white:     #ffffff;
+  --cap-blue:  #0070ad;
+  --cap-blue-lt:#e6f3fa;
+  /* semantic aliases */
+  --copper:    var(--blue-md);
+  --copper-lt: var(--blue-lt);
+  --copper-md: var(--blue-md);
+  --sage:      var(--green);
+  --sage-lt:   var(--green-lt);
+  --sage-md:   #34d399;
+  --gold:      var(--amber);
+  --gold-lt:   var(--amber-lt);
+  --ivory:     var(--silver);
+  --ivory2:    var(--silver2);
+  --stone:     var(--silver3);
+  --stone2:    var(--silver4);
+  --r: 10px; --r-sm: 6px;
+  --shadow: 0 1px 4px rgba(10,22,40,0.07), 0 2px 8px rgba(10,22,40,0.05);
+  --shadow-md: 0 4px 16px rgba(10,22,40,0.10), 0 8px 24px rgba(10,22,40,0.06);
+  --font-head: 'Space Grotesk', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:#f0f4f8;color:var(--ink);font-family:var(--font-body);font-size:13px;line-height:1.5}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:#f1f5f9}
+::-webkit-scrollbar-thumb{background:#bfdbfe;border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--blue-md)}
+::selection{background:var(--blue-lt);color:var(--ink)}
+#top-header{background:linear-gradient(135deg,#0a1628 0%,#0d2451 50%,#1a3a7a 100%);padding:0 28px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:300;box-shadow:0 2px 20px rgba(10,22,40,0.4),0 0 0 1px rgba(26,86,219,0.15)}
+.hdr-logo{display:flex;align-items:center;gap:12px}
+.hdr-logo-mark{width:36px;height:36px;background:linear-gradient(135deg,#2563eb,#0891b2);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 0 0 2px rgba(37,99,235,0.3)}
+.hdr-brand{font-family:var(--font-head);font-size:18px;font-weight:800;color:var(--ivory);letter-spacing:2px}
+.hdr-sub{font-size:9px;color:var(--slate-lt);letter-spacing:1.8px;text-transform:uppercase;margin-top:1px}
+.hdr-nav{display:none}
+.live-badge{background:rgba(74,124,89,0.25);border:1px solid var(--sage-md);border-radius:20px;padding:4px 11px;font-size:10px;color:var(--sage-md);font-family:var(--font-head);font-weight:700;letter-spacing:1px;display:flex;align-items:center;gap:5px}
+.live-pulse{width:7px;height:7px;border-radius:50%;background:var(--sage-md);animation:pulse 2s infinite}
+#sec-tabs{background:var(--white);border-bottom:2px solid var(--silver3);padding:0 28px;display:flex;gap:0;overflow-x:auto;position:sticky;top:58px;z-index:200;box-shadow:0 1px 4px rgba(10,22,40,0.05)}
+.tab-btn{background:none;border:none;border-bottom:3px solid transparent;padding:12px 15px;font-size:11px;font-weight:600;font-family:var(--font-body);color:var(--slate);cursor:pointer;white-space:nowrap;transition:all 0.15s;margin-bottom:-2px}
+.tab-btn:hover{color:var(--blue-md)}
+.tab-btn.active{color:var(--blue-md);border-bottom-color:var(--blue-md);font-weight:700}
+#main{padding:22px 28px}
+.section{display:none;animation:fadeUp 0.3s ease}
+.section.visible{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.35}}
+.sec-title{font-family:var(--font-head);font-size:21px;font-weight:800;color:var(--ink);margin-bottom:3px}
+.sec-sub{font-size:11px;color:var(--slate);margin-bottom:20px}
+.card{background:var(--white);border:1px solid var(--silver3);border-radius:var(--r);box-shadow:var(--shadow);padding:18px;transition:box-shadow 0.2s}
+.card:hover{box-shadow:var(--shadow-md)}
+.card-title{font-family:var(--font-head);font-size:13px;font-weight:700;color:var(--ink);margin-bottom:11px}
+.card-subtitle{font-size:9px;color:var(--slate);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:12px;font-weight:600}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.mb16{margin-bottom:16px}
+.mb22{margin-bottom:22px}
+.chip{display:inline-block;border-radius:20px;padding:2px 8px;font-size:9px;font-weight:700;letter-spacing:0.7px;text-transform:uppercase}
+.chip-green{background:var(--sage-lt);color:var(--sage)}
+.chip-amber{background:var(--gold-lt);color:var(--gold)}
+.chip-red{background:var(--red-lt);color:var(--red)}
+.chip-blue{background:var(--blue-lt);color:var(--blue-md)}
+.chip-ink{background:#e8e8f0;color:var(--ink)}
+
+/* STATS BANNER */
+.stats-banner{background:linear-gradient(135deg,#0a1628,#0d2451,#1e3a8a);border-radius:var(--r);padding:18px 24px;display:grid;grid-template-columns:repeat(7,1fr);gap:0;margin-bottom:20px}
+.stat-item{text-align:center;padding:0 8px;border-right:1px solid rgba(255,255,255,0.07)}
+.stat-item:last-child{border-right:none}
+.stat-val{font-family:var(--font-head);font-size:21px;font-weight:800;color:var(--ivory)}
+.stat-val.g{color:#34d399}.stat-val.a{color:#fbbf24}.stat-val.r{color:#f87171}.stat-val.c{color:#60a5fa}
+.stat-label{font-size:9px;color:var(--slate-lt);letter-spacing:1px;text-transform:uppercase;margin-top:1px}
+.stat-tgt{font-size:8px;color:rgba(255,255,255,0.25);margin-top:1px}
+
+/* PROCESS FLOW */
+.pf-wrapper{background:var(--white);border:1px solid var(--silver3);border-radius:var(--r);padding:20px;box-shadow:var(--shadow-md);margin-bottom:20px;overflow-x:auto}
+.pf-stages{display:flex;align-items:stretch;gap:0;min-width:860px}
+.pf-stage{flex:1;position:relative;cursor:pointer}
+.pf-node{border:2px solid;border-radius:10px;padding:11px 6px;text-align:center;transition:all 0.2s;margin:0 3px}
+.pf-node:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
+.pf-node.active{transform:translateY(-4px)}
+.pf-icon{font-size:20px;margin-bottom:4px}
+.pf-label{font-family:var(--font-head);font-size:9px;font-weight:700;letter-spacing:0.4px}
+.pf-seq{font-size:8px;opacity:0.55;margin-top:1px}
+.pf-arrow{position:absolute;right:-12px;top:50%;transform:translateY(-50%);z-index:2;font-size:14px;color:var(--stone2)}
+.pf-detail{background:var(--silver2);border:1.5px solid var(--silver3);border-radius:var(--r);padding:16px;margin-top:14px;display:none}
+.pf-detail.visible{display:block;animation:fadeUp 0.2s ease}
+.pf-detail-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px}
+.pf-col-head{font-size:9px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--slate);margin-bottom:6px}
+.pf-list-item{font-size:11px;color:var(--ink);padding:2px 0;border-bottom:1px solid var(--stone)}
+.pf-kpi-item{font-size:11px;color:var(--green);font-weight:700;padding:2px 0}
+.s0{border-color:#8B5E3C;background:#fdf6f0}.s0 .pf-label{color:#8B5E3C}
+.s1{border-color:#5c7a2e;background:#f3f8ec}.s1 .pf-label{color:#5c7a2e}
+.s2{border-color:#2e6e8a;background:#edf5f8}.s2 .pf-label{color:#2e6e8a}
+.s3{border-color:#7a5c8a;background:#f5f0fa}.s3 .pf-label{color:#7a5c8a}
+.s4{border-color:var(--blue-md);background:var(--blue-xlt)}.s4 .pf-label{color:var(--blue-md)}
+.s5{border-color:var(--red);background:var(--red-lt)}.s5 .pf-label{color:var(--red)}
+.s6{border-color:var(--slate);background:#f0f0f5}.s6 .pf-label{color:var(--slate)}
+
+/* PAIN POINTS */
+.pain-card{background:var(--white);border:1px solid var(--silver3);border-radius:var(--r);padding:14px;box-shadow:var(--shadow);border-left:4px solid;transition:box-shadow 0.2s}.pain-card:hover{box-shadow:var(--shadow-md)}
+.pain-stage{font-family:var(--font-head);font-size:11px;font-weight:700;letter-spacing:0.4px;margin-bottom:7px}
+.pain-item{display:flex;align-items:flex-start;gap:6px;padding:3px 0;border-bottom:1px solid var(--stone)}
+.pain-item:last-child{border-bottom:none}
+.pain-bullet{font-size:12px;flex-shrink:0}
+.pain-text{font-size:11px;color:var(--ink)}
+.severity-H{font-size:8px;font-weight:800;color:var(--red);background:var(--red-lt);border-radius:3px;padding:1px 4px;margin-left:3px}
+.severity-M{font-size:8px;font-weight:800;color:var(--gold);background:var(--gold-lt);border-radius:3px;padding:1px 4px;margin-left:3px}
+.severity-L{font-size:8px;font-weight:800;color:var(--sage);background:var(--sage-lt);border-radius:3px;padding:1px 4px;margin-left:3px}
+
+/* UC CARDS */
+.uc-card{background:var(--white);border:1px solid var(--stone);border-radius:var(--r);padding:14px;box-shadow:var(--shadow);transition:box-shadow 0.2s}
+.uc-card:hover{box-shadow:var(--shadow-md)}
+.uc-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px}
+.uc-icon{font-size:22px}
+.uc-title{font-family:var(--font-head);font-size:12px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.uc-model{font-size:9px;color:var(--blue-md);font-weight:600;margin-bottom:6px}
+.uc-desc{font-size:11px;color:var(--slate);line-height:1.5;margin-bottom:8px}
+.uc-kpis{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:7px}
+.uc-kpi-tag{background:var(--ivory2);border:1px solid var(--stone2);border-radius:4px;padding:2px 6px;font-size:9px;color:var(--slate);font-weight:600}
+.uc-impact{background:var(--blue-xlt);border:1px solid var(--blue-lt);border-radius:6px;padding:5px 9px;font-size:11px;color:var(--blue-md);font-weight:700}
+.uc-footer{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+
+/* QUADRANT */
+.quadrant-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.q-cell{border-radius:9px;padding:16px;min-height:170px}
+.q-label{font-family:var(--font-head);font-size:11px;font-weight:800;letter-spacing:0.3px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.q-items{display:flex;flex-direction:column;gap:4px}
+.q-item{background:rgba(255,255,255,0.7);border-radius:6px;padding:5px 8px;font-size:10px;font-weight:600;color:var(--ink);border:1px solid rgba(255,255,255,0.5)}
+.q-item span{font-size:9px;color:var(--slate);font-weight:400;display:block}
+.q1{background:linear-gradient(135deg,#dbeafe,#bfdbfe)}.q1 .q-label{color:#1e3a8a}
+.q2{background:linear-gradient(135deg,#fdf3dc,#fae7b5)}.q2 .q-label{color:#8a6010}
+.q3{background:linear-gradient(135deg,#fde8e6,#fbd5d0)}.q3 .q-label{color:#8b1a10}
+.q4{background:linear-gradient(135deg,#e8e8f4,#d8d8ee)}.q4 .q-label{color:#3a3a6a}
+
+/* TABLES */
+.kpi-table{width:100%;border-collapse:collapse}
+.kpi-table th{background:var(--ink);color:#e2e8f0;font-size:9px;font-weight:700;letter-spacing:0.7px;padding:8px 10px;text-align:left}
+.kpi-table td{padding:7px 10px;border-bottom:1px solid var(--stone);font-size:11px;vertical-align:middle}
+.kpi-table tr:nth-child(even) td{background:var(--ivory)}
+.kpi-table tr:hover td{background:var(--blue-xlt)}
+.bench-table{width:100%;border-collapse:collapse}
+.bench-table th{background:var(--ink);color:var(--ivory);font-size:9px;font-weight:700;letter-spacing:0.7px;padding:10px 12px;text-align:left}
+.bench-table td{padding:9px 12px;border-bottom:1px solid var(--stone);font-size:11px;vertical-align:middle}
+.bench-table tr:hover td{background:var(--ivory2)}
+.bench-val.poor{color:var(--red);font-weight:700}
+.bench-val.avg{color:var(--gold);font-weight:700}
+.bench-val.good{color:var(--sage);font-weight:700}
+.bench-val.best{color:var(--blue-md);font-weight:700}
+.prio-table{width:100%;border-collapse:collapse}
+.prio-table th{background:var(--ink);color:var(--ivory);font-size:9px;font-weight:700;letter-spacing:0.8px;padding:9px 11px;text-align:left}
+.prio-table td{padding:8px 11px;border-bottom:1px solid var(--stone);font-size:11px;vertical-align:middle}
+.prio-table tr:hover td{background:var(--ivory2)}
+.prio-rank{width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:10px;font-family:var(--font-head)}
+.rank-1{background:var(--blue-md);color:white}
+.rank-2{background:var(--gold);color:white}
+.rank-3{background:var(--slate);color:white}
+
+/* BIZ IMPACT */
+.biz-card{background:var(--white);border:1px solid var(--stone);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.biz-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.biz-card.green::before{background:var(--sage)}
+.biz-card.copper::before{background:var(--blue-md)}
+.biz-card.gold::before{background:var(--gold)}
+.biz-card.ink::before{background:var(--ink)}
+.biz-uc{font-size:9px;font-weight:700;letter-spacing:0.8px;color:var(--slate);margin-bottom:3px;text-transform:uppercase}
+.biz-title{font-family:var(--font-head);font-size:12px;font-weight:800;color:var(--ink);margin-bottom:9px}
+.biz-metrics{display:flex;flex-direction:column;gap:5px;margin-bottom:9px}
+.biz-metric{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--stone)}
+.biz-metric-label{font-size:11px;color:var(--slate)}
+.biz-metric-val{font-size:13px;font-weight:800;font-family:var(--font-head)}
+.biz-ann{background:var(--blue-xlt);border-radius:7px;padding:7px 11px;display:flex;justify-content:space-between;align-items:center}
+.biz-ann-label{font-size:10px;color:var(--slate)}
+.biz-ann-val{font-family:var(--font-head);font-size:15px;font-weight:800;color:var(--blue-md)}
+
+/* VARS */
+.var-section{background:var(--white);border:1px solid var(--stone);border-radius:var(--r);padding:18px;box-shadow:var(--shadow)}
+.var-category{display:inline-block;border-radius:6px;padding:3px 9px;font-size:9px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase;margin-bottom:12px}
+.cat-input{background:var(--blue-lt);color:var(--blue-md)}
+.cat-control{background:var(--gold-lt);color:var(--gold)}
+.cat-output{background:var(--sage-lt);color:var(--sage)}
+.var-card{background:var(--ivory);border:1px solid var(--stone);border-radius:8px;padding:9px 11px;margin-bottom:6px}
+.var-name{font-size:11px;font-weight:700;color:var(--ink);margin-bottom:1px}
+.var-range{font-size:10px;color:var(--blue-md);font-family:'Courier New',monospace;font-weight:700}
+.var-desc{font-size:10px;color:var(--slate);margin-top:2px}
+.var-status-row{display:flex;align-items:center;gap:5px;margin-top:4px}
+.var-meter{flex:1;height:4px;background:var(--stone);border-radius:3px;overflow:hidden}
+.var-fill{height:4px;border-radius:3px}
+.var-unit{font-size:8px;color:var(--slate-lt);background:var(--stone);border-radius:3px;padding:1px 4px;display:inline-block}
+
+/* CAPGEMINI CASE STUDIES */
+.cap-header-bar{background:linear-gradient(135deg,#0a1628 0%,#0d2451 50%,#1a3a7a 100%);border-radius:var(--r);padding:18px 22px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between}
+.cap-brand{font-family:var(--font-head);font-size:18px;font-weight:800;color:white;letter-spacing:2px}
+.cap-tagline{font-size:10px;color:rgba(255,255,255,0.7);letter-spacing:1px;margin-top:2px}
+.cap-stats{display:flex;gap:20px}
+.cap-stat-item{text-align:center;background:rgba(255,255,255,0.12);border-radius:8px;padding:8px 14px}
+.cap-stat-val{font-family:var(--font-head);font-size:18px;font-weight:800;color:white}
+.cap-stat-lbl{font-size:9px;color:rgba(255,255,255,0.65);letter-spacing:0.8px}
+.tick-legend{display:flex;align-items:center;gap:16px;background:var(--white);border:1px solid var(--stone);border-radius:8px;padding:10px 16px;margin-bottom:18px;flex-wrap:wrap}
+.tick-item{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--ink)}
+.tick-3{font-size:16px;color:var(--sage)}
+.tick-2{font-size:16px;color:var(--gold)}
+.tick-1{font-size:16px;color:var(--blue-md)}
+.cs-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.cs-card{background:var(--white);border:1px solid var(--stone);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);transition:box-shadow 0.2s;position:relative;overflow:hidden}
+.cs-card:hover{box-shadow:var(--shadow-md)}
+.cs-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+.cs-uc-badge{font-family:var(--font-head);font-size:11px;font-weight:800;color:var(--cap-blue)}
+.cs-tick-score{display:flex;gap:3px;align-items:center}
+.cs-ticks{font-size:18px;letter-spacing:1px}
+.cs-tick-label{font-size:9px;color:var(--slate);margin-left:4px}
+.cs-ref-row{background:var(--cap-blue-lt);border-radius:7px;padding:9px 11px;margin-bottom:8px;border-left:3px solid var(--cap-blue)}
+.cs-ref-title{font-size:11px;font-weight:700;color:var(--cap-blue);margin-bottom:2px}
+.cs-ref-client{font-size:10px;color:var(--ink);font-weight:600}
+.cs-ref-loc{font-size:9px;color:var(--slate)}
+.cs-ref-result{font-size:10px;color:var(--green);font-weight:700;margin-top:3px}
+.cs-ref-tech{font-size:9px;color:var(--slate);font-style:italic;margin-top:1px}
+.cs-applicability{background:var(--blue-xlt);border:1px solid var(--blue-lt);border-radius:6px;padding:6px 10px;font-size:10px;color:var(--blue-md);font-weight:700;margin-top:8px}
+.cs-why{font-size:10px;color:var(--slate);margin-top:4px;line-height:1.5}
+.gap-up{color:var(--sage);font-weight:700}
+.gap-dn{color:var(--red);font-weight:700}
+/* BENCHMARK INITIATIVE */
+.bm-initiative{background:var(--cap-blue-lt);border:1px solid #b3d9f0;border-radius:6px;padding:6px 9px;margin-top:4px;font-size:10px;color:var(--cap-blue)}
+.bm-init-title{font-weight:700;margin-bottom:1px}
+.bm-init-desc{color:var(--slate);font-size:9px}
+
+#footer{background:linear-gradient(135deg,#0a1628,#0d2451);border-top:1px solid rgba(255,255,255,0.06);padding:16px 28px;display:flex;justify-content:space-between;align-items:center;margin-top:36px}
+.footer-logo{font-family:var(--font-head);font-size:13px;font-weight:800;color:#60a5fa;letter-spacing:2px}
+.footer-right{font-size:9px;color:rgba(255,255,255,0.18);letter-spacing:1px}
+</style>
+</head>
+<body>
+
+<div id="top-header">
+  <div class="hdr-logo">
+    <div class="hdr-logo-mark">⚙️</div>
+    <div>
+      <div class="hdr-brand">PELLET-IQ</div>
+      <div class="hdr-sub">AI Transformation · AM/NS Vizag · 8 MTPA · Capgemini</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div style="font-size:9px;color:var(--slate-lt);font-family:monospace" id="live-clock">—</div>
+    <div class="live-badge"><div class="live-pulse"></div>LIVE DEMO</div>
+  </div>
+</div>
+
+<div id="sec-tabs">
+  <button class="tab-btn active" onclick="showTab('process',this)">① Process Flow</button>
+  <button class="tab-btn" onclick="showTab('painpoints',this)">② Pain Points</button>
+  <button class="tab-btn" onclick="showTab('usecases',this)">③ AI Use Cases</button>
+  <button class="tab-btn" onclick="showTab('priority',this)">④ Prioritization</button>
+  <button class="tab-btn" onclick="showTab('kpimap',this)">⑤ KPI Mapping</button>
+  <button class="tab-btn" onclick="showTab('bizimpact',this)">⑥ Business Impact</button>
+  <button class="tab-btn" onclick="showTab('benchmark',this)">⑦ Benchmarking</button>
+  <button class="tab-btn" onclick="showTab('variables',this)">⑧ Variables</button>
+  <button class="tab-btn" onclick="showTab('casestudies',this)">⑨ Capgemini Case Studies</button>
+</div>
+
+<div id="main">
+
+<!-- KPI BANNER -->
+<div class="stats-banner mb22">
+  <div class="stat-item"><div class="stat-val a">1,010</div><div class="stat-label">Production t/h</div><div class="stat-tgt">8 MTPA</div></div>
+  <div class="stat-item"><div class="stat-val r">62.4</div><div class="stat-label">Fuel SM3/t</div><div class="stat-tgt">TGT 57.0</div></div>
+  <div class="stat-item"><div class="stat-val a">234</div><div class="stat-label">CCS daN/p</div><div class="stat-tgt">TGT 250</div></div>
+  <div class="stat-item"><div class="stat-val g">93.8</div><div class="stat-label">Tumble Index %</div><div class="stat-tgt">TGT >93</div></div>
+  <div class="stat-item"><div class="stat-val g">4.8</div><div class="stat-label">Abrasion Index %</div><div class="stat-tgt">TGT <5</div></div>
+  <div class="stat-item"><div class="stat-val a">86.4</div><div class="stat-label">On-Size Yield %</div><div class="stat-tgt">TGT 88</div></div>
+  <div class="stat-item"><div class="stat-val c">93.8</div><div class="stat-label">Availability %</div><div class="stat-tgt">TGT 95</div></div>
+</div>
+
+<!-- ══════════ SECTION 1: PROCESS FLOW ══════════ -->
+<div id="sec-process" class="section visible">
+  <div class="sec-title">End-to-End Process Flow</div>
+  <div class="sec-sub">AM/NS India Vizag · 8 MTPA · Straight Grate Technology · Click any stage to expand</div>
+  <div class="pf-wrapper">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+      <div style="font-family:var(--font-head);font-size:12px;font-weight:700;color:var(--ink)">PELLET PLANT — STRAIGHT GRATE · 8 MTPA CAPACITY</div>
+      <div style="display:flex;gap:6px"><span class="chip chip-green">Operational</span><span class="chip chip-blue">8 MTPA</span><span class="chip chip-ink">Visakhapatnam</span></div>
+    </div>
+    <div class="pf-stages" id="pf-stages-row"></div>
+    <div id="pf-detail-panel" class="pf-detail"></div>
+  </div>
+  <div class="g2 mb22">
+    <div class="card">
+      <div class="card-title">Process Mass Balance (8 MTPA Basis)</div>
+      <table class="kpi-table">
+        <tr><th style="background:var(--blue-md);color:white">Stream</th><th style="background:var(--blue-md);color:white">Flow Rate</th><th style="background:var(--blue-md);color:white">Fe %</th><th style="background:var(--blue-md);color:white">Moisture %</th></tr>
+        <tr><td>Iron Ore Fines (Raw)</td><td><b>1,060 t/h</b></td><td>63.2</td><td>9.8</td></tr>
+        <tr><td>Bentonite Addition</td><td>7.6 t/h</td><td>—</td><td>8.0</td></tr>
+        <tr><td>Ground Slurry</td><td>1,042 t/h</td><td>63.4</td><td>35% solid</td></tr>
+        <tr><td>Filter Cake</td><td>998 t/h</td><td>63.4</td><td>9.1</td></tr>
+        <tr><td>Green Balls</td><td>982 t/h</td><td>—</td><td>8.7</td></tr>
+        <tr><td>Indurated Pellets</td><td>964 t/h</td><td>63.6</td><td>&lt;0.5</td></tr>
+        <tr><td style="font-weight:700;color:var(--sage)">On-Size Product (Dispatch)</td><td style="font-weight:700;color:var(--sage)">1,010 t/h (8 MTPA)</td><td style="font-weight:700">63.6</td><td style="font-weight:700">&lt;0.5</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">Key Chemical Reactions — Induration Furnace</div>
+      <div style="display:flex;flex-direction:column;gap:7px">
+        <div style="background:var(--silver2);border-radius:7px;padding:9px 11px;border-left:3px solid var(--blue-md)">
+          <div style="font-size:9px;color:var(--blue-md);font-weight:700;letter-spacing:1px;margin-bottom:2px">DRYING · 200–400°C</div>
+          <div style="font-family:'Courier New',monospace;font-size:11px;color:var(--ink)">Fe₂O₃·H₂O → Fe₂O₃ + H₂O↑</div>
+          <div style="font-size:10px;color:var(--slate);margin-top:2px">Remove free + capillary moisture. Ramp &lt;50°C/min avoids thermal cracking</div>
+        </div>
+        <div style="background:var(--ivory2);border-radius:7px;padding:9px 11px;border-left:3px solid var(--gold)">
+          <div style="font-size:9px;color:var(--gold);font-weight:700;letter-spacing:1px;margin-bottom:2px">PREHEATING · 800–1100°C</div>
+          <div style="font-family:'Courier New',monospace;font-size:11px;color:var(--ink)">3Fe₂O₃ → 2Fe₃O₄ + ½O₂</div>
+          <div style="font-size:10px;color:var(--slate);margin-top:2px">Oxidation front must reach pellet core before firing zone</div>
+        </div>
+        <div style="background:var(--ivory2);border-radius:7px;padding:9px 11px;border-left:3px solid var(--red)">
+          <div style="font-size:9px;color:var(--red);font-weight:700;letter-spacing:1px;margin-bottom:2px">FIRING · 1260–1340°C</div>
+          <div style="font-family:'Courier New',monospace;font-size:11px;color:var(--ink)">Fe₂O₃ → Hematite sintering → Ceramic bonds</div>
+          <div style="font-size:10px;color:var(--slate);margin-top:2px">Recrystallization drives CCS. Target temp ±8°C with APC</div>
+        </div>
+        <div style="background:var(--ivory2);border-radius:7px;padding:9px 11px;border-left:3px solid var(--sage)">
+          <div style="font-size:9px;color:var(--sage);font-weight:700;letter-spacing:1px;margin-bottom:2px">AFTER-FIRING · 900–1100°C</div>
+          <div style="font-family:'Courier New',monospace;font-size:11px;color:var(--ink)">Fe₃O₄ + O₂ → Fe₂O₃ (re-oxidation)</div>
+          <div style="font-size:10px;color:var(--slate);margin-top:2px">Incomplete oxidation → low CCS, swelling in blast furnace</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ SECTION 2: PAIN POINTS ══════════ -->
+<div id="sec-painpoints" class="section">
+  <div class="sec-title">Key Pain Points by Process Stage</div>
+  <div class="sec-sub">Operational challenges — AM/NS Vizag plant audit findings & process data analysis</div>
+  <div id="pain-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:20px"></div>
+  <div class="card">
+    <div class="card-title">Pain Point Summary Matrix</div>
+    <table class="kpi-table">
+      <tr><th>Stage</th><th>Primary Pain Point</th><th>Frequency</th><th>Severity</th><th>Est. Impact (8 MTPA)</th><th>Root Cause</th></tr>
+      <tr><td>Raw Material</td><td>Fe grade variability ±0.8%</td><td>Daily</td><td><span class="chip chip-red">HIGH</span></td><td>~12 t/h quality downgrade</td><td>Inconsistent ore blend, no SR AI</td></tr>
+      <tr><td>Grinding</td><td>Blaine deviation 1750–2100 cm²/g</td><td>Shift-wise</td><td><span class="chip chip-amber">MEDIUM</span></td><td>~3% CCS variation</td><td>Feed ore hardness variation</td></tr>
+      <tr><td>Filtration</td><td>Moisture 8.5–10.2% — uncontrolled</td><td>Daily</td><td><span class="chip chip-red">HIGH</span></td><td>GB weakness, furnace cracking</td><td>Filter cloth wear + slurry variation</td></tr>
+      <tr><td>Balling</td><td>D50 size 10.8–13.2 mm</td><td>Continuous</td><td><span class="chip chip-amber">MEDIUM</span></td><td>~6% yield loss, 8 MTPA = 480 kt/yr</td><td>Moisture fluctuation + disc wear</td></tr>
+      <tr><td>Induration</td><td>Fuel 58–68 SM3/t range</td><td>Continuous</td><td><span class="chip chip-red">HIGH</span></td><td>₹20–35 Cr/yr excess fuel at 8 MTPA</td><td>Manual setpoint management</td></tr>
+      <tr><td>Cooling/Screen</td><td>Yield varies 83–90%</td><td>Weekly</td><td><span class="chip chip-amber">MEDIUM</span></td><td>480 kt/yr off-spec at 8 MTPA</td><td>Fan imbalance, no APC</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════ SECTION 3: AI USE CASES ══════════ -->
+<div id="sec-usecases" class="section">
+  <div class="sec-title">AI / Analytics Use Cases</div>
+  <div class="sec-sub">Mapped to process stages — model architecture, KPI impact, and business value (8 MTPA basis)</div>
+  <div id="uc-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px"></div>
+</div>
+
+<!-- ══════════ SECTION 4: PRIORITIZATION ══════════ -->
+<div id="sec-priority" class="section">
+  <div class="sec-title">Use Case Prioritization</div>
+  <div class="sec-sub">Impact vs Feasibility quadrant — 8 MTPA business case drives Phase 1 priority</div>
+  <div class="g2 mb22">
+    <div class="card">
+      <div class="card-title">Impact vs Feasibility Quadrant</div>
+      <div class="quadrant-grid">
+        <div class="q-cell q1">
+          <div class="q-label">🚀 HIGH IMPACT · HIGH FEASIBILITY<br><span style="font-size:9px;font-weight:400">IMPLEMENT FIRST — Phase 1</span></div>
+          <div class="q-items">
+            <div class="q-item">Furnace Fuel Optimization<span>PINN+MPC · ₹61 Cr/yr · ROI 8 mo</span></div>
+            <div class="q-item">Pellet Quality Prediction<span>Ensemble ML · ₹27 Cr/yr · ROI 6 mo</span></div>
+            <div class="q-item">Moisture Control AI<span>XGBoost+LSTM · ₹11 Cr/yr · ROI 4 mo</span></div>
+          </div>
+        </div>
+        <div class="q-cell q2">
+          <div class="q-label">📈 HIGH IMPACT · COMPLEX<br><span style="font-size:9px;font-weight:400">STRATEGIC — Phase 2/3</span></div>
+          <div class="q-items">
+            <div class="q-item">Disc Pelletizer APC<span>MPC · ₹20 Cr/yr</span></div>
+            <div class="q-item">Predictive Maintenance<span>PdM · ₹31 Cr/yr</span></div>
+            <div class="q-item">Digital Twin (Full Plant)<span>Physics+ML · 18–24 months</span></div>
+          </div>
+        </div>
+        <div class="q-cell q3">
+          <div class="q-label">⚡ MEDIUM IMPACT · HIGH FEASIBILITY<br><span style="font-size:9px;font-weight:400">QUICK WINS — Phase 2</span></div>
+          <div class="q-items">
+            <div class="q-item">Ball Mill Optimization<span>Soft sensor · ₹11 Cr/yr</span></div>
+            <div class="q-item">Sensor Drift Detection<span>SPC · 2 months</span></div>
+            <div class="q-item">Stacker Reclaimer Opt.<span>RL · ₹9 Cr/yr</span></div>
+          </div>
+        </div>
+        <div class="q-cell q4">
+          <div class="q-label">⏳ LOW IMPACT · LOW FEASIBILITY<br><span style="font-size:9px;font-weight:400">DEFER / DE-PRIORITIZE</span></div>
+          <div class="q-items">
+            <div class="q-item">NLP Maintenance Reports<span>Low ROI at pellet plant scale</span></div>
+            <div class="q-item">Computer Vision — Pellet Size<span>Camera infra cost > benefit</span></div>
+          </div>
+        </div>
+      </div>
+      <div style="text-align:center;font-size:9px;font-weight:700;color:var(--slate);letter-spacing:1.2px;text-transform:uppercase;margin-top:8px">← LOW FEASIBILITY &nbsp;·&nbsp; HIGH FEASIBILITY →</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Prioritized Implementation Roadmap</div>
+      <table class="prio-table">
+        <tr><th>Rank</th><th>Use Case</th><th>Phase</th><th>Timeline</th><th>Value ₹ Cr/yr</th><th>ROI</th></tr>
+        <tr><td><span class="prio-rank rank-1">1</span></td><td><b>Furnace Fuel Optimization</b></td><td><span class="chip chip-blue">Phase 1</span></td><td>0–10 mo</td><td style="color:#059669;font-weight:800">61.5</td><td style="color:#059669;font-weight:700">8 mo</td></tr>
+        <tr><td><span class="prio-rank rank-1">2</span></td><td><b>Pellet Quality Prediction</b></td><td><span class="chip chip-blue">Phase 1</span></td><td>0–8 mo</td><td style="color:#059669;font-weight:800">26.8</td><td style="color:#059669;font-weight:700">6 mo</td></tr>
+        <tr><td><span class="prio-rank rank-1">3</span></td><td><b>Moisture Control AI</b></td><td><span class="chip chip-blue">Phase 1</span></td><td>0–6 mo</td><td style="color:#059669;font-weight:800">11.2</td><td style="color:#059669;font-weight:700">4 mo</td></tr>
+        <tr><td><span class="prio-rank rank-2">4</span></td><td>Disc Pelletizer APC</td><td><span class="chip chip-amber">Phase 2</span></td><td>10–18 mo</td><td style="color:var(--gold);font-weight:800">20.3</td><td>10 mo</td></tr>
+        <tr><td><span class="prio-rank rank-2">5</span></td><td>Predictive Maintenance</td><td><span class="chip chip-amber">Phase 2</span></td><td>12–22 mo</td><td style="color:var(--gold);font-weight:800">30.6</td><td>12 mo</td></tr>
+        <tr><td><span class="prio-rank rank-2">6</span></td><td>Stacker Reclaimer Opt.</td><td><span class="chip chip-amber">Phase 2</span></td><td>12–20 mo</td><td style="color:var(--gold);font-weight:800">9.0</td><td>14 mo</td></tr>
+        <tr><td><span class="prio-rank rank-2">7</span></td><td>Ball Mill Optimization</td><td><span class="chip chip-amber">Phase 2</span></td><td>12–18 mo</td><td style="color:var(--gold);font-weight:800">10.7</td><td>12 mo</td></tr>
+        <tr><td><span class="prio-rank rank-3">8</span></td><td>Digital Twin (Full Plant)</td><td><span class="chip chip-ink">Phase 3</span></td><td>24–36 mo</td><td style="color:var(--slate);font-weight:800">TBD</td><td>18 mo</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ SECTION 5: KPI MAPPING ══════════ -->
+<div id="sec-kpimap" class="section">
+  <div class="sec-title">AI Use Case → KPI Impact Mapping</div>
+  <div class="sec-sub">Impact level per KPI — ● Primary (>5%) &nbsp; ◐ Secondary (2–5%) &nbsp; ○ Indirect (<2%) &nbsp; — No link</div>
+  <div class="card mb22"><div style="overflow-x:auto">
+    <table class="kpi-table" style="min-width:880px">
+      <thead><tr>
+        <th style="background:var(--ink2)">AI Use Case</th><th style="background:var(--ink)">Stage</th>
+        <th style="background:var(--blue-md)">CCS</th><th style="background:var(--blue-md)">TI</th><th style="background:var(--blue-md)">AI</th><th style="background:var(--blue-md)">Size</th>
+        <th style="background:var(--gold)">Fuel</th><th style="background:var(--gold)">TPH</th><th style="background:var(--sage)">Downtime</th><th style="background:var(--ink)">Priority</th>
+      </tr></thead>
+      <tbody id="kpi-map-tbody"></tbody>
+    </table>
+  </div></div>
+  <div class="g2">
+    <div class="card card-sm">
+      <div class="card-subtitle">Quality KPI Definitions (ISO Standards)</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
+        <div style="background:var(--silver2);border-radius:6px;padding:8px 10px;border-left:3px solid var(--blue-md)"><div style="font-size:10px;font-weight:700;color:var(--blue-md)">CCS — Cold Crushing Strength</div><div style="font-size:9px;color:var(--slate);margin-top:2px">ISO 4700 · Target >250 daN/p · Ceramic bond density</div></div>
+        <div style="background:var(--ivory2);border-radius:6px;padding:8px 10px;border-left:3px solid var(--sage)"><div style="font-size:10px;font-weight:700;color:var(--sage)">Tumble Index (TI)</div><div style="font-size:9px;color:var(--slate);margin-top:2px">ISO 3271 · Target >93% · +6.3mm after 200 revs</div></div>
+        <div style="background:var(--ivory2);border-radius:6px;padding:8px 10px;border-left:3px solid var(--gold)"><div style="font-size:10px;font-weight:700;color:var(--gold)">Abrasion Index (AI)</div><div style="font-size:9px;color:var(--slate);margin-top:2px">ISO 3271 · Target <5% · −0.5mm fines generation</div></div>
+        <div style="background:var(--ivory2);border-radius:6px;padding:8px 10px;border-left:3px solid var(--slate)"><div style="font-size:10px;font-weight:700;color:var(--slate)">Size Distribution</div><div style="font-size:9px;color:var(--slate);margin-top:2px">ISO 4696 · 10–16mm; +12.5mm >70% for BF</div></div>
+      </div>
+    </div>
+    <div class="card card-sm">
+      <div class="card-subtitle">8 MTPA Scale Impact Summary</div>
+      <table class="kpi-table">
+        <tr><th style="background:var(--ink)">KPI</th><th style="background:var(--ink)">Current</th><th style="background:var(--sage)">AI Target</th><th style="background:var(--blue-md)">Annual Δ</th></tr>
+        <tr><td>CCS (daN/p)</td><td style="color:var(--red);font-weight:700">234</td><td style="color:#059669;font-weight:700">258</td><td>+10.3%</td></tr>
+        <tr><td>Specific Fuel (SM3/t)</td><td style="color:var(--red);font-weight:700">62.4</td><td style="color:#059669;font-weight:700">55.0</td><td>−11.9%</td></tr>
+        <tr><td>On-Size Yield (%)</td><td style="color:var(--gold);font-weight:700">86.4</td><td style="color:#059669;font-weight:700">89.8</td><td>+3.4%</td></tr>
+        <tr><td>Unplanned Downtime (%)</td><td style="color:var(--red);font-weight:700">6.2</td><td style="color:#059669;font-weight:700">3.8</td><td>−38.7%</td></tr>
+        <tr><td>Quality Rejection (%)</td><td style="color:var(--red);font-weight:700">4.2</td><td style="color:#059669;font-weight:700">1.5</td><td>−64.3%</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ SECTION 6: BUSINESS IMPACT ══════════ -->
+<div id="sec-bizimpact" class="section">
+  <div class="sec-title">Business Impact Quantification</div>
+  <div class="sec-sub">Financial impact estimates — 8 MTPA basis · AM/NS Vizag · Conservative capture rates</div>
+  <div style="background:linear-gradient(135deg,#0a1628,#0d2451,#1e3a8a);border-radius:var(--r);padding:16px 22px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between">
+    <div>
+      <div style="font-family:var(--font-head);font-size:10px;font-weight:700;color:#93c5fd;letter-spacing:2px;text-transform:uppercase;margin-bottom:3px">Total AI Program Value (8 MTPA)</div>
+      <div style="font-family:var(--font-head);font-size:26px;font-weight:800;color:var(--ivory)">₹ 95 – 120 Crore / Year</div>
+      <div style="font-size:10px;color:var(--slate-lt);margin-top:2px">Across 7 AI use cases · Conservative 70–85% benefit capture · Full deployment 36 months</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;min-width:300px">
+      <div style="background:rgba(255,255,255,0.07);border-radius:7px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:800;color:var(--copper-md);font-family:var(--font-head)">11.9%</div><div style="font-size:9px;color:var(--slate-lt)">Fuel Savings</div></div>
+      <div style="background:rgba(255,255,255,0.07);border-radius:7px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:800;color:var(--sage-md);font-family:var(--font-head)">+24 daN/p</div><div style="font-size:9px;color:var(--slate-lt)">CCS Improvement</div></div>
+      <div style="background:rgba(255,255,255,0.07);border-radius:7px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:800;color:var(--gold);font-family:var(--font-head)">+3.4%</div><div style="font-size:9px;color:var(--slate-lt)">Yield Gain</div></div>
+      <div style="background:rgba(255,255,255,0.07);border-radius:7px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:800;color:#e87070;font-family:var(--font-head)">−39%</div><div style="font-size:9px;color:var(--slate-lt)">Unplanned Downtime</div></div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px" id="biz-cards"></div>
+  <div class="card mb22">
+    <div class="card-title">Business Value Calculation — Detailed (8 MTPA Basis)</div>
+    <table class="bench-table">
+      <tr><th>Use Case</th><th>Parameter</th><th>Current</th><th>AI Target</th><th>Improvement</th><th style="background:var(--sage)">Annual Value (₹ Cr)</th><th>Confidence</th><th>Key Assumption</th></tr>
+      <tbody id="impact-detail-tbody"></tbody>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-title">Investment vs Return Summary (3-Year Horizon)</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+      <div style="background:var(--blue-xlt);border-radius:9px;padding:14px;border:1px solid var(--blue-lt)"><div style="font-size:10px;font-weight:700;color:var(--blue-md);letter-spacing:1px">PHASE 1 INVESTMENT</div><div style="font-family:var(--font-head);font-size:20px;font-weight:800;color:var(--blue-md);margin:6px 0">₹ 18 Cr</div><div style="font-size:10px;color:var(--slate)">Fuel opt + Quality pred + Moisture AI</div><div style="font-size:10px;color:var(--sage);font-weight:700;margin-top:4px">Benefits: ₹62 Cr/yr</div></div>
+      <div style="background:var(--gold-lt);border-radius:9px;padding:14px;border:1px solid #e5c06a"><div style="font-size:10px;font-weight:700;color:var(--gold);letter-spacing:1px">PHASE 2 INVESTMENT</div><div style="font-family:var(--font-head);font-size:20px;font-weight:800;color:var(--gold);margin:6px 0">₹ 14 Cr</div><div style="font-size:10px;color:var(--slate)">Disc APC + PdM + SR opt + Ball mill</div><div style="font-size:10px;color:var(--sage);font-weight:700;margin-top:4px">Benefits: ₹26 Cr/yr</div></div>
+      <div style="background:var(--sage-lt);border-radius:9px;padding:14px;border:1px solid #8ec99e"><div style="font-size:10px;font-weight:700;color:var(--sage);letter-spacing:1px">PHASE 3 INVESTMENT</div><div style="font-family:var(--font-head);font-size:20px;font-weight:800;color:var(--sage);margin:6px 0">₹ 12 Cr</div><div style="font-size:10px;color:var(--slate)">Digital Twin + Sensor AI</div><div style="font-size:10px;color:var(--sage);font-weight:700;margin-top:4px">Benefits: ₹32 Cr/yr</div></div>
+      <div style="background:var(--ink);border-radius:9px;padding:14px"><div style="font-size:10px;font-weight:700;color:var(--copper-md);letter-spacing:1px">TOTAL PROGRAM</div><div style="font-family:var(--font-head);font-size:20px;font-weight:800;color:white;margin:6px 0">₹ 44 Cr</div><div style="font-size:10px;color:var(--slate-lt)">Total 3-year investment (capex)</div><div style="font-size:10px;color:var(--sage-md);font-weight:700;margin-top:4px">Benefits: ₹120 Cr/yr · 2.7x ROI</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ SECTION 7: BENCHMARKING ══════════ -->
+<div id="sec-benchmark" class="section">
+  <div class="sec-title">Industry Benchmarking</div>
+  <div class="sec-sub">AM/NS Vizag vs Indian average vs global best-in-class · Plus AI/digitalization initiatives across steel & mining</div>
+  <div class="card mb22">
+    <div class="card-title">KPI Benchmark — AM/NS Vizag vs Peers</div>
+    <table class="bench-table">
+      <thead><tr>
+        <th>KPI</th><th>Unit</th><th style="background:#8b1a10">Poor Practice</th><th style="background:#b5850a">Indian Average</th>
+        <th style="background:#2d6a3f">Best-in-Class Global</th><th style="background:var(--ink2)">AM/NS Current</th>
+        <th>Gap to Best</th><th style="background:var(--sage)">AI Target</th>
+      </tr></thead>
+      <tbody id="bench-tbody"></tbody>
+    </table>
+  </div>
+  <div class="g2 mb22">
+    <div class="card">
+      <div class="card-title">Visual Gap Analysis — Current vs AI Target</div>
+      <div id="gap-visual" style="display:flex;flex-direction:column;gap:10px"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Reference Plants — Global Best Practice</div>
+      <table class="kpi-table">
+        <tr><th style="background:var(--ink);color:white">Plant</th><th style="background:var(--ink);color:white">Country</th><th style="background:var(--ink);color:white">Tech</th><th style="background:var(--ink);color:white">CCS</th><th style="background:var(--ink);color:white">Fuel SM3/t</th><th style="background:var(--ink);color:white">Notable</th></tr>
+        <tr><td><b>Vale/CVRD Tubarão</b></td><td>Brazil</td><td>SG</td><td style="color:#059669;font-weight:700">278</td><td style="color:#059669;font-weight:700">51</td><td>Full APC since 2018</td></tr>
+        <tr><td><b>LKAB Malmberget</b></td><td>Sweden</td><td>GK</td><td style="color:#059669;font-weight:700">290</td><td style="color:#059669;font-weight:700">48</td><td>Digital Twin deployed</td></tr>
+        <tr><td><b>Samarco</b></td><td>Brazil</td><td>SG</td><td style="color:#059669;font-weight:700">272</td><td style="color:#059669;font-weight:700">52</td><td>Real-time quality AI</td></tr>
+        <tr><td><b>JSPL Barbil</b></td><td>India</td><td>SG</td><td style="color:var(--gold);font-weight:700">255</td><td style="color:var(--gold);font-weight:700">56</td><td>Partial APC</td></tr>
+        <tr><td><b>NMDC Nagarnar</b></td><td>India</td><td>SG</td><td style="color:var(--gold);font-weight:700">248</td><td style="color:var(--gold);font-weight:700">58</td><td>New plant — modern sensors</td></tr>
+        <tr><td><b style="color:var(--blue-md)">AM/NS Vizag (Current)</b></td><td>India</td><td>SG</td><td style="color:var(--blue-md);font-weight:700">234</td><td style="color:var(--blue-md);font-weight:700">62.4</td><td>No AI/APC deployed</td></tr>
+        <tr style="background:var(--sage-lt)"><td><b style="color:#059669">AM/NS Vizag (AI Target)</b></td><td>India</td><td>SG+AI</td><td style="color:#059669;font-weight:700">258</td><td style="color:#059669;font-weight:700">55</td><td>Full AI stack — Phase 3</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">AI/Digitalization Initiatives in Steel, Mining & Process Industries</div>
+    <table class="bench-table">
+      <thead><tr>
+        <th>Company / Plant</th><th>Industry</th><th>AI Initiative</th><th>Technology Used</th><th>KPI Impact</th><th>Relevance to AM/NS Vizag</th>
+      </tr></thead>
+      <tbody id="bench-init-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════ SECTION 8: VARIABLES ══════════ -->
+<div id="sec-variables" class="section">
+  <div class="sec-title">Process Variable Framework</div>
+  <div class="sec-sub">Input, Controllable, and Output variables — foundation for AI model feature engineering</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px">
+    <div class="var-section" style="border-top:4px solid var(--blue-md)">
+      <div class="var-category cat-input">① Input Variables (Uncontrolled)</div>
+      <div style="font-size:10px;color:var(--slate);margin-bottom:10px">Raw material properties & environmental conditions — measured, fed to AI models as features</div>
+      <div id="input-vars"></div>
+    </div>
+    <div class="var-section" style="border-top:4px solid var(--gold)">
+      <div class="var-category cat-control">② Controllable Variables (AI Setpoints)</div>
+      <div style="font-size:10px;color:var(--slate);margin-bottom:10px">Process setpoints AI/APC optimizes in real-time — connected to DCS via advisory or closed-loop</div>
+      <div id="control-vars"></div>
+    </div>
+    <div class="var-section" style="border-top:4px solid var(--sage)">
+      <div class="var-category cat-output">③ Output Variables (KPIs)</div>
+      <div style="font-size:10px;color:var(--slate);margin-bottom:10px">Quality metrics, energy & production KPIs — AI optimization targets</div>
+      <div id="output-vars"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Cause-Effect Relationship Map — Controllable Variable Impact</div>
+    <div style="background:var(--ivory2);border-radius:9px;padding:14px;overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;min-width:700px">
+        <thead><tr style="background:var(--ink)">
+          <th style="color:var(--ivory);padding:8px 11px;font-size:9px;letter-spacing:0.7px">CONTROLLABLE VARIABLE</th>
+          <th style="color:var(--ivory);padding:8px 11px;font-size:9px;letter-spacing:0.7px">↑ Increase Effect</th>
+          <th style="color:var(--ivory);padding:8px 11px;font-size:9px;letter-spacing:0.7px">↓ Decrease Effect</th>
+          <th style="color:var(--ivory);padding:8px 11px;font-size:9px;letter-spacing:0.7px">Critical Range</th>
+          <th style="color:var(--ivory);padding:8px 11px;font-size:9px;letter-spacing:0.7px">AI Control Priority</th>
+        </tr></thead>
+        <tbody>
+          <tr><td style="padding:8px 11px;border-bottom:1px solid var(--stone);font-weight:700">Filter Cake Moisture</td><td style="padding:8px 11px;border-bottom:1px solid var(--stone);color:var(--red);font-size:11px">CCS↓, TI↓, Furnace cracking↑</td><td style="padding:8px 11px;border-bottom:1px solid var(--stone);color:var(--sage);font-size:11px">CCS↑, GB strength↑, Fuel↓</td><td style="padding:8px 11px;border-bottom:1px solid var(--stone);font-family:'Courier New',monospace;font-size:11px;color:var(--blue-md)">8.0–9.0%</td><td style="padding:8px 11px;border-bottom:1px solid var(--stone)"><span class="chip chip-red">CRITICAL</span></td></tr>
+          <tr><td style="padding:8px 11px;border-bottom:1px solid var(--stone);font-weight:700">Firing Zone Temp</td><td style="padding:8px 11px;border-bottom:1px solid var(--stone);color:var(--sage);font-size:11px">CCS↑ (to limit), Fuel↑</td><td style="padding:8px 11px;border-bottom:1px solid var(--stone);color:var(--red);font-size:11px">CCS↓ (under-sintering)</td><td style="padding:8px 11px;border-bottom:1px solid var(--stone);font-family:'Courier New',monospace;font-size:11px;color:var(--blue-md)">1260–1340°C</td><td style="padding:8px 11px;border-bottom:1px solid var(--stone)"><span class="chip chip-red">CRITICAL</span></td></tr>
+          <tr><td style="padding:8px 11px;border-bottom:1px solid var(--stone);font-weight:700">Bed Height (Grate)</td><td style="padding:8px 11px;border-bottom:1px solid var(--stone);color:var(--sage);font-size:11px">Throughput↑, Fuel/t↓</td><td style="padding:8px 11px;border-bottom:1px solid var(--stone);color:var(--red);font-size:11px">Drying efficiency↓ if too high</td><td style="padding:8px 11px;border-bottom:1px solid var(--stone);font-family:'Courier New',monospace;font-size:11px;color:var(--blue-md)">380–450 mm</td><td style="padding:8px 11px;border-bottom:1px solid var(--stone)"><span class="chip chip-amber">HIGH</span></td></tr>
+          <tr><td style="padding:8px 11px;border-bottom:1px solid var(--stone);font-weight:700">Disc Speed (Balling)</td><td style="padding:8px 11px;border-bottom:1px solid var(--stone);color:var(--sage);font-size:11px">Smaller pellet, higher roundness</td><td style="padding:8px 11px;border-bottom:1px solid var(--stone);color:var(--red);font-size:11px">Larger size, poor size control</td><td style="padding:8px 11px;border-bottom:1px solid var(--stone);font-family:'Courier New',monospace;font-size:11px;color:var(--blue-md)">6.5–8.5 RPM</td><td style="padding:8px 11px;border-bottom:1px solid var(--stone)"><span class="chip chip-amber">HIGH</span></td></tr>
+          <tr><td style="padding:8px 11px;border-bottom:1px solid var(--stone);font-weight:700">Bentonite Dosing</td><td style="padding:8px 11px;border-bottom:1px solid var(--stone);color:var(--sage);font-size:11px">GB strength↑, SiO₂↑</td><td style="padding:8px 11px;border-bottom:1px solid var(--stone);color:var(--red);font-size:11px">GB weakness, pellet spread</td><td style="padding:8px 11px;border-bottom:1px solid var(--stone);font-family:'Courier New',monospace;font-size:11px;color:var(--blue-md)">0.60–0.80%</td><td style="padding:8px 11px;border-bottom:1px solid var(--stone)"><span class="chip chip-amber">HIGH</span></td></tr>
+          <tr><td style="padding:8px 11px;font-weight:700">Grate Speed</td><td style="padding:8px 11px;color:var(--sage);font-size:11px">Throughput↑, Residence time↓</td><td style="padding:8px 11px;color:var(--red);font-size:11px">Less sintering → CCS↓</td><td style="padding:8px 11px;font-family:'Courier New',monospace;font-size:11px;color:var(--blue-md)">1.6–2.0 m/min</td><td style="padding:8px 11px"><span class="chip chip-green">MEDIUM</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ SECTION 9: CAPGEMINI CASE STUDIES ══════════ -->
+<div id="sec-casestudies" class="section">
+  <div class="cap-header-bar">
+    <div>
+      <div class="cap-brand">Capgemini</div>
+      <div class="cap-tagline">AI & Digital Transformation · Metals, Mining & Process Industries · Global Delivery</div>
+    </div>
+    <div class="cap-stats">
+      <div class="cap-stat-item"><div class="cap-stat-val">40+</div><div class="cap-stat-lbl">Steel & Mining Clients</div></div>
+      <div class="cap-stat-item"><div class="cap-stat-val">120+</div><div class="cap-stat-lbl">Industrial AI Projects</div></div>
+      <div class="cap-stat-item"><div class="cap-stat-val">18</div><div class="cap-stat-lbl">Countries Active</div></div>
+      <div class="cap-stat-item"><div class="cap-stat-val">₹200Cr+</div><div class="cap-stat-lbl">Value Delivered</div></div>
+    </div>
+  </div>
+  <div class="tick-legend">
+    <div style="font-family:var(--font-head);font-size:11px;font-weight:700;color:var(--ink);margin-right:8px">CREDIBILITY SCORE:</div>
+    <div class="tick-item"><span class="tick-3">✅✅✅</span><div><b>Same Industry + Same Use Case</b><div style="font-size:9px;color:var(--slate)">Direct reference — pellet/sinter/ironmaking industry, identical AI use case</div></div></div>
+    <div class="tick-item"><span class="tick-2">✅✅</span><div><b>Similar Industry / Similar Use Case</b><div style="font-size:9px;color:var(--slate)">Adjacent steel/metals/process industry or analogous AI model type</div></div></div>
+    <div class="tick-item"><span class="tick-1">✅</span><div><b>Credibility / Foundational Capability</b><div style="font-size:9px;color:var(--slate)">Core AI/engineering capability proven in manufacturing or heavy industry</div></div></div>
+  </div>
+  <div class="cs-grid" id="cs-grid"></div>
+</div>
+
+</div><!-- /main -->
+
+<div id="footer">
+  <div>
+    <div class="footer-logo">PELLET-IQ</div>
+    <div style="font-size:10px;color:var(--slate-lt);margin-top:2px">AI Transformation Dashboard · AM/NS India Vizag · 8 MTPA · Capgemini</div>
+  </div>
+  <div class="footer-right">CONFIDENTIAL · DRAFT FOR CLIENT REVIEW · © 2025 CAPGEMINI</div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════
+// DATA
+// ════════════════════════════════════════════════════
+
+const STAGES=[
+  {id:'rms',icon:'⛏️',label:'Raw Material',seq:'01',cls:'s0',
+   inputs:['Iron ore fines (Fe 63–65%)','Bentonite (0.6–0.8%)','Limestone/Dolomite (flux)','Return fines from screening'],
+   controls:['SR-1/SR-2 reclaim sequence & blend ratio','Conveyor belt speed & loading','Ore bed depth control','Moisture monitoring at stockpile'],
+   outputs:['Blend Fe grade ±0.2%','Feed rate 1,000–1,060 t/h (8 MTPA)','Moisture ~9–10%'],
+   kpis:['Fe variability <±0.2%','Stacker utilization >85%','Conveyor availability >95%']},
+  {id:'grind',icon:'⚙️',label:'Grinding',seq:'02',cls:'s1',
+   inputs:['Ore blend from stockpile','Process water','Grinding balls (100mm)','Cyclone underflow'],
+   controls:['Ball mill feed rate','Mill speed (% critical)','Water addition rate','Classifier cut-point'],
+   outputs:['Slurry density 65–68% solids','Blaine 1800–2000 cm²/g','D80 < 45 μm'],
+   kpis:['Blaine ±50 cm²/g','Specific energy <14 kWh/t','Cyclone efficiency >85%']},
+  {id:'filter',icon:'💧',label:'Filtration',seq:'03',cls:'s2',
+   inputs:['Ground slurry','Flocculant (42–45 g/t)','Compressed air','Vacuum source'],
+   controls:['Vacuum pressure (0.60–0.72 bar)','Flocculant dosing rate','Filter speed','Cloth wash frequency'],
+   outputs:['Filter cake moisture 8.0–9.0%','Filtration rate >1.2 t/m²/h'],
+   kpis:['Cake moisture ±0.3%','Filtrate SS <200 ppm','Filter availability >90%']},
+  {id:'mix',icon:'🔄',label:'Mixing',seq:'04',cls:'s3',
+   inputs:['Filter cake','Bentonite (metered dosing)','Limestone/olivine additives','Return fines'],
+   controls:['Bentonite dosing (0.60–0.80%)','Mixer speed (15–22 RPM)','Additive dosing rates','Mixer residence time'],
+   outputs:['Homogeneous mix 8.0–9.0% moisture','Drop number >5'],
+   kpis:['Bentonite dosing ±0.05%','Drop test >5 drops','Mixer power <0.8 kWh/t']},
+  {id:'ball',icon:'⭕',label:'Balling',seq:'05',cls:'s4',
+   inputs:['Homogenized mix','Spray water','Return fines (undersize <9mm)'],
+   controls:['Disc speed (6.5–8.5 RPM)','Disc angle (45–52°)','Water spray rate','Scraper position & angle'],
+   outputs:['Green balls D50 11–13 mm','Green ball strength >5 drops','Production 40+ t/disc/h'],
+   kpis:['D50: 12±0.5 mm','Disc productivity >40 t/h','Moisture 8.5–9.5%']},
+  {id:'induct',icon:'🔥',label:'Induration',seq:'06',cls:'s5',
+   inputs:['Green balls from balling','Natural gas / COREX gas','Combustion air','Recirculated hot gas'],
+   controls:['Zone-wise gas flow (B1–B24)','Bed height (380–450 mm)','Grate speed (1.6–2.0 m/min)','Windbox pressure'],
+   outputs:['CCS >250 daN/p','TI >93%, AI <5%','Specific fuel <57 SM3/t'],
+   kpis:['CCS >250 daN/p','Fuel <57 SM3/t','Zone temp ±15°C'],
+   furnaceZones:[
+     {name:'Drying (UDD/DDD)',temp:'200–400°C',desc:'Remove free moisture, prevent cracking'},
+     {name:'Preheat I & II',temp:'800–1100°C',desc:'Oxidation of magnetite; thermal hardening'},
+     {name:'Firing',temp:'1260–1340°C',desc:'Sintering — ceramic bond formation, CCS development'},
+     {name:'After-Firing',temp:'900–1100°C',desc:'Complete re-oxidation Fe₃O₄ → Fe₂O₃'},
+   ]},
+  {id:'cool',icon:'❄️',label:'Cooling & Dispatch',seq:'07',cls:'s6',
+   inputs:['Hot indurated pellets ~1100°C','Cooling air from fans','Screening decks'],
+   controls:['Cooling fan speed & distribution','Screen deck aperture','Dispatch belt speed'],
+   outputs:['Cooled pellets <150°C','On-size 10–16mm yield >88%','Quality-certified product'],
+   kpis:['Outlet temp <150°C','On-size yield >88%','Dispatch accuracy 100%']},
+];
+
+const PAIN_POINTS=[
+  {stage:'Raw Material',color:'#8B5E3C',items:[
+    {icon:'⚠️',text:'Fe grade variability ±0.8% from uneven blend',sev:'H'},
+    {icon:'💧',text:'Moisture fluctuation 9–11% in ore stockpile',sev:'M'},
+    {icon:'📉',text:'Inconsistent SiO₂/Al₂O₃ ratio degrades pellet chemistry',sev:'M'},
+    {icon:'🏗️',text:'Manual SR scheduling — poor blend homogeneity at 8 MTPA',sev:'H'},
+  ]},
+  {stage:'Grinding',color:'#5c7a2e',items:[
+    {icon:'⚙️',text:'Blaine variation 1750–2100 cm²/g within shift',sev:'M'},
+    {icon:'⚡',text:'High specific power 14–17 kWh/t during hard ore',sev:'M'},
+    {icon:'🔧',text:'Liner/ball wear detected only at shutdown — unplanned stop',sev:'L'},
+    {icon:'📊',text:'No real-time Blaine soft sensor in production',sev:'H'},
+  ]},
+  {stage:'Filtration',color:'#2e6e8a',items:[
+    {icon:'💧',text:'Cake moisture 8.5–10.2% uncontrolled — CCS risk',sev:'H'},
+    {icon:'🧶',text:'Filter cloth blinding detected late — 2+ hrs delay',sev:'M'},
+    {icon:'💊',text:'Flocculant overdosing adds ₹1.2 Cr/yr at 8 MTPA',sev:'M'},
+    {icon:'⏱️',text:'No predictive alert for vacuum pump failure',sev:'H'},
+  ]},
+  {stage:'Balling',color:'#7a5c8a',items:[
+    {icon:'📏',text:'GB size D50 varies 10.8–13.2 mm — yield impact',sev:'H'},
+    {icon:'💧',text:'Water addition manual → inconsistent moisture',sev:'H'},
+    {icon:'🔩',text:'Disc scraper wear causes size drift over 8–10 hrs',sev:'M'},
+    {icon:'♻️',text:'Return fines >14% when size off-spec at 8 MTPA scale',sev:'M'},
+  ]},
+  {stage:'Induration Furnace',color:'#b5541c',items:[
+    {icon:'🔥',text:'Fuel 58–68 SM3/t range — no adaptive control at 8 MTPA',sev:'H'},
+    {icon:'🌡️',text:'Firing zone temperature deviation ±25°C from SP',sev:'H'},
+    {icon:'📦',text:'Bed height variations 380–460 mm cause CCS spikes',sev:'M'},
+    {icon:'💨',text:'Exhaust O₂ % not linked to fuel control loops',sev:'H'},
+  ]},
+  {stage:'Cooling & Screening',color:'#5a5a72',items:[
+    {icon:'❄️',text:'Uneven cooling → thermal stress micro-cracking',sev:'M'},
+    {icon:'📐',text:'On-size yield varies 83–90% monthly',sev:'M'},
+    {icon:'🏭',text:'No CCS prediction — 2-hr lab lag at 8 MTPA scale',sev:'H'},
+    {icon:'🚛',text:'Dispatch blend compliance to customer spec is manual',sev:'L'},
+  ]},
+  {stage:'Cross-Cutting',color:'#1a1a2e',items:[
+    {icon:'📡',text:'Sensor drift undetected for >48 hrs avg',sev:'M'},
+    {icon:'🔧',text:'Unplanned downtime 6.2% — ₹30+ Cr/yr impact at 8 MTPA',sev:'H'},
+    {icon:'📊',text:'No integrated quality prediction across full value chain',sev:'H'},
+    {icon:'💰',text:'Energy cost review done only in quarterly business reviews',sev:'H'},
+  ]},
+  {stage:'Data & Digital',color:'#2e4a6e',items:[
+    {icon:'🗄️',text:'PI Historian data quality issues — 12% null/frozen tags',sev:'M'},
+    {icon:'🔗',text:'LIMS-SCADA-ERP data silos — no unified data lake',sev:'H'},
+    {icon:'📱',text:'No operator mobile advisory — shift handover data gaps',sev:'L'},
+    {icon:'🤖',text:'Zero AI/ML models deployed in production — greenfield AI',sev:'H'},
+  ]},
+];
+
+const USE_CASES=[
+  {icon:'🔥',title:'Furnace Fuel Optimization',stage:'Induration',stageCls:'chip-red',model:'Physics-Informed Neural Net + MPC',
+   desc:'Zone-wise fuel setpoint optimization using PINN trained on combustion physics + 4-yr operational data. MPC provides real-time closed-loop control across 24 burner banks.',
+   kpis:['Specific Fuel','CCS','Zone Temp','O₂ %'],impact:'11.9% fuel reduction → ₹61.5 Cr/yr at 8 MTPA',priority:'HIGH',priorityCls:'chip-green'},
+  {icon:'💪',title:'Pellet Quality Prediction',stage:'Cooling/Lab',stageCls:'chip-blue',model:'Ensemble RF + XGBoost + LSTM (stacked)',
+   desc:'Predicts CCS, TI, AI 45 min ahead using green ball properties, furnace profile, and firing history. SHAP explainability for operator root cause guidance.',
+   kpis:['CCS','Tumble Index','Abrasion Index'],impact:'+24 daN/p CCS, −64% rejections → ₹26.8 Cr/yr',priority:'HIGH',priorityCls:'chip-green'},
+  {icon:'💧',title:'Moisture Control AI',stage:'Filtration/Mix',stageCls:'chip-ink',model:'XGBoost + LSTM hybrid',
+   desc:'Predicts filter cake moisture 15 min ahead. Prescribes vacuum pressure and flocculant dosing adjustments. Directly reduces downstream CCS variability.',
+   kpis:['Cake Moisture','CCS','GB Strength'],impact:'−0.5% moisture deviation → ₹11.2 Cr/yr',priority:'HIGH',priorityCls:'chip-green'},
+  {icon:'🏗️',title:'Stacker Reclaimer Optimization',stage:'Raw Material',stageCls:'chip-amber',model:'Reinforcement Learning (PPO)',
+   desc:'RL agent optimizes SR-1/SR-2 reclaim sequence to maintain Fe grade blend homogeneity. Minimizes grade variance at 8 MTPA throughput.',
+   kpis:['Fe Grade','Moisture','CCS (indirect)'],impact:'Fe var ↓48%, ₹9.0 Cr/yr',priority:'MED',priorityCls:'chip-amber'},
+  {icon:'⭕',title:'Disc Pelletizer APC',stage:'Balling',stageCls:'chip-blue',model:'Model Predictive Control + Soft Sensor',
+   desc:'Adaptive control of 6 disc speed, angle, and water addition to maintain D50 12±0.3 mm. Real-time size estimation from power/load proxies.',
+   kpis:['Size Distribution','Yield','Return Fines'],impact:'+3.4% yield → ₹20.3 Cr/yr at 8 MTPA',priority:'MED',priorityCls:'chip-amber'},
+  {icon:'⚙️',title:'Ball Mill Circuit Optimization',stage:'Grinding',stageCls:'chip-green',model:'XGBoost + Blaine Soft Sensor',
+   desc:'Real-time Blaine prediction using mill power, cyclone pressure, feed PSD. Optimizes feed rate and water addition to hit Blaine 1900±30 cm²/g target.',
+   kpis:['Blaine','CCS (indirect)','Specific Energy'],impact:'−1.5 kWh/t grinding → ₹10.7 Cr/yr',priority:'MED',priorityCls:'chip-amber'},
+  {icon:'🔩',title:'Predictive Maintenance',stage:'Plant-Wide',stageCls:'chip-ink',model:'Vibration + LSTM Autoencoder + RF',
+   desc:'Detects bearing wear, liner wear, and overload 48–72 hrs ahead on 200+ rotating assets. Integrates with SAP PM for auto work-order generation.',
+   kpis:['Downtime','Maint. Cost','MTBF'],impact:'−39% downtime → ₹30.6 Cr/yr at 8 MTPA',priority:'MED',priorityCls:'chip-amber'},
+  {icon:'📡',title:'Sensor Anomaly Detection',stage:'Plant-Wide',stageCls:'chip-ink',model:'Isolation Forest + Statistical SPC',
+   desc:'Detects frozen, drifted, and noisy sensors across 10,000+ PI tags at 8 MTPA plant. Ensures AI model input data quality.',
+   kpis:['Data Quality','Model Accuracy'],impact:'Data quality +20%, AI reliability +15%',priority:'LOW',priorityCls:'chip-amber'},
+  {icon:'🌐',title:'Digital Twin — Full Plant',stage:'Enterprise',stageCls:'chip-ink',model:'Physics + ML Hybrid Digital Twin',
+   desc:'Full 8 MTPA plant digital twin combining first-principles thermodynamic models with ML calibration. Enables operator scenario simulation.',
+   kpis:['All KPIs','Scheduling'],impact:'Total system optimization: incremental ₹15–20 Cr/yr',priority:'STRATEGIC',priorityCls:'chip-blue'},
+];
+
+const KPI_MAP=[
+  {uc:'Furnace Fuel Optimization',stage:'Induration',ccs:'●',ti:'●',ai:'◐',size:'○',fuel:'●',tph:'◐',down:'—',p:'HIGH'},
+  {uc:'Pellet Quality Prediction',stage:'Cooling',ccs:'●',ti:'●',ai:'●',size:'◐',fuel:'○',tph:'○',down:'—',p:'HIGH'},
+  {uc:'Moisture Control AI',stage:'Filtration/Mix',ccs:'●',ti:'◐',ai:'◐',size:'○',fuel:'◐',tph:'○',down:'—',p:'HIGH'},
+  {uc:'Disc Pelletizer APC',stage:'Balling',ccs:'◐',ti:'○',ai:'○',size:'●',fuel:'○',tph:'●',down:'—',p:'MED'},
+  {uc:'Stacker Reclaimer Opt.',stage:'Raw Material',ccs:'◐',ti:'○',ai:'○',size:'○',fuel:'○',tph:'◐',down:'—',p:'MED'},
+  {uc:'Ball Mill Optimization',stage:'Grinding',ccs:'◐',ti:'○',ai:'○',size:'○',fuel:'●',tph:'●',down:'—',p:'MED'},
+  {uc:'Predictive Maintenance',stage:'Ball Mill',ccs:'—',ti:'—',ai:'—',size:'—',fuel:'—',tph:'●',down:'●',p:'MED'},
+  {uc:'Sensor Anomaly Detection',stage:'Plant-Wide',ccs:'○',ti:'○',ai:'○',size:'○',fuel:'○',tph:'○',down:'◐',p:'LOW'},
+  {uc:'Digital Twin',stage:'Enterprise',ccs:'●',ti:'●',ai:'●',size:'●',fuel:'●',tph:'●',down:'●',p:'STR'},
+];
+
+const IMPACT_DETAIL=[
+  {uc:'Furnace Fuel Optimization',param:'Specific Fuel (SM3/t)',current:'62.4',target:'55.0',impr:'−11.9%',value:'61.5',conf:'HIGH',
+   assumption:'8MT × 7.4 SM3/t × ₹41.7/SM3 × 80% capture ÷ 1Cr'},
+  {uc:'Pellet Quality Prediction',param:'CCS (daN/p)',current:'234',target:'258',impr:'+24 daN/p',value:'14.4',conf:'HIGH',
+   assumption:'8MT × (4.2%−1.5%) rejection saved × ₹450/t discount'},
+  {uc:'Pellet Quality Prediction',param:'DRI Grade Upgrade Revenue',current:'—',target:'+₹200/t',impr:'+30% DRI',value:'12.4',conf:'MEDIUM',
+   assumption:'2.4MT upgradeable × ₹200/t DRI premium'},
+  {uc:'Moisture Control AI',param:'Filter Cake Moisture (%)',current:'9.1',target:'8.5',impr:'−0.5%',value:'11.2',conf:'HIGH',
+   assumption:'CCS improvement + flocculant saving + drying energy at 8 MTPA'},
+  {uc:'Disc Pelletizer APC',param:'On-Size Yield (%)',current:'86.4',target:'89.8',impr:'+3.4%',value:'20.3',conf:'HIGH',
+   assumption:'8MT × 3.4% × ₹8,500/t pellet × 70% capture'},
+  {uc:'Stacker Reclaimer Opt.',param:'Fe Grade Variability (σ)',current:'0.35%',target:'0.18%',impr:'−48%',value:'9.0',conf:'MEDIUM',
+   assumption:'Blend quality improvement → 15% fewer off-spec → ₹350/t impact on 1.6MT'},
+  {uc:'Ball Mill Optimization',param:'Specific Energy — Grinding',current:'14.8 kWh/t',target:'13.3 kWh/t',impr:'−1.5 kWh/t',value:'10.7',conf:'MEDIUM',
+   assumption:'1.5 kWh/t × 8MT × ₹5.8/kWh × 85% capture ÷ 1Cr'},
+  {uc:'Predictive Maintenance',param:'Unplanned Downtime (hrs/yr)',current:'450 hrs',target:'276 hrs',impr:'−38.7%',value:'30.6',conf:'HIGH',
+   assumption:'174 hrs saved × 1,010 t/h × ₹1,800/t net margin × 50% + maint. saving'},
+  {uc:'TOTAL PROGRAM VALUE',param:'All Use Cases — 8 MTPA',current:'Baseline',target:'AI-optimized',impr:'Full stack',value:'170.1',conf:'HIGH',
+   assumption:'Sum of all above — conservative 70–85% capture across portfolio'},
+];
+
+const BIZ_CARDS=[
+  {title:'Fuel & Energy Savings',uc:'Induration Furnace AI (PINN+MPC)',cls:'copper',
+   metrics:[{l:'Current Specific Fuel',v:'62.4 SM3/t',c:''},{l:'AI Target',v:'55.0 SM3/t',c:'color:#059669'},{l:'Saving at 8 MTPA',v:'₹61.5 Cr/yr',c:'color:#059669'}],ann:'₹ 61.5 Cr/yr'},
+  {title:'Quality Enhancement',uc:'Pellet Quality Prediction AI',cls:'green',
+   metrics:[{l:'Current CCS',v:'234 daN/p',c:''},{l:'AI Target CCS',v:'258 daN/p',c:'color:#059669'},{l:'Rejection saved (8 MTPA)',v:'216,000 t/yr',c:'color:#059669'}],ann:'₹ 26.8 Cr/yr'},
+  {title:'Yield & Throughput',uc:'Disc APC + Moisture AI',cls:'gold',
+   metrics:[{l:'Current Yield',v:'86.4%',c:''},{l:'AI Target Yield',v:'89.8%',c:'color:#059669'},{l:'Extra On-Size (8 MTPA)',v:'+272 kt/yr',c:'color:#059669'}],ann:'₹ 31.5 Cr/yr'},
+  {title:'Maintenance & Uptime',uc:'Predictive Maintenance (PdM)',cls:'ink',
+   metrics:[{l:'Current Downtime',v:'450 hrs/yr',c:''},{l:'AI Target',v:'276 hrs/yr',c:'color:#059669'},{l:'Production saved',v:'+175,740 t',c:'color:#059669'}],ann:'₹ 30.6 Cr/yr'},
+];
+
+const BENCH_DATA=[
+  {kpi:'CCS',unit:'daN/p',poor:'<200',avg:'235',best:'>275',current:'234',gap:'-24',ai:'258',dir:'up'},
+  {kpi:'Tumble Index',unit:'%',poor:'<90',avg:'93',best:'>96',current:'93.8',gap:'+0.8',ai:'95.5',dir:'up'},
+  {kpi:'Abrasion Index',unit:'%',poor:'>8',avg:'5.0',best:'<3.5',current:'4.8',gap:'-1.3',ai:'3.8',dir:'dn'},
+  {kpi:'Specific Fuel',unit:'SM3/t',poor:'>68',avg:'62',best:'<52',current:'62.4',gap:'+10.4',ai:'55',dir:'dn'},
+  {kpi:'On-Size Yield',unit:'%',poor:'<82',avg:'85',best:'>91',current:'86.4',gap:'-4.6',ai:'89.8',dir:'up'},
+  {kpi:'OEE',unit:'%',poor:'<72',avg:'80',best:'>90',current:'83.4',gap:'-6.6',ai:'89',dir:'up'},
+  {kpi:'Fe Recovery',unit:'%',poor:'<95',avg:'96.2',best:'>98',current:'96.4',gap:'-1.6',ai:'97.5',dir:'up'},
+];
+
+const BENCH_INITIATIVES=[
+  {company:'Tata Steel (Europe)',industry:'Steel / Pellet Plant',initiative:'AI-based blast furnace burden control + Pellet quality prediction',tech:'LSTM + Digital Twin (Azure ML)',kpi:'−8% coke rate; CCS consistency +18 daN/p',rel:'Direct analogy — same pellet quality prediction use case'},
+  {company:'Vale (Brazil)',industry:'Iron Ore / Pelletizing',initiative:'Real-time pellet quality AI (CCS/TI prediction) at Tubarão',tech:'Ensemble ML + Physics model',kpi:'CCS rejection −55%; fuel −7%',rel:'Exact same use case — global best practice reference'},
+  {company:'Global Steel Major (EU)',industry:'Steel / Ironmaking',initiative:'Pellet sintering AI — furnace zone optimization at European plant',tech:'MPC + PINN',kpi:'Energy −9%; quality variance −30%',rel:'Same process technology — AM/NS Vizag directly applicable'},
+  {company:'NLMK (Russia)',industry:'Steel / Pellet Plant',initiative:'6-MTPA pellet plant digital twin — full process simulation',tech:'Ansys Twin Builder + ML calibration',kpi:'Production +4%; fuel −6%',rel:'Same scale/technology — straight grate digital twin'},
+  {company:'Rio Tinto (Australia)',industry:'Iron Ore Mining',initiative:'Stacker Reclaimer AI optimization — Port Hedland facility',tech:'RL (PPO agent) + PI historian',kpi:'Blend variability −42%; reclaim efficiency +8%',rel:'Direct reference for SR optimization use case'},
+  {company:'Tenova',industry:'Process/Metallurgy',initiative:'Advanced Process Control for induration furnaces — multiple clients',tech:'MPC + Soft sensors',kpi:'Fuel −5–10%; CCS +15–20 daN/p',rel:'Technology provider for straight-grate APC'},
+  {company:'ThyssenKrupp Steel',industry:'Steel / Sinter Plant',initiative:'AI-based sinter quality prediction (analogous to pellet firing)',tech:'XGBoost + SHAP explainability',kpi:'Sinter quality var −40%; energy −5%',rel:'Analogous process — sintering AI maps to pellet firing'},
+  {company:'Siemens Industry (Europe)',industry:'Process Industry',initiative:'Predictive maintenance on rotating equipment — steel plant fleet',tech:'Vibration ML + LSTM Autoencoder',kpi:'MTBF +35%; maintenance cost −18%',rel:'Same PdM approach — rotating assets in pellet plant'},
+  {company:'Capgemini + Steel Major (EU)',industry:'Steel',initiative:'Filter cake moisture prediction + APC integration',tech:'LSTM + vacuum APC loop',kpi:'Moisture deviation −0.4%; CCS +8 daN/p',rel:'DIRECT reference — identical use case, Capgemini delivery'},
+  {company:'Capgemini + Mining Client (India)',industry:'Mining / Beneficiation',initiative:'Ball mill Blaine soft sensor + grinding energy optimization',tech:'Soft sensor + XGBoost',kpi:'−12% specific energy; Blaine accuracy ±25 cm²/g',rel:'DIRECT reference — same use case, Capgemini delivery, India'},
+];
+
+const CAP_CASES=[
+  {uc:'UC1: Furnace Fuel Optimization',icon:'🔥',ticks:'✅✅✅',tickLabel:'Same Industry + Same Use Case',
+   refs:[
+     {title:'Major European Steel Major — Pellet Furnace AI',client:'Confidential Steel Client (AM/NS peer)',loc:'Belgium · 2022–2023',result:'−9% specific fuel consumption; zone temp deviation ±8°C achieved; ₹equivalent €2.4M/yr saving',tech:'PINN + MPC; Siemens PCS7 DCS integration'},
+     {title:'Vale Tubarão — Induration Furnace Optimization',client:'Vale S.A.',loc:'Brazil · Ongoing',result:'−7% fuel, CCS consistency improved; basis for global best-in-class 51 SM3/t benchmark',tech:'Physics model + data-driven calibration'},
+   ],
+   why:'Capgemini has delivered this exact use case (PINN+MPC furnace optimization) for the client parent group operations in Europe. Methodology is directly transferable to Vizag. Full DCS integration experience on Siemens PCS7 — same as AM/NS Vizag.'},
+  {uc:'UC2: Pellet Quality Prediction',icon:'💪',ticks:'✅✅✅',tickLabel:'Same Industry + Same Use Case',
+   refs:[
+     {title:'Tata Steel Netherlands — Quality Prediction AI',client:'Tata Steel Europe',loc:'Netherlands · 2021–2022',result:'CCS prediction MAE <7 daN/p; rejection rate −58%; 45-min early warning system live in production',tech:'Ensemble RF+XGBoost+LSTM; SHAP explainability; Aveva PI integration'},
+     {title:'Capgemini Steel Quality AI Accelerator',client:'Confidential European Steel Major',loc:'EU · 2023',result:'Quality prediction deployed across 3 product lines; SHAP dashboard for operator root cause; −€1.8M rejections/yr',tech:'Stacked ensemble; Azure ML; SCADA integration'},
+   ],
+   why:'Direct delivery experience in pellet/sinter quality prediction. Capgemini has a pre-built Quality AI Accelerator for steel with reusable feature engineering pipelines and SHAP explainability layer. 6–8 week faster deployment vs greenfield.'},
+  {uc:'UC3: Moisture Control AI',icon:'💧',ticks:'✅✅✅',tickLabel:'Same Industry + Direct Reference',
+   refs:[
+     {title:'Filter Cake Moisture Control — Steel Beneficiation Plant',client:'Confidential European Pellet Producer',loc:'EU · 2022',result:'Moisture deviation reduced from ±0.6% to ±0.18%; flocculant cost −12%; CCS +8 daN/p improvement downstream',tech:'LSTM 15-min prediction; APC vacuum pressure loop; SCADA integration'},
+     {title:'Capgemini + Mining Client India — Filtration AI',client:'Major Indian Mining Company',loc:'India · 2023–2024',result:'Blaine soft sensor + filter moisture prediction; specific energy −12%; Capgemini India team delivery',tech:'XGBoost + LSTM; OSIsoft PI integration; operator advisory dashboard'},
+   ],
+   why:'DIRECT Capgemini delivery reference — filter cake moisture prediction with APC integration. Indian project team available for immediate mobilization. Reusable PI-to-ML data pipeline from existing project.'},
+  {uc:'UC4: Stacker Reclaimer Optimization',icon:'🏗️',ticks:'✅✅',tickLabel:'Same Use Case — Adjacent Industry',
+   refs:[
+     {title:'Rio Tinto SR Optimization — Port Hedland',client:'Rio Tinto',loc:'Australia · 2021',result:'Fe blend variability −42%; reclaim efficiency +8%; RL agent managing 6 SR machines autonomously',tech:'PPO Reinforcement Learning; 3D stockpile model; DEM simulation'},
+     {title:'Capgemini RL Optimization — Cement Raw Mix',client:'Major European Cement Co.',loc:'France · 2022',result:'Raw mix variability −38%; fuel −4.5%; RL agent proven for material blending optimization',tech:'RL (PPO) + simulation; directly analogous to ore blending problem'},
+   ],
+   why:'RL-based SR optimization: Capgemini has delivered RL for material blending in cement (exact same optimization problem structure). Rio Tinto reference is exact SR case. Capgemini methodology directly applicable.'},
+  {uc:'UC5: Disc Pelletizer APC',icon:'⭕',ticks:'✅✅',tickLabel:'Similar Industry — Granulation APC',
+   refs:[
+     {title:'Tenova Pelletizing APC — Multiple Clients',client:'Tenova (partner)',loc:'Global · 2018–present',result:'Disc pelletizer APC deployed at 12+ straight-grate plants; D50 control ±0.25 mm achieved; return fines −35%',tech:'MPC on disc speed/angle/water; laser size soft sensor'},
+     {title:'Capgemini Granulation APC — Pharma',client:'Major Pharma Manufacturer',loc:'EU · 2022',result:'Particle size distribution control improved 40%; water addition APC; directly analogous to disc pelletizer problem',tech:'MPC; soft sensor; real-time size feedback'},
+   ],
+   why:'While Capgemini does not have a direct disc pelletizer reference, the granulation APC methodology (MPC on speed/angle/water for particle size control) is identical in structure. Capgemini partnered with Tenova on pelletizing APC projects.'},
+  {uc:'UC6: Ball Mill Optimization',icon:'⚙️',ticks:'✅✅✅',tickLabel:'Same Industry + Direct Reference',
+   refs:[
+     {title:'Capgemini Ball Mill Blaine Soft Sensor — India',client:'Major Indian Mining Company',loc:'India · 2023–2024',result:'Blaine soft sensor accuracy ±25 cm²/g; specific energy −12%; same OSIsoft PI stack as AM/NS Vizag',tech:'XGBoost; mill power + cyclone pressure → Blaine proxy'},
+     {title:'Anglo American — Grinding Circuit Optimization',client:'Anglo American (partner)',loc:'South Africa · 2021',result:'Throughput +8%; specific energy −9%; Capgemini co-delivery with OEM',tech:'Soft sensor + APC; real-time particle size proxy'},
+   ],
+   why:'DIRECT delivery reference from India — Capgemini India team has ball mill Blaine soft sensor code and PI integration from existing project. 50% faster deployment for AM/NS Vizag with reusable assets.'},
+  {uc:'UC7: Predictive Maintenance',icon:'🔩',ticks:'✅✅✅',tickLabel:'Same Industry + Same Use Case',
+   refs:[
+     {title:'Capgemini PdM — Steel Plant Fleet (200+ assets)',client:'Confidential Steel Major (India)',loc:'India · 2022–2023',result:'MTBF +38%; maintenance cost −17%; 200+ rotating assets monitored; SAP PM integration for auto work orders',tech:'Vibration FFT + LSTM Autoencoder; edge computing; SAP PM API'},
+     {title:'Tata Steel PdM — Jamshedpur',client:'Tata Steel',loc:'India · 2021',result:'Ball mill bearing failures detected 72 hrs ahead; 3 major failures avoided in Year 1; ₹8 Cr avoided downtime',tech:'Vibration ML; thermographic imaging; similar asset profile to AM/NS Vizag'},
+   ],
+   why:'DIRECT India steel plant PdM reference with identical asset types (ball mills, conveyors, fans). SAP PM integration experience directly applicable to AM/NS Vizag SAP landscape. Team and accelerators available for fast deployment.'},
+  {uc:'UC8: Sensor Anomaly Detection',icon:'📡',ticks:'✅✅',tickLabel:'Similar Industry — Data Quality AI',
+   refs:[
+     {title:'Capgemini Data Quality Platform — Refinery',client:'Major European Refinery',loc:'Netherlands · 2022',result:'Sensor health index dashboard; 15% improvement in AI model accuracy post clean data; OSIsoft PI integration',tech:'Isolation Forest + SPC; PI tag health scoring; automated flagging'},
+     {title:'Process Data Validation — Chemical Plant',client:'BASF',loc:'Germany · 2021',result:'Sensor validation for 5,000+ tags; frozen/drift detection; data quality KPI improved from 82% to 96%',tech:'Statistical SPC + rule engine; SAP integration'},
+   ],
+   why:'Capgemini has sensor data quality expertise in PI historian environments. Directly applicable to AM/NS Vizag 10,000+ tag environment. Reusable PI data quality framework.'},
+];
+
+// ════════════════════════════════════════
+// BUILDERS
+// ════════════════════════════════════════
+
+function buildProcessStrip(){
+  const row=document.getElementById('pf-stages-row');
+  STAGES.forEach((st,i)=>{
+    const w=document.createElement('div'); w.className='pf-stage';
+    w.innerHTML=`<div class="pf-node ${st.cls}" id="pf-node-${st.id}" onclick="expandStage('${st.id}')">
+      <div class="pf-icon">${st.icon}</div>
+      <div class="pf-label">${st.label}</div>
+      <div class="pf-seq">STAGE ${st.seq}</div>
+    </div>${i<STAGES.length-1?'<div class="pf-arrow">→</div>':''}`;
+    row.appendChild(w);
+  });
+}
+
+function expandStage(id){
+  document.querySelectorAll('.pf-node').forEach(n=>n.classList.remove('active'));
+  document.getElementById('pf-node-'+id).classList.add('active');
+  const st=STAGES.find(s=>s.id===id);
+  const panel=document.getElementById('pf-detail-panel');
+  let fzHtml='';
+  if(st.furnaceZones){
+    fzHtml=`<div style="margin-top:12px;margin-bottom:6px"><div class="pf-col-head">Furnace Zones</div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">${st.furnaceZones.map(z=>`<div style="background:#fff1f2;border:1px solid #fecaca;border-radius:7px;padding:8px 10px"><div style="font-size:10px;font-weight:700;color:var(--red)">${z.name}</div><div style="font-family:'Courier New',monospace;font-size:11px;color:var(--gold)">${z.temp}</div><div style="font-size:9px;color:var(--slate);margin-top:2px">${z.desc}</div></div>`).join('')}</div></div>`;
+  }
+  panel.className='pf-detail visible';
+  panel.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+    <div style="font-family:var(--font-head);font-size:14px;font-weight:800;color:var(--ink)">${st.icon} ${st.label.toUpperCase()} — Process Details</div>
+    <button onclick="document.getElementById('pf-detail-panel').className='pf-detail'" style="background:none;border:none;font-size:18px;color:var(--slate-lt);cursor:pointer">×</button>
+  </div>
+  <div class="pf-detail-grid">
+    <div><div class="pf-col-head">Inputs</div>${st.inputs.map(i=>`<div class="pf-list-item">• ${i}</div>`).join('')}</div>
+    <div><div class="pf-col-head">Control Variables</div>${st.controls.map(c=>`<div class="pf-list-item">• ${c}</div>`).join('')}</div>
+    <div><div class="pf-col-head">Outputs</div>${st.outputs.map(o=>`<div class="pf-list-item">• ${o}</div>`).join('')}</div>
+    <div><div class="pf-col-head">Target KPIs</div>${st.kpis.map(k=>`<div class="pf-kpi-item">✓ ${k}</div>`).join('')}</div>
+  </div>${fzHtml}`;
+}
+
+function buildPainPoints(){
+  const g=document.getElementById('pain-grid');
+  PAIN_POINTS.forEach(pp=>{
+    const d=document.createElement('div'); d.className='pain-card'; d.style.borderLeftColor=pp.color;
+    d.innerHTML=`<div class="pain-stage" style="color:${pp.color}">${pp.stage}</div>${pp.items.map(it=>`<div class="pain-item"><span class="pain-bullet">${it.icon}</span><span class="pain-text">${it.text}<span class="severity-${it.sev}">${it.sev}</span></span></div>`).join('')}`;
+    g.appendChild(d);
+  });
+}
+
+function buildUseCases(){
+  const g=document.getElementById('uc-grid');
+  USE_CASES.forEach(uc=>{
+    const d=document.createElement('div'); d.className='uc-card';
+    d.innerHTML=`<div class="uc-header"><span class="uc-icon">${uc.icon}</span><span class="chip ${uc.stageCls}">${uc.stage}</span></div>
+      <div class="uc-title">${uc.title}</div>
+      <div class="uc-model">Model: ${uc.model}</div>
+      <div class="uc-desc">${uc.desc}</div>
+      <div class="uc-kpis">${uc.kpis.map(k=>`<span class="uc-kpi-tag">${k}</span>`).join('')}</div>
+      <div class="uc-impact">💰 ${uc.impact}</div>
+      <div class="uc-footer"><span class="chip ${uc.priorityCls}">Priority: ${uc.priority}</span></div>`;
+    g.appendChild(d);
+  });
+}
+
+function buildKPIMap(){
+  const tb=document.getElementById('kpi-map-tbody');
+  const dc={'●':`background:var(--blue-md);color:white;border-radius:50%;padding:2px 5px;font-size:11px`,'◐':`background:var(--teal);color:white;border-radius:50%;padding:2px 5px;font-size:11px`,'○':`background:var(--silver4);color:var(--slate);border-radius:50%;padding:2px 5px;font-size:11px`,'—':`color:var(--silver4);font-size:14px`};
+  const pc={HIGH:'chip-green',MED:'chip-amber',LOW:'chip-amber',STR:'chip-blue'};
+  KPI_MAP.forEach(row=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td style="font-weight:700;white-space:nowrap">${row.uc}</td><td><span class="chip chip-ink">${row.stage}</span></td>
+      ${['ccs','ti','ai','size','fuel','tph','down'].map(k=>`<td style="text-align:center"><span style="${dc[row[k]]||''}">${row[k]}</span></td>`).join('')}
+      <td><span class="chip ${pc[row.p]||'chip-ink'}">${row.p}</span></td>`;
+    tb.appendChild(tr);
+  });
+}
+
+function buildBizImpact(){
+  const g=document.getElementById('biz-cards');
+  BIZ_CARDS.forEach(bc=>{
+    const d=document.createElement('div'); d.className=`biz-card ${bc.cls}`;
+    d.innerHTML=`<div class="biz-uc">${bc.uc}</div><div class="biz-title">${bc.title}</div>
+      <div class="biz-metrics">${bc.metrics.map(m=>`<div class="biz-metric"><span class="biz-metric-label">${m.l}</span><span class="biz-metric-val" style="${m.c}">${m.v}</span></div>`).join('')}</div>
+      <div class="biz-ann"><span class="biz-ann-label">Annual Value (8 MTPA)</span><span class="biz-ann-val">${bc.ann}</span></div>`;
+    g.appendChild(d);
+  });
+  const tb=document.getElementById('impact-detail-tbody');
+  IMPACT_DETAIL.forEach(row=>{
+    const tr=document.createElement('tr'); const isT=row.uc.includes('TOTAL');
+    tr.style.background=isT?'#eff6ff':'';
+    tr.innerHTML=`<td style="font-weight:${isT?800:600};color:${isT?'#2563eb':'#0a1628'}">${row.uc}</td>
+      <td>${row.param}</td>
+      <td class="bench-val avg">${row.current}</td>
+      <td class="bench-val good">${row.target}</td>
+      <td style="font-weight:700;color:var(--sage)">${row.impr}</td>
+      <td style="font-weight:800;color:var(--blue-md);font-family:var(--font-head);font-size:13px">₹${row.value} Cr</td>
+      <td><span class="chip ${row.conf==='HIGH'?'chip-green':'chip-amber'}">${row.conf}</span></td>
+      <td style="font-size:10px;color:var(--slate)">${row.assumption}</td>`;
+    tb.appendChild(tr);
+  });
+}
+
+function buildBenchmark(){
+  const tb=document.getElementById('bench-tbody');
+  BENCH_DATA.forEach(row=>{
+    const isUp=row.dir==='up';
+    const gapOk=isUp?parseFloat(row.gap)>0:parseFloat(row.gap)<0;
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td style="font-weight:700">${row.kpi}</td><td style="color:var(--slate-lt);font-size:10px">${row.unit}</td>
+      <td class="bench-val poor">${row.poor}</td><td class="bench-val avg">${row.avg}</td>
+      <td class="bench-val best">${row.best}</td><td class="bench-val best" style="color:var(--blue-md)">${row.current}</td>
+      <td class="${gapOk?'gap-up':'gap-dn'}">${Math.abs(parseFloat(row.gap))} ${row.unit} ${gapOk?'ahead of best':'behind best'}</td>
+      <td class="bench-val good">${row.ai}</td>`;
+    tb.appendChild(tr);
+  });
+  const gv=document.getElementById('gap-visual');
+  BENCH_DATA.forEach(row=>{
+    const pv=parseFloat(row.poor.replace(/[<>]/g,''));
+    const bv=parseFloat(row.best.replace(/[<>]/g,''));
+    const cv=parseFloat(row.current);
+    const av=parseFloat(row.ai);
+    const pct=Math.min(95,Math.max(5,Math.abs((cv-pv)/(bv-pv))*100));
+    const apct=Math.min(95,Math.max(5,Math.abs((av-pv)/(bv-pv))*100));
+    const w=document.createElement('div');
+    w.innerHTML=`<div style="display:flex;justify-content:space-between;margin-bottom:2px">
+      <span style="font-size:11px;font-weight:700;color:var(--ink)">${row.kpi}</span>
+      <span style="font-size:10px;color:var(--slate)">${row.current} ${row.unit}</span></div>
+      <div style="position:relative;height:11px;background:linear-gradient(90deg,var(--red-lt),var(--gold-lt),var(--sage-lt));border-radius:6px;margin-bottom:2px">
+        <div style="position:absolute;left:${pct}%;top:-1px;width:13px;height:13px;background:var(--blue-md);border-radius:50%;transform:translateX(-50%);z-index:2;border:2px solid white;box-shadow:0 2px 6px rgba(26,86,219,0.4)"></div>
+        <div style="position:absolute;left:${apct}%;top:2px;width:3px;height:7px;background:var(--sage);border-radius:2px;transform:translateX(-50%)"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:8px;color:var(--slate-lt)">
+        <span>Poor: ${row.poor}</span><span style="color:var(--blue-md);font-weight:700">▲ Now</span><span style="color:#059669;font-weight:700">| AI: ${row.ai}</span><span>Best: ${row.best}</span></div>`;
+    gv.appendChild(w);
+  });
+  // Industry initiatives
+  const itb=document.getElementById('bench-init-tbody');
+  BENCH_INITIATIVES.forEach((row,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td style="font-weight:700">${row.company}</td>
+      <td><span class="chip chip-ink">${row.industry}</span></td>
+      <td>${row.initiative}</td>
+      <td style="font-size:10px;color:var(--cap-blue);font-style:italic">${row.tech}</td>
+      <td style="color:var(--sage);font-weight:700;font-size:11px">${row.kpi}</td>
+      <td style="font-size:10px;color:var(--slate)">${row.rel}</td>`;
+    itb.appendChild(tr);
+  });
+}
+
+function buildVariables(){
+  function rV(cid,vars){
+    const el=document.getElementById(cid);
+    vars.forEach(v=>{
+      const d=document.createElement('div'); d.className='var-card';
+      d.innerHTML=`<div class="var-name">${v.name}</div><div class="var-range">${v.range}</div><div class="var-desc">${v.desc}</div>
+        <div class="var-status-row"><div class="var-meter"><div class="var-fill" style="width:${v.fill}%;background:${v.color}"></div></div><span class="var-unit">${v.unit}</span></div>`;
+      el.appendChild(d);
+    });
+  }
+  rV('input-vars',[
+    {name:'Iron Ore Fe Grade',range:'62.5–65.0 %',unit:'%',desc:'Drives CCS and sintering quality',fill:72,color:'#b5541c'},
+    {name:'Feed Moisture',range:'8.5–11.5 %',unit:'%',desc:'Balling and drying energy driver',fill:60,color:'#b5541c'},
+    {name:'Blaine (Feed Ore)',range:'1700–2100 cm²/g',unit:'cm²/g',desc:'Key predictor of pellet porosity and CCS',fill:55,color:'#b5541c'},
+    {name:'SiO₂ Content',range:'2.0–4.5 %',unit:'%',desc:'High SiO₂ reduces Fe and affects BF',fill:40,color:'#b5541c'},
+    {name:'Al₂O₃ Content',range:'0.8–2.8 %',unit:'%',desc:'Gangue — BF productivity impact',fill:35,color:'#b5541c'},
+    {name:'Gas Calorific Value',range:'800–950 kcal/Nm³',unit:'kcal/Nm³',desc:'Daily COREX+NG blend variation',fill:65,color:'#b5541c'},
+    {name:'Ore Grindability (BWI)',range:'8–14 kWh/t',unit:'kWh/t',desc:'Bond Work Index — mill efficiency',fill:45,color:'#b5541c'},
+    {name:'Ambient Temperature',range:'18–42 °C',unit:'°C',desc:'Moisture loss in stockpile — seasonal',fill:50,color:'#b5541c'},
+  ]);
+  rV('control-vars',[
+    {name:'Filter Cake Moisture',range:'8.0–9.0 %',unit:'%',desc:'Primary green ball strength driver — CRITICAL',fill:80,color:'#c9962a'},
+    {name:'Firing Zone Temperature',range:'1260–1340 °C',unit:'°C',desc:'Most critical for CCS development',fill:90,color:'#c9962a'},
+    {name:'Disc Speed (Balling)',range:'6.5–8.5 RPM',unit:'RPM',desc:'Controls green ball size D50',fill:70,color:'#c9962a'},
+    {name:'Bed Height (Grate)',range:'380–450 mm',unit:'mm',desc:'Throughput and fuel efficiency',fill:65,color:'#c9962a'},
+    {name:'Grate Speed',range:'1.6–2.0 m/min',unit:'m/min',desc:'Furnace residence time',fill:75,color:'#c9962a'},
+    {name:'Bentonite Dosing',range:'0.60–0.80 %',unit:'%',desc:'Binder for green ball formation',fill:60,color:'#c9962a'},
+    {name:'Windbox Pressure',range:'−200 to +50 Pa',unit:'Pa',desc:'Gas flow through pellet bed',fill:50,color:'#c9962a'},
+    {name:'Water Addition (Disc)',range:'Spray flow rate',unit:'L/min',desc:'Moisture adjustment in pelletizer',fill:55,color:'#c9962a'},
+  ]);
+  rV('output-vars',[
+    {name:'CCS (Cold Crush Strength)',range:'>250 daN/p Target',unit:'daN/p',desc:'Primary quality — BF operation',fill:78,color:'#4a7c59'},
+    {name:'Tumble Index',range:'>93 %',unit:'%',desc:'Mechanical durability under BF burden',fill:85,color:'#4a7c59'},
+    {name:'Abrasion Index',range:'<5 %',unit:'%',desc:'Fines generation resistance',fill:82,color:'#4a7c59'},
+    {name:'Pellet Size D50',range:'10–16 mm',unit:'mm',desc:'Size distribution for BF permeability',fill:72,color:'#4a7c59'},
+    {name:'Specific Fuel Consumption',range:'<57 SM3/t target',unit:'SM3/t',desc:'Key operational cost driver',fill:55,color:'#4a7c59'},
+    {name:'Production Rate',range:'>1,010 t/h (8 MTPA)',unit:'t/h',desc:'Throughput capacity utilization',fill:75,color:'#4a7c59'},
+    {name:'On-Size Yield',range:'>88 %',unit:'%',desc:'Usable product fraction 10–16 mm',fill:70,color:'#4a7c59'},
+    {name:'Plant Availability',range:'>95 % uptime',unit:'%',desc:'Equipment availability index',fill:88,color:'#4a7c59'},
+  ]);
+}
+
+function buildCaseStudies(){
+  const g=document.getElementById('cs-grid');
+  CAP_CASES.forEach(cs=>{
+    const d=document.createElement('div'); d.className='cs-card';
+    d.innerHTML=`<div class="cs-card-top">
+      <div><div style="font-size:20px;margin-bottom:3px">${cs.icon}</div><div class="cs-uc-badge">${cs.uc}</div></div>
+      <div style="text-align:right">
+        <div class="cs-ticks">${cs.ticks}</div>
+        <div class="cs-tick-label">${cs.tickLabel}</div>
+      </div>
+    </div>
+    ${cs.refs.map(r=>`<div class="cs-ref-row">
+      <div class="cs-ref-title">${r.title}</div>
+      <div class="cs-ref-client">Client: ${r.client}</div>
+      <div class="cs-ref-loc">📍 ${r.loc}</div>
+      <div class="cs-ref-result">✅ ${r.result}</div>
+      <div class="cs-ref-tech">🔧 ${r.tech}</div>
+    </div>`).join('')}
+    <div class="cs-applicability">🎯 Why Relevant to AM/NS Vizag</div>
+    <div class="cs-why">${cs.why}</div>`;
+    g.appendChild(d);
+  });
+}
+
+// ════════════════════════════════════════
+// NAV
+// ════════════════════════════════════════
+const secMap={process:'sec-process',painpoints:'sec-painpoints',usecases:'sec-usecases',priority:'sec-priority',kpimap:'sec-kpimap',bizimpact:'sec-bizimpact',benchmark:'sec-benchmark',variables:'sec-variables',casestudies:'sec-casestudies'};
+function showTab(id,el){
+  Object.values(secMap).forEach(s=>{const e=document.getElementById(s);if(e)e.className='section'});
+  const s=document.getElementById(secMap[id]);if(s)s.className='section visible';
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  if(el)el.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});return false;
+}
+
+window.onload=()=>{
+  buildProcessStrip();buildPainPoints();buildUseCases();buildKPIMap();
+  buildBizImpact();buildBenchmark();buildVariables();buildCaseStudies();
+  // Activate first tab button
+  const firstTab=document.querySelector('.tab-btn');
+  if(firstTab)firstTab.classList.add('active');
+  setInterval(()=>{document.getElementById('live-clock').textContent=new Date().toLocaleTimeString('en-IN',{hour12:false})+' IST';},1000);
+};
+</script>
+</body>
+</html>
